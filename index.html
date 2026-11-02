@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<script>(function(){try{var t=localStorage.getItem('tema');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Automatismos · animaciones provisionales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>:root{--paper:#fff;--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--flow:#F2B400;--panel:#fff;--line:#cfd6de;--btn:#fff;box-sizing:border-box}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--panel:#1f252c;--line:#36404b;--btn:#262d35}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--panel:#1f252c;--line:#36404b;--btn:#262d35}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:17px;line-height:1.45}
+main{max-width:1500px;margin:0 auto;padding:16px 14px 30px}
+h1{font-size:clamp(1.35rem,2.6vw,1.9rem);margin:0 0 4px;line-height:1.15}
+h2{font-size:1rem;margin:0 0 8px;color:var(--muted)}
+.sub{color:var(--muted);margin:0 0 14px;max-width:90ch}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:14px;align-items:start}
+@media (max-width:1000px){.grid{grid-template-columns:1fr}}
+.sheets{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:240px;overflow-x:auto;flex-grow:0}
+.sheet svg{display:block;width:100%;height:auto;max-height:80vh}
+.side{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.card ul,.card ol{margin:4px 0 0;padding-left:20px}.card li{margin:4px 0}
+.below{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;margin-top:14px}
+@media (max-width:1000px){.below{grid-template-columns:1fr}}
+.explain{border-left:6px solid var(--flow)}
+.explain p{margin:4px 0}
+.k{background:#FFF1C2;color:#1a1a1a;border-radius:4px;padding:0 4px;font-weight:700}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{font:inherit;font-weight:700;border-radius:10px;border:2px solid var(--line);background:var(--btn);color:var(--ink);padding:10px 8px;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
+button:focus-visible{outline:3px solid var(--flow);outline-offset:2px}
+button .small{display:block;font-size:.78rem;font-weight:400;opacity:.8}
+button.b-push{border-color:#2E8B3E}button.b-push.on{background:#2E8B3E;color:#fff}
+button.b-toggle.on{background:#1F4E79;color:#fff;border-color:#1F4E79}
+button.b-trip{border-color:#C0392B}button.b-trip.on{background:#C0392B;color:#fff}
+button.b-q.on{background:#555;color:#fff}
+button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;color:#fff}
+.leds{display:flex;flex-wrap:wrap;gap:8px 14px}
+.led{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.95rem}.led small{font-weight:400;color:var(--muted)}
+.dot{width:20px;height:20px;border-radius:50%;border:3px solid #333;background:#fff;transition:background .15s,box-shadow .15s;--lc:#3DBB4E}
+.dot.on{background:var(--lc);box-shadow:0 0 12px var(--lc)}
+.dot.c{border-radius:4px;--lc:#FFC94D}.dot.m{--lc:#2E8B3E}
+.foot{color:var(--muted);font-size:.88rem;margin-top:12px}
+.pin{display:inline-block;background:#FFF3C4;border:2px solid #F2B400;border-radius:6px;padding:0 6px;font-weight:700;color:#1a1a1a}
+/* esquema */
+.w{stroke-width:1.9;stroke-linecap:round}
+.wf{stroke:#D0191C;opacity:.45}.wn{stroke:#1F5FBF}
+.wf.live{opacity:1;stroke:#FF1F1F;stroke-width:3.4}
+.flow{stroke:var(--flow);stroke-width:4.5;stroke-linecap:round;stroke-dasharray:3 9;opacity:0;pointer-events:none}
+.flow.on{opacity:1;animation:run .7s linear infinite}
+@keyframes run{to{stroke-dashoffset:-12}}
+.ct .act{display:none}.ct.on .act{display:inline}.ct.on .rest{display:none}
+.coil.on rect:first-of-type{fill:#FFE9A8}
+.glow{opacity:0;transition:opacity .15s}.glow.on{opacity:.85}
+.rotor{opacity:0}.mot.run .rotor{opacity:1;animation:spin 1s linear infinite}.mot.run.rev .rotor{animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cdt{font-weight:700;font-size:12px;fill:#9a6a00}
+.hit{cursor:pointer}.hit:focus{outline:none}
+.hb{fill:transparent;stroke:transparent;stroke-width:2;stroke-dasharray:4 4}
+.hit:hover .hb,.hit:focus-visible .hb{stroke:#F2B400}
+.hit.latched .hb{fill:#FFF3C4;fill-opacity:.4;stroke:#F2B400;stroke-dasharray:none;stroke-width:3}
+@media (prefers-reduced-motion: reduce){.flow.on{animation:none;stroke-dasharray:none;opacity:.5}.mot.run .rotor{animation:none}}
+/* barra superior */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px;padding:4px 0 10px;border-bottom:1px solid var(--line)}
+.tb-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.tbback{flex:none;display:inline-flex;align-items:center;height:36px;padding:0 12px;border-radius:10px;border:2px solid var(--line);color:var(--ink);text-decoration:none;font-weight:700}
+.crumbs{min-width:0;flex:1;overflow:hidden;white-space:nowrap;font-size:.92rem;color:var(--muted)}
+.crumbs a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)}
+.crumbs .sep{margin:0 6px;opacity:.7}.crumbs b{color:var(--ink)}
+.themebtn{flex:none;width:42px;height:36px;border-radius:10px;border:2px solid var(--line);background:transparent;color:var(--ink);font-size:1.1rem;cursor:pointer;padding:0}
+.pnav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.pnav a{border:2px solid var(--line);border-radius:8px;padding:2px 10px;text-decoration:none;color:var(--ink);font-weight:700;font-size:.9rem}
+.pnav a.sel{background:#2E7D32;border-color:#2E7D32;color:#fff}
+/* índice */
+.sec{font-size:1.15rem;color:var(--ink);margin:22px 0 10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.card2{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-decoration:none;color:var(--ink)}
+.card2:hover{border-color:#2E7D32}
+.card2 .num{flex:none;background:#1F4E79;color:#fff;font-weight:700;border-radius:8px;padding:8px 10px;min-width:52px;text-align:center}
+.card2 h2{color:var(--ink);font-size:1.05rem;margin:0 0 2px}.card2 p{margin:0;color:var(--muted);font-size:.9rem}
+</style></head>
+<body><main>
+<header class="topbar"><div class="tb-left"><nav class="crumbs"><span class="in"><a href="https://bernardotorio.github.io/automatismos/">Automatismos</a><span class="sep">›</span><b>Animaciones provisionales</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
+<h1>Animaciones de las soluciones · provisional</h1>
+<p class="sub">Soluciones animadas de las prácticas 4 y 5 de Automatismos Industriales (1MB). Toca los aparatos del esquema para accionarlos.</p>
+<h2 class="sec" id="p4">Práctica 4 · Esquemas con temporizadores</h2><div class="cards"><a class="card2" href="p4_1_bomba_riego.html"><div class="num">4.1</div><div><h2>Bomba de riego</h2><p>Al pulsar la marcha -S2, la bomba -M1 funciona 20 s y se para sola. El paro -S1 la para en cualquier momento.</p></div></a><a class="card2" href="p4_2_paro_automatico.html"><div class="num">4.2</div><div><h2>Motor con paro automático</h2><p>Marcha -S2 y paro -S1. Al arrancar el motor, -KT1 empieza a contar y a los 12 s para todo. Pilotos: verde en marcha, rojo parado y naranja si salta el térmico.</p></div></a><a class="card2" href="p4_3_cinta_aviso.html"><div class="num">4.3</div><div><h2>Cinta con aviso de arranque</h2><p>Al pulsar -S2 se enciende el aviso -H1; a los 8 s arranca la cinta -M1 y el aviso se apaga. -S1 lo para todo.</p></div></a><a class="card2" href="p4_4_ventilador.html"><div class="num">4.4</div><div><h2>Ventilador que se queda enfriando</h2><p>Con -S2 arrancan la máquina -M1 y el ventilador -M2. Con -S1 se para la máquina, pero el ventilador sigue 30 s más.</p></div></a><a class="card2" href="p4_5_dos_motores_fc.html"><div class="num">4.5</div><div><h2>Dos motores con final de carrera</h2><p>-M1 arranca con -S2 o con -FC1 y queda realimentado. A los 20 s arranca -M2 y, 30 s después, se para todo. -S1 para todo.</p></div></a><a class="card2" href="p4_6_escalera_emergencia.html"><div class="num">4.6</div><div><h2>Escalera mecánica con emergencia</h2><p>La escalera arranca con -S2 o con el detector -S3 y funciona 10 s. -S4 o -S5 activan la emergencia (-KA1): se para y no arranca hasta el rearme -S6.</p></div></a><a class="card2" href="p4_7_tres_motores.html"><div class="num">4.7</div><div><h2>Tres motores con un solo pulsador</h2><p>Según lo que mantengas pulsado -S2: a los 2 s arranca -M1, a los 4 s -M2 y a los 6 s -M3. Al soltar, los que arrancaron siguen. -S1 para todo.</p></div></a><a class="card2" href="p4_8_baliza.html"><div class="num">4.8</div><div><h2>RETO · Baliza intermitente</h2><p>-S2 activa -KA1 (realimentado). Mientras está activado, -H1 parpadea: 2 s apagado, 2 s encendido. -S1 lo para todo.</p></div></a></div>
+<h2 class="sec" id="p5">Práctica 5 · Arranque escalonado y cambio de sentido de giro</h2><div class="cards"><a class="card2" href="p5_1_arranque_escalonado.html"><div class="num">5.1</div><div><h2>Arranque escalonado de dos motores</h2><p>-S2 arranca -M1; 5 s después arranca -M2 solo. -S1 para los dos. Cualquier térmico para todo.</p></div></a><a class="card2" href="p5_2_inversion_giro.html"><div class="num">5.2</div><div><h2>Inversión de giro</h2><p>-S2 gira a derechas (-KM1) y -S3 a izquierdas (-KM2). -S1 para. Enclavamiento con los 61-62 y un solo térmico.</p></div></a><a class="card2" href="p5_3_inversion_pausa.html"><div class="num">5.3</div><div><h2>Inversión con pausa y aviso de avería</h2><p>Como la 5.2, pero después de un paro hay que esperar 3 s parado antes de poder arrancar. -H3 avisa si salta el térmico.</p></div></a></div>
+</main>
+<script>(function(){
+  var b = document.getElementById('themeBtn'), r = document.documentElement;
+  function cur(){ var t = r.getAttribute('data-theme'); if (t) return t; return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light'; }
+  function paint(){ var d = cur() === 'dark'; b.textContent = d ? '\u2600\uFE0F' : '\uD83C\uDF19'; }
+  b.addEventListener('click', function(){ var t = cur() === 'dark' ? 'light' : 'dark'; r.setAttribute('data-theme', t); try { localStorage.setItem('tema', t); } catch(e){} paint(); });
+  paint();
+})();</script>
+</body></html>

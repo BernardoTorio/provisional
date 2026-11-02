@@ -19,8 +19,11 @@ h2{font-size:1rem;margin:0 0 8px;color:var(--muted)}
 .sub{color:var(--muted);margin:0 0 14px;max-width:90ch}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:14px;align-items:start}
 @media (max-width:1000px){.grid{grid-template-columns:1fr}}
-.sheets{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
-.sheet{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:240px;overflow-x:auto;flex-grow:0}
+.sheets{display:flex;gap:10px;align-items:flex-start;flex-wrap:nowrap}
+.sheet.fz{flex:0 0 clamp(180px,24%,320px)}
+.sheet.md{flex:1 1 0;min-width:0}
+@media (max-width:760px){.sheets{flex-wrap:wrap}.sheet.fz{flex-basis:100%;max-width:360px}.sheet.md{flex-basis:100%}}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px;overflow-x:auto}
 .sheet svg{display:block;width:100%;height:auto;max-height:80vh}
 .side{display:flex;flex-direction:column;gap:12px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
@@ -82,6 +85,9 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 .card2:hover{border-color:#2E7D32}
 .card2 .num{flex:none;background:#1F4E79;color:#fff;font-weight:700;border-radius:8px;padding:8px 10px;min-width:52px;text-align:center}
 .card2 h2{color:var(--ink);font-size:1.05rem;margin:0 0 2px}.card2 p{margin:0;color:var(--muted);font-size:.9rem}
+.ru{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:6px 0}
+.ru .rn{font-weight:700;white-space:nowrap}.ru .rn small{font-weight:400;color:var(--muted)}
+.ru input{width:100%;accent-color:#1F4E79}.ru b{min-width:3.2em;text-align:right}
 </style>
 </head>
 <body>
@@ -89,9 +95,9 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
   <header class="topbar"><div class="tb-left"><a class="tbback" href="index.html" title="Volver al índice (tecla Esc)">← Volver al índice</a><nav class="crumbs" aria-label="Dónde estás"><span class="in"><a href="index.html">Provisional</a><span class="sep">›</span><a href="index.html#p4">Práctica 4</a><span class="sep">›</span><b>4.5 Dos motores con final de carrera</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
   <nav class="pnav"><a href="p4_1_bomba_riego.html">4.1</a> <a href="p4_2_paro_automatico.html">4.2</a> <a href="p4_3_cinta_aviso.html">4.3</a> <a href="p4_4_ventilador.html">4.4</a> <a href="p4_5_dos_motores_fc.html" class="sel">4.5</a> <a href="p4_6_escalera_emergencia.html">4.6</a> <a href="p4_7_tres_motores.html">4.7</a> <a href="p4_8_baliza.html">4.8</a></nav>
   <h1>4.5 Dos motores con final de carrera</h1>
-  <p class="sub">-M1 arranca con -S2 o con -FC1 y queda realimentado. A los 20 s arranca -M2 y, 30 s después, se para todo. -S1 para todo.</p>
+  <p class="sub">-M1 arranca con -S2 o con -FC1 y queda realimentado. A los 20 s arranca -M2 y, 30 s después, se para todo. -S1 para todo. En la animación, los tiempos se regulan con las ruletas, de 1 a 10 s.</p>
   <div class="grid">
-    <div class="sheets"><div class="sheet" style="flex:372 1 427px"><svg viewBox="6 0 372 361" xmlns="http://www.w3.org/2000/svg" font-family="Atkinson Hyperlegible,Verdana,sans-serif"><defs><marker id="Farr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2E8B3E"/></marker></defs><g class="wires"><line id="Fw0" class="w wf" x1="104.0" y1="16.0" x2="104.0" y2="28.0"/>
+    <div class="sheets"><div class="sheet fz"><svg viewBox="6 0 372 361" xmlns="http://www.w3.org/2000/svg" font-family="Atkinson Hyperlegible,Verdana,sans-serif"><defs><marker id="Farr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2E8B3E"/></marker></defs><g class="wires"><line id="Fw0" class="w wf" x1="104.0" y1="16.0" x2="104.0" y2="28.0"/>
 <line id="Ffw0" class="flow" x1="104.0" y1="16.0" x2="104.0" y2="28.0"/>
 <line id="Fw1" class="w wf" x1="128.0" y1="16.0" x2="128.0" y2="28.0"/>
 <line id="Ffw1" class="flow" x1="128.0" y1="16.0" x2="128.0" y2="28.0"/>
@@ -420,7 +426,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 <text x="304.0" y="351.0" font-size="10.6" text-anchor="middle" fill="#111111">3~</text>
 <text x="226.0" y="340.5" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-M2</text>
 <g class="rotor" style="transform-origin:304.0px 336.5px"><path d="M285.4 332.7 A19.8 19.8 0 0 1 309.0 316.6" fill="none" stroke="#2E8B3E" stroke-width="3" marker-end="url(#Farr)"/></g>
-</g></svg></div><div class="sheet" style="flex:900 1 1035px"><svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg" font-family="Atkinson Hyperlegible,Verdana,sans-serif"><defs><marker id="Marr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2E8B3E"/></marker></defs><g class="wires"><line id="Mw0" class="w wf" x1="92.0" y1="20.0" x2="92.0" y2="28.0"/>
+</g></svg></div><div class="sheet md"><svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg" font-family="Atkinson Hyperlegible,Verdana,sans-serif"><defs><marker id="Marr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2E8B3E"/></marker></defs><g class="wires"><line id="Mw0" class="w wf" x1="92.0" y1="20.0" x2="92.0" y2="28.0"/>
 <line id="Mfw0" class="flow" x1="92.0" y1="20.0" x2="92.0" y2="28.0"/>
 <line id="Mw1" class="w wf" x1="92.0" y1="28.0" x2="92.0" y2="48.0"/>
 <line id="Mfw1" class="flow" x1="92.0" y1="28.0" x2="92.0" y2="48.0"/>
@@ -893,6 +899,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 <circle cx="772.0" cy="526.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/></svg></div></div>
     <div class="side">
       <div class="card"><h2>Estado</h2><div id="leds" class="leds"></div></div>
+      <div class="card"><h2>Ruletas de los temporizadores</h2><div id="ruletas"></div></div>
       <div class="card"><div id="btns" class="controls"></div>
         <button id="bSpeed" type="button" class="b-speed">Tiempo normal<span class="small">acelera los temporizadores</span></button></div>
     </div>
@@ -941,14 +948,14 @@ Array.prototype.forEach.call(document.querySelectorAll('.hit'), function(h){ var
 Object.keys(DEV).forEach(function(n){
   var D = DEV[n];
   if (/^-Q/.test(n)) D.kind = 'q';
-  if (D.timer){ D.T = (CFG.timers && CFG.timers[n]) || 5; }
+  if (D.timer){ D.T = Math.max(1, Math.min(10, (CFG.timers && CFG.timers[n]) || 5)); }
 });
 
 var short = false, speed = 1, lastMsg = '', ev = '';
 function actuated(e){
   var D = DEV[e.dev];
   if (/^-Q/.test(e.dev)) return D.on;
-  if (/^-F/.test(e.dev) && !D.coil) return D.tripped;
+  if (/^-F\d/.test(e.dev) && !D.coil) return D.tripped;
   if (D.coil) return e.timed ? D.out : D.en;
   return D.pressed;
 }
@@ -1152,6 +1159,18 @@ var mot = G.cons.filter(function(c){ return c.t === 'motor'; });
 names.forEach(function(n){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot c"></span>' + n + (DEV[n].timer ? ' <small>(' + DEV[n].T + ' s)</small>' : ''); LD.appendChild(s); LEDS[n] = s.firstChild; });
 pil.forEach(function(c){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot" style="--lc:' + (c.el ? (DRAWCOL[c.dev] || '#3DBB4E') : '#3DBB4E') + '"></span>' + c.dev; LD.appendChild(s); LEDS[c.dev] = s.firstChild; });
 mot.forEach(function(c){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot m"></span>' + c.dev; LD.appendChild(s); LEDS[c.dev] = s.firstChild; });
+// ruletas: un deslizador de 1 a 10 s por temporizador
+var RU = $('ruletas');
+Object.keys(DEV).filter(function(n){ return DEV[n].timer; }).sort(function(a, b){ return a.localeCompare(b, 'es', { numeric: true }); }).forEach(function(n){
+  var D = DEV[n];
+  D.T = Math.max(1, Math.min(10, Math.round(D.T)));
+  var row = document.createElement('label'); row.className = 'ru';
+  row.innerHTML = '<span class="rn">' + n + ' <small>' + (D.timer === 'on' ? 'conexión' : 'desconexión') + '</small></span><input type="range" min="1" max="10" step="1" value="' + D.T + '" aria-label="Tiempo de ' + n + '"><b>' + D.T + ' s</b>';
+  var inp = row.querySelector('input'), out = row.querySelector('b');
+  inp.addEventListener('input', function(){ D.T = +inp.value; out.textContent = D.T + ' s'; var lab = LEDS[n] && LEDS[n].parentNode.querySelector('small'); if (lab) lab.textContent = '(' + D.T + ' s)'; });
+  RU.appendChild(row);
+});
+if (!RU.children.length) RU.parentNode.style.display = 'none';
 // velocidad
 $('bSpeed').addEventListener('click', function(){ speed = speed === 1 ? 5 : 1; this.classList.toggle('on', speed > 1); this.firstChild.nodeValue = speed > 1 ? 'Tiempo ×5' : 'Tiempo normal'; });
 

@@ -88,6 +88,12 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 .ru{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:6px 0}
 .ru .rn{font-weight:700;white-space:nowrap}.ru .rn small{font-weight:400;color:var(--muted)}
 .ru input{width:100%;accent-color:#1F4E79}.ru b{min-width:3.2em;text-align:right}
+
+.card.ojo{grid-column:1/-1;border:2px solid #E0A100;background:#FFF6D6}
+.card.ojo h2{color:#9A6B00}
+[data-theme="dark"] .card.ojo{background:#3A3115;border-color:#C99A1E}
+[data-theme="dark"] .card.ojo h2{color:#F2C94C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card.ojo{background:#3A3115;border-color:#C99A1E}:root:not([data-theme="light"]) .card.ojo h2{color:#F2C94C}}
 </style>
 </head>
 <body>
@@ -345,6 +351,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
     </div>
   </div>
   <div class="below">
+    
     <div class="card explain"><h2>Qué está pasando</h2><div id="explain" aria-live="polite"></div></div>
     <div class="card"><h2>Cómo funciona</h2><ul><li>El 21-24 de -KA1 alimenta la baliza: -KT1 a través del 55-56 de -KT2; el 67-68 de -KT1 alimenta -KT2 y -H1.</li><li>-KT1 cuenta 2 s → cierra su 67-68 → -H1 se enciende y -KT2 cuenta 2 s → se abre el 55-56 de -KT2 → cae -KT1 → se apaga -H1, cae -KT2 → vuelta a empezar.</li></ul></div>
     <div class="card"><h2>Pruébalo</h2><ol><li>Pulsa -S2 y mira las dos cuentas atrás pasándose la pelota.</li><li>Pulsa -S1: -H1 se queda apagado.</li></ol></div>

@@ -88,6 +88,12 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 .ru{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:6px 0}
 .ru .rn{font-weight:700;white-space:nowrap}.ru .rn small{font-weight:400;color:var(--muted)}
 .ru input{width:100%;accent-color:#1F4E79}.ru b{min-width:3.2em;text-align:right}
+
+.card.ojo{grid-column:1/-1;border:2px solid #E0A100;background:#FFF6D6}
+.card.ojo h2{color:#9A6B00}
+[data-theme="dark"] .card.ojo{background:#3A3115;border-color:#C99A1E}
+[data-theme="dark"] .card.ojo h2{color:#F2C94C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card.ojo{background:#3A3115;border-color:#C99A1E}:root:not([data-theme="light"]) .card.ojo h2{color:#F2C94C}}
 </style>
 </head>
 <body>
@@ -95,7 +101,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
   <header class="topbar"><div class="tb-left"><a class="tbback" href="index.html" title="Volver al índice (tecla Esc)">← Volver al índice</a><nav class="crumbs" aria-label="Dónde estás"><span class="in"><a href="index.html">Provisional</a><span class="sep">›</span><a href="index.html#p5">Práctica 5</a><span class="sep">›</span><b>5.3 Cambio de giro automático por tiempo</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
   <nav class="pnav"><a href="p5_1_arranque_escalonado.html">5.1</a> <a href="p5_2_inversion_giro.html">5.2</a> <a href="p5_3_inversion_pausa.html" class="sel">5.3</a></nav>
   <h1>5.3 Cambio de giro automático por tiempo</h1>
-  <p class="sub">Con -S2 empieza un ciclo: 3 s parado, 7 s a derechas, 3 s parado, 7 s a izquierdas… hasta pulsar -S1. -H3 avisa si salta el térmico. En la animación, los tiempos se regulan con las ruletas, de 1 a 10 s.</p>
+  <p class="sub">Un carro va y viene solo. Con -S2 empieza el ciclo: 3 s parado, 7 s a derechas, 3 s parado, 7 s a izquierdas… hasta pulsar -S1 o cortar la barrera -S3. Los finales de carrera -FC1 y -FC2 lo paran en los extremos. -H3 avisa si salta el térmico. En la animación, los tiempos se regulan con las ruletas, de 1 a 10 s.</p>
   <div class="grid">
     <div class="sheets"><div class="sheet fz"><svg viewBox="0 0 364 399" xmlns="http://www.w3.org/2000/svg" font-family="Atkinson Hyperlegible,Verdana,sans-serif"><defs><marker id="Farr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2E8B3E"/></marker></defs><g class="wires"><line id="Fw0" class="w wf" x1="96.0" y1="16.0" x2="96.0" y2="28.0"/>
 <line id="Ffw0" class="flow" x1="96.0" y1="16.0" x2="96.0" y2="28.0"/>
@@ -377,7 +383,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 </g>
 <text x="320.0" y="211.3" font-size="9.9" text-anchor="middle" fill="#333">-KM2 cruza</text>
 <text x="320.0" y="223.1" font-size="9.9" text-anchor="middle" fill="#333">L1 y L3</text>
-<text x="320.0" y="235.0" font-size="9.9" text-anchor="middle" fill="#333">a la salida</text></svg></div><div class="sheet md"><svg viewBox="0 0 932 507" xmlns="http://www.w3.org/2000/svg" font-family="Atkinson Hyperlegible,Verdana,sans-serif"><defs><marker id="Marr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2E8B3E"/></marker></defs><g class="wires"><line id="Mw0" class="w wf" x1="92.0" y1="20.0" x2="92.0" y2="28.0"/>
+<text x="320.0" y="235.0" font-size="9.9" text-anchor="middle" fill="#333">a la salida</text></svg></div><div class="sheet md"><svg viewBox="0 0 1024 552" xmlns="http://www.w3.org/2000/svg" font-family="Atkinson Hyperlegible,Verdana,sans-serif"><defs><marker id="Marr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2E8B3E"/></marker></defs><g class="wires"><line id="Mw0" class="w wf" x1="92.0" y1="20.0" x2="92.0" y2="28.0"/>
 <line id="Mfw0" class="flow" x1="92.0" y1="20.0" x2="92.0" y2="28.0"/>
 <line id="Mw1" class="w wf" x1="92.0" y1="28.0" x2="92.0" y2="48.0"/>
 <line id="Mfw1" class="flow" x1="92.0" y1="28.0" x2="92.0" y2="48.0"/>
@@ -389,138 +395,156 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 <line id="Mfw4" class="flow" x1="92.0" y1="175.7" x2="92.0" y2="187.7"/>
 <line id="Mw5" class="w wf" x1="92.0" y1="187.7" x2="92.0" y2="207.7"/>
 <line id="Mfw5" class="flow" x1="92.0" y1="187.7" x2="92.0" y2="207.7"/>
-<line id="Mw6" class="w wf" x1="92.0" y1="233.3" x2="92.0" y2="245.3"/>
-<line id="Mfw6" class="flow" x1="92.0" y1="233.3" x2="92.0" y2="245.3"/>
-<line id="Mw7" class="w wf" x1="92.0" y1="245.3" x2="152.0" y2="245.3"/>
-<line id="Mfw7" class="flow" x1="92.0" y1="245.3" x2="152.0" y2="245.3"/>
-<line id="Mw8" class="w wf" x1="92.0" y1="245.3" x2="92.0" y2="265.3"/>
-<line id="Mfw8" class="flow" x1="92.0" y1="245.3" x2="92.0" y2="265.3"/>
-<line id="Mw9" class="w wf" x1="92.0" y1="291.0" x2="92.0" y2="307.3"/>
-<line id="Mfw9" class="flow" x1="92.0" y1="291.0" x2="92.0" y2="307.3"/>
-<line id="Mw10" class="w wf" x1="152.0" y1="245.3" x2="152.0" y2="265.3"/>
-<line id="Mfw10" class="flow" x1="152.0" y1="245.3" x2="152.0" y2="265.3"/>
-<line id="Mw11" class="w wf" x1="152.0" y1="291.0" x2="152.0" y2="307.3"/>
-<line id="Mfw11" class="flow" x1="152.0" y1="291.0" x2="152.0" y2="307.3"/>
-<line id="Mw12" class="w wf" x1="92.0" y1="307.3" x2="152.0" y2="307.3"/>
-<line id="Mfw12" class="flow" x1="92.0" y1="307.3" x2="152.0" y2="307.3"/>
-<line id="Mw13" class="w wf" x1="92.0" y1="187.7" x2="240.0" y2="187.7"/>
-<line id="Mfw13" class="flow" x1="92.0" y1="187.7" x2="240.0" y2="187.7"/>
-<line id="Mw14" class="w wf" x1="240.0" y1="187.7" x2="240.0" y2="207.7"/>
-<line id="Mfw14" class="flow" x1="240.0" y1="187.7" x2="240.0" y2="207.7"/>
-<line id="Mw15" class="w wf" x1="240.0" y1="233.3" x2="240.0" y2="245.3"/>
-<line id="Mfw15" class="flow" x1="240.0" y1="233.3" x2="240.0" y2="245.3"/>
-<line id="Mw16" class="w wf" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
-<line id="Mfw16" class="flow" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
-<line id="Mw17" class="w wf" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
-<line id="Mfw17" class="flow" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
-<line id="Mw18" class="w wf" x1="368.0" y1="245.3" x2="552.0" y2="245.3"/>
-<line id="Mfw18" class="flow" x1="368.0" y1="245.3" x2="552.0" y2="245.3"/>
-<line id="Mw19" class="w wf" x1="552.0" y1="245.3" x2="636.0" y2="245.3"/>
-<line id="Mfw19" class="flow" x1="552.0" y1="245.3" x2="636.0" y2="245.3"/>
-<line id="Mw20" class="w wf" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
-<line id="Mfw20" class="flow" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
-<line id="Mw21" class="w wf" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
-<line id="Mfw21" class="flow" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
-<line id="Mw22" class="w wf" x1="240.0" y1="245.3" x2="240.0" y2="265.3"/>
-<line id="Mfw22" class="flow" x1="240.0" y1="245.3" x2="240.0" y2="265.3"/>
-<line id="Mw23" class="w wf" x1="240.0" y1="291.0" x2="240.0" y2="307.3"/>
-<line id="Mfw23" class="flow" x1="240.0" y1="291.0" x2="240.0" y2="307.3"/>
-<line id="Mw24" class="w wf" x1="304.0" y1="245.3" x2="304.0" y2="265.3"/>
-<line id="Mfw24" class="flow" x1="304.0" y1="245.3" x2="304.0" y2="265.3"/>
-<line id="Mw25" class="w wf" x1="304.0" y1="291.0" x2="304.0" y2="307.3"/>
-<line id="Mfw25" class="flow" x1="304.0" y1="291.0" x2="304.0" y2="307.3"/>
-<line id="Mw26" class="w wf" x1="368.0" y1="245.3" x2="368.0" y2="265.3"/>
-<line id="Mfw26" class="flow" x1="368.0" y1="245.3" x2="368.0" y2="265.3"/>
-<line id="Mw27" class="w wf" x1="368.0" y1="291.0" x2="368.0" y2="307.3"/>
-<line id="Mfw27" class="flow" x1="368.0" y1="291.0" x2="368.0" y2="307.3"/>
-<line id="Mw28" class="w wf" x1="240.0" y1="307.3" x2="304.0" y2="307.3"/>
-<line id="Mfw28" class="flow" x1="240.0" y1="307.3" x2="304.0" y2="307.3"/>
-<line id="Mw29" class="w wf" x1="304.0" y1="307.3" x2="368.0" y2="307.3"/>
-<line id="Mfw29" class="flow" x1="304.0" y1="307.3" x2="368.0" y2="307.3"/>
-<line id="Mw30" class="w wf" x1="240.0" y1="307.3" x2="240.0" y2="327.3"/>
-<line id="Mfw30" class="flow" x1="240.0" y1="307.3" x2="240.0" y2="327.3"/>
-<line id="Mw31" class="w wf" x1="240.0" y1="353.0" x2="240.0" y2="373.0"/>
-<line id="Mfw31" class="flow" x1="240.0" y1="353.0" x2="240.0" y2="373.0"/>
-<line id="Mw32" class="w wf" x1="368.0" y1="307.3" x2="368.0" y2="327.3"/>
-<line id="Mfw32" class="flow" x1="368.0" y1="307.3" x2="368.0" y2="327.3"/>
-<line id="Mw33" class="w wf" x1="368.0" y1="353.0" x2="368.0" y2="365.0"/>
-<line id="Mfw33" class="flow" x1="368.0" y1="353.0" x2="368.0" y2="365.0"/>
-<line id="Mw34" class="w wf" x1="368.0" y1="365.0" x2="456.0" y2="365.0"/>
-<line id="Mfw34" class="flow" x1="368.0" y1="365.0" x2="456.0" y2="365.0"/>
-<line id="Mw35" class="w wf" x1="368.0" y1="365.0" x2="368.0" y2="385.0"/>
-<line id="Mfw35" class="flow" x1="368.0" y1="365.0" x2="368.0" y2="385.0"/>
-<line id="Mw36" class="w wf" x1="552.0" y1="245.3" x2="552.0" y2="265.3"/>
-<line id="Mfw36" class="flow" x1="552.0" y1="245.3" x2="552.0" y2="265.3"/>
-<line id="Mw37" class="w wf" x1="636.0" y1="245.3" x2="636.0" y2="265.3"/>
-<line id="Mfw37" class="flow" x1="636.0" y1="245.3" x2="636.0" y2="265.3"/>
-<line id="Mw38" class="w wf" x1="636.0" y1="291.0" x2="636.0" y2="311.0"/>
-<line id="Mfw38" class="flow" x1="636.0" y1="291.0" x2="636.0" y2="311.0"/>
-<line id="Mw39" class="w wf" x1="92.0" y1="130.0" x2="720.0" y2="130.0"/>
-<line id="Mfw39" class="flow" x1="92.0" y1="130.0" x2="720.0" y2="130.0"/>
-<line id="Mw40" class="w wf" x1="720.0" y1="130.0" x2="800.0" y2="130.0"/>
-<line id="Mfw40" class="flow" x1="720.0" y1="130.0" x2="800.0" y2="130.0"/>
-<line id="Mw41" class="w wf" x1="800.0" y1="130.0" x2="880.0" y2="130.0"/>
-<line id="Mfw41" class="flow" x1="800.0" y1="130.0" x2="880.0" y2="130.0"/>
-<line id="Mw42" class="w wf" x1="720.0" y1="130.0" x2="720.0" y2="150.0"/>
-<line id="Mfw42" class="flow" x1="720.0" y1="130.0" x2="720.0" y2="150.0"/>
-<line id="Mw43" class="w wf" x1="800.0" y1="130.0" x2="800.0" y2="150.0"/>
-<line id="Mfw43" class="flow" x1="800.0" y1="130.0" x2="800.0" y2="150.0"/>
-<line id="Mw44" class="w wf" x1="880.0" y1="130.0" x2="880.0" y2="150.0"/>
-<line id="Mfw44" class="flow" x1="880.0" y1="130.0" x2="880.0" y2="150.0"/>
-<line id="Mw45" class="w wf" x1="92.0" y1="307.3" x2="92.0" y2="442.6"/>
-<line id="Mfw45" class="flow" x1="92.0" y1="307.3" x2="92.0" y2="442.6"/>
-<line id="Mw46" class="w wn" x1="92.0" y1="470.6" x2="92.0" y2="492.6"/>
-<line id="Mfw46" class="flow" x1="92.0" y1="470.6" x2="92.0" y2="492.6"/>
-<line id="Mw47" class="w wf" x1="240.0" y1="398.6" x2="240.0" y2="442.6"/>
-<line id="Mfw47" class="flow" x1="240.0" y1="398.6" x2="240.0" y2="442.6"/>
-<line id="Mw48" class="w wn" x1="240.0" y1="470.6" x2="240.0" y2="492.6"/>
-<line id="Mfw48" class="flow" x1="240.0" y1="470.6" x2="240.0" y2="492.6"/>
-<line id="Mw49" class="w wf" x1="368.0" y1="410.6" x2="368.0" y2="442.6"/>
-<line id="Mfw49" class="flow" x1="368.0" y1="410.6" x2="368.0" y2="442.6"/>
-<line id="Mw50" class="w wn" x1="368.0" y1="470.6" x2="368.0" y2="492.6"/>
-<line id="Mfw50" class="flow" x1="368.0" y1="470.6" x2="368.0" y2="492.6"/>
-<line id="Mw51" class="w wf" x1="456.0" y1="365.0" x2="456.0" y2="442.6"/>
-<line id="Mfw51" class="flow" x1="456.0" y1="365.0" x2="456.0" y2="442.6"/>
-<line id="Mw52" class="w wn" x1="456.0" y1="470.6" x2="456.0" y2="492.6"/>
-<line id="Mfw52" class="flow" x1="456.0" y1="470.6" x2="456.0" y2="492.6"/>
-<line id="Mw53" class="w wf" x1="552.0" y1="291.0" x2="552.0" y2="442.6"/>
-<line id="Mfw53" class="flow" x1="552.0" y1="291.0" x2="552.0" y2="442.6"/>
-<line id="Mw54" class="w wn" x1="552.0" y1="470.6" x2="552.0" y2="492.6"/>
-<line id="Mfw54" class="flow" x1="552.0" y1="470.6" x2="552.0" y2="492.6"/>
-<line id="Mw55" class="w wf" x1="636.0" y1="336.6" x2="636.0" y2="442.6"/>
-<line id="Mfw55" class="flow" x1="636.0" y1="336.6" x2="636.0" y2="442.6"/>
-<line id="Mw56" class="w wn" x1="636.0" y1="470.6" x2="636.0" y2="492.6"/>
-<line id="Mfw56" class="flow" x1="636.0" y1="470.6" x2="636.0" y2="492.6"/>
-<line id="Mw57" class="w wf" x1="720.0" y1="175.7" x2="720.0" y2="442.6"/>
-<line id="Mfw57" class="flow" x1="720.0" y1="175.7" x2="720.0" y2="442.6"/>
-<line id="Mw58" class="w wn" x1="720.0" y1="466.6" x2="720.0" y2="492.6"/>
-<line id="Mfw58" class="flow" x1="720.0" y1="466.6" x2="720.0" y2="492.6"/>
-<line id="Mw59" class="w wf" x1="800.0" y1="175.7" x2="800.0" y2="442.6"/>
-<line id="Mfw59" class="flow" x1="800.0" y1="175.7" x2="800.0" y2="442.6"/>
-<line id="Mw60" class="w wn" x1="800.0" y1="466.6" x2="800.0" y2="492.6"/>
-<line id="Mfw60" class="flow" x1="800.0" y1="466.6" x2="800.0" y2="492.6"/>
-<line id="Mw61" class="w wf" x1="880.0" y1="175.7" x2="880.0" y2="442.6"/>
-<line id="Mfw61" class="flow" x1="880.0" y1="175.7" x2="880.0" y2="442.6"/>
-<line id="Mw62" class="w wn" x1="880.0" y1="466.6" x2="880.0" y2="492.6"/>
-<line id="Mfw62" class="flow" x1="880.0" y1="466.6" x2="880.0" y2="492.6"/>
-<line id="Mw63" class="w wn" x1="36.0" y1="492.6" x2="92.0" y2="492.6"/>
-<line id="Mfw63" class="flow" x1="36.0" y1="492.6" x2="92.0" y2="492.6"/>
-<line id="Mw64" class="w wn" x1="92.0" y1="492.6" x2="240.0" y2="492.6"/>
-<line id="Mfw64" class="flow" x1="92.0" y1="492.6" x2="240.0" y2="492.6"/>
-<line id="Mw65" class="w wn" x1="240.0" y1="492.6" x2="368.0" y2="492.6"/>
-<line id="Mfw65" class="flow" x1="240.0" y1="492.6" x2="368.0" y2="492.6"/>
-<line id="Mw66" class="w wn" x1="368.0" y1="492.6" x2="456.0" y2="492.6"/>
-<line id="Mfw66" class="flow" x1="368.0" y1="492.6" x2="456.0" y2="492.6"/>
-<line id="Mw67" class="w wn" x1="456.0" y1="492.6" x2="552.0" y2="492.6"/>
-<line id="Mfw67" class="flow" x1="456.0" y1="492.6" x2="552.0" y2="492.6"/>
-<line id="Mw68" class="w wn" x1="552.0" y1="492.6" x2="636.0" y2="492.6"/>
-<line id="Mfw68" class="flow" x1="552.0" y1="492.6" x2="636.0" y2="492.6"/>
-<line id="Mw69" class="w wn" x1="636.0" y1="492.6" x2="720.0" y2="492.6"/>
-<line id="Mfw69" class="flow" x1="636.0" y1="492.6" x2="720.0" y2="492.6"/>
-<line id="Mw70" class="w wn" x1="720.0" y1="492.6" x2="800.0" y2="492.6"/>
-<line id="Mfw70" class="flow" x1="720.0" y1="492.6" x2="800.0" y2="492.6"/>
-<line id="Mw71" class="w wn" x1="800.0" y1="492.6" x2="880.0" y2="492.6"/>
-<line id="Mfw71" class="flow" x1="800.0" y1="492.6" x2="880.0" y2="492.6"/></g><text x="92.0" y="14.2" font-size="12.0" text-anchor="middle" fill="#111111" font-weight="700">L</text>
+<line id="Mw6" class="w wf" x1="92.0" y1="233.3" x2="92.0" y2="253.3"/>
+<line id="Mfw6" class="flow" x1="92.0" y1="233.3" x2="92.0" y2="253.3"/>
+<line id="Mw7" class="w wf" x1="92.0" y1="279.0" x2="92.0" y2="291.0"/>
+<line id="Mfw7" class="flow" x1="92.0" y1="279.0" x2="92.0" y2="291.0"/>
+<line id="Mw8" class="w wf" x1="92.0" y1="291.0" x2="152.0" y2="291.0"/>
+<line id="Mfw8" class="flow" x1="92.0" y1="291.0" x2="152.0" y2="291.0"/>
+<line id="Mw9" class="w wf" x1="92.0" y1="291.0" x2="92.0" y2="311.0"/>
+<line id="Mfw9" class="flow" x1="92.0" y1="291.0" x2="92.0" y2="311.0"/>
+<line id="Mw10" class="w wf" x1="92.0" y1="336.6" x2="92.0" y2="353.0"/>
+<line id="Mfw10" class="flow" x1="92.0" y1="336.6" x2="92.0" y2="353.0"/>
+<line id="Mw11" class="w wf" x1="152.0" y1="291.0" x2="152.0" y2="311.0"/>
+<line id="Mfw11" class="flow" x1="152.0" y1="291.0" x2="152.0" y2="311.0"/>
+<line id="Mw12" class="w wf" x1="152.0" y1="336.6" x2="152.0" y2="353.0"/>
+<line id="Mfw12" class="flow" x1="152.0" y1="336.6" x2="152.0" y2="353.0"/>
+<line id="Mw13" class="w wf" x1="92.0" y1="353.0" x2="152.0" y2="353.0"/>
+<line id="Mfw13" class="flow" x1="92.0" y1="353.0" x2="152.0" y2="353.0"/>
+<line id="Mw14" class="w wf" x1="92.0" y1="187.7" x2="240.0" y2="187.7"/>
+<line id="Mfw14" class="flow" x1="92.0" y1="187.7" x2="240.0" y2="187.7"/>
+<line id="Mw15" class="w wf" x1="240.0" y1="187.7" x2="240.0" y2="207.7"/>
+<line id="Mfw15" class="flow" x1="240.0" y1="187.7" x2="240.0" y2="207.7"/>
+<line id="Mw16" class="w wf" x1="240.0" y1="233.3" x2="240.0" y2="245.3"/>
+<line id="Mfw16" class="flow" x1="240.0" y1="233.3" x2="240.0" y2="245.3"/>
+<line id="Mw17" class="w wf" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
+<line id="Mfw17" class="flow" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
+<line id="Mw18" class="w wf" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
+<line id="Mfw18" class="flow" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
+<line id="Mw19" class="w wf" x1="368.0" y1="245.3" x2="568.0" y2="245.3"/>
+<line id="Mfw19" class="flow" x1="368.0" y1="245.3" x2="568.0" y2="245.3"/>
+<line id="Mw20" class="w wf" x1="568.0" y1="245.3" x2="652.0" y2="245.3"/>
+<line id="Mfw20" class="flow" x1="568.0" y1="245.3" x2="652.0" y2="245.3"/>
+<line id="Mw21" class="w wf" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
+<line id="Mfw21" class="flow" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
+<line id="Mw22" class="w wf" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
+<line id="Mfw22" class="flow" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
+<line id="Mw23" class="w wf" x1="240.0" y1="245.3" x2="240.0" y2="265.3"/>
+<line id="Mfw23" class="flow" x1="240.0" y1="245.3" x2="240.0" y2="265.3"/>
+<line id="Mw24" class="w wf" x1="240.0" y1="291.0" x2="240.0" y2="307.3"/>
+<line id="Mfw24" class="flow" x1="240.0" y1="291.0" x2="240.0" y2="307.3"/>
+<line id="Mw25" class="w wf" x1="304.0" y1="245.3" x2="304.0" y2="265.3"/>
+<line id="Mfw25" class="flow" x1="304.0" y1="245.3" x2="304.0" y2="265.3"/>
+<line id="Mw26" class="w wf" x1="304.0" y1="291.0" x2="304.0" y2="307.3"/>
+<line id="Mfw26" class="flow" x1="304.0" y1="291.0" x2="304.0" y2="307.3"/>
+<line id="Mw27" class="w wf" x1="368.0" y1="245.3" x2="368.0" y2="265.3"/>
+<line id="Mfw27" class="flow" x1="368.0" y1="245.3" x2="368.0" y2="265.3"/>
+<line id="Mw28" class="w wf" x1="368.0" y1="291.0" x2="368.0" y2="307.3"/>
+<line id="Mfw28" class="flow" x1="368.0" y1="291.0" x2="368.0" y2="307.3"/>
+<line id="Mw29" class="w wf" x1="240.0" y1="307.3" x2="304.0" y2="307.3"/>
+<line id="Mfw29" class="flow" x1="240.0" y1="307.3" x2="304.0" y2="307.3"/>
+<line id="Mw30" class="w wf" x1="304.0" y1="307.3" x2="368.0" y2="307.3"/>
+<line id="Mfw30" class="flow" x1="304.0" y1="307.3" x2="368.0" y2="307.3"/>
+<line id="Mw31" class="w wf" x1="240.0" y1="307.3" x2="240.0" y2="327.3"/>
+<line id="Mfw31" class="flow" x1="240.0" y1="307.3" x2="240.0" y2="327.3"/>
+<line id="Mw32" class="w wf" x1="240.0" y1="353.0" x2="240.0" y2="373.0"/>
+<line id="Mfw32" class="flow" x1="240.0" y1="353.0" x2="240.0" y2="373.0"/>
+<line id="Mw33" class="w wf" x1="240.0" y1="398.6" x2="240.0" y2="418.6"/>
+<line id="Mfw33" class="flow" x1="240.0" y1="398.6" x2="240.0" y2="418.6"/>
+<line id="Mw34" class="w wf" x1="368.0" y1="307.3" x2="384.0" y2="307.3"/>
+<line id="Mfw34" class="flow" x1="368.0" y1="307.3" x2="384.0" y2="307.3"/>
+<line id="Mw35" class="w wf" x1="384.0" y1="307.3" x2="384.0" y2="327.3"/>
+<line id="Mfw35" class="flow" x1="384.0" y1="307.3" x2="384.0" y2="327.3"/>
+<line id="Mw36" class="w wf" x1="384.0" y1="353.0" x2="384.0" y2="365.0"/>
+<line id="Mfw36" class="flow" x1="384.0" y1="353.0" x2="384.0" y2="365.0"/>
+<line id="Mw37" class="w wf" x1="384.0" y1="365.0" x2="472.0" y2="365.0"/>
+<line id="Mfw37" class="flow" x1="384.0" y1="365.0" x2="472.0" y2="365.0"/>
+<line id="Mw38" class="w wf" x1="384.0" y1="365.0" x2="384.0" y2="385.0"/>
+<line id="Mfw38" class="flow" x1="384.0" y1="365.0" x2="384.0" y2="385.0"/>
+<line id="Mw39" class="w wf" x1="384.0" y1="410.6" x2="384.0" y2="430.6"/>
+<line id="Mfw39" class="flow" x1="384.0" y1="410.6" x2="384.0" y2="430.6"/>
+<line id="Mw40" class="w wf" x1="568.0" y1="245.3" x2="568.0" y2="265.3"/>
+<line id="Mfw40" class="flow" x1="568.0" y1="245.3" x2="568.0" y2="265.3"/>
+<line id="Mw41" class="w wf" x1="652.0" y1="245.3" x2="652.0" y2="265.3"/>
+<line id="Mfw41" class="flow" x1="652.0" y1="245.3" x2="652.0" y2="265.3"/>
+<line id="Mw42" class="w wf" x1="652.0" y1="291.0" x2="652.0" y2="311.0"/>
+<line id="Mfw42" class="flow" x1="652.0" y1="291.0" x2="652.0" y2="311.0"/>
+<line id="Mw43" class="w wf" x1="92.0" y1="130.0" x2="736.0" y2="130.0"/>
+<line id="Mfw43" class="flow" x1="92.0" y1="130.0" x2="736.0" y2="130.0"/>
+<line id="Mw44" class="w wf" x1="736.0" y1="130.0" x2="812.0" y2="130.0"/>
+<line id="Mfw44" class="flow" x1="736.0" y1="130.0" x2="812.0" y2="130.0"/>
+<line id="Mw45" class="w wf" x1="812.0" y1="130.0" x2="888.0" y2="130.0"/>
+<line id="Mfw45" class="flow" x1="812.0" y1="130.0" x2="888.0" y2="130.0"/>
+<line id="Mw46" class="w wf" x1="888.0" y1="130.0" x2="976.0" y2="130.0"/>
+<line id="Mfw46" class="flow" x1="888.0" y1="130.0" x2="976.0" y2="130.0"/>
+<line id="Mw47" class="w wf" x1="736.0" y1="130.0" x2="736.0" y2="150.0"/>
+<line id="Mfw47" class="flow" x1="736.0" y1="130.0" x2="736.0" y2="150.0"/>
+<line id="Mw48" class="w wf" x1="812.0" y1="130.0" x2="812.0" y2="150.0"/>
+<line id="Mfw48" class="flow" x1="812.0" y1="130.0" x2="812.0" y2="150.0"/>
+<line id="Mw49" class="w wf" x1="888.0" y1="130.0" x2="888.0" y2="150.0"/>
+<line id="Mfw49" class="flow" x1="888.0" y1="130.0" x2="888.0" y2="150.0"/>
+<line id="Mw50" class="w wf" x1="976.0" y1="130.0" x2="976.0" y2="150.0"/>
+<line id="Mfw50" class="flow" x1="976.0" y1="130.0" x2="976.0" y2="150.0"/>
+<line id="Mw51" class="w wf" x1="92.0" y1="353.0" x2="92.0" y2="488.3"/>
+<line id="Mfw51" class="flow" x1="92.0" y1="353.0" x2="92.0" y2="488.3"/>
+<line id="Mw52" class="w wn" x1="92.0" y1="516.3" x2="92.0" y2="538.3"/>
+<line id="Mfw52" class="flow" x1="92.0" y1="516.3" x2="92.0" y2="538.3"/>
+<line id="Mw53" class="w wf" x1="240.0" y1="444.3" x2="240.0" y2="488.3"/>
+<line id="Mfw53" class="flow" x1="240.0" y1="444.3" x2="240.0" y2="488.3"/>
+<line id="Mw54" class="w wn" x1="240.0" y1="516.3" x2="240.0" y2="538.3"/>
+<line id="Mfw54" class="flow" x1="240.0" y1="516.3" x2="240.0" y2="538.3"/>
+<line id="Mw55" class="w wf" x1="384.0" y1="456.3" x2="384.0" y2="488.3"/>
+<line id="Mfw55" class="flow" x1="384.0" y1="456.3" x2="384.0" y2="488.3"/>
+<line id="Mw56" class="w wn" x1="384.0" y1="516.3" x2="384.0" y2="538.3"/>
+<line id="Mfw56" class="flow" x1="384.0" y1="516.3" x2="384.0" y2="538.3"/>
+<line id="Mw57" class="w wf" x1="472.0" y1="365.0" x2="472.0" y2="488.3"/>
+<line id="Mfw57" class="flow" x1="472.0" y1="365.0" x2="472.0" y2="488.3"/>
+<line id="Mw58" class="w wn" x1="472.0" y1="516.3" x2="472.0" y2="538.3"/>
+<line id="Mfw58" class="flow" x1="472.0" y1="516.3" x2="472.0" y2="538.3"/>
+<line id="Mw59" class="w wf" x1="568.0" y1="291.0" x2="568.0" y2="488.3"/>
+<line id="Mfw59" class="flow" x1="568.0" y1="291.0" x2="568.0" y2="488.3"/>
+<line id="Mw60" class="w wn" x1="568.0" y1="516.3" x2="568.0" y2="538.3"/>
+<line id="Mfw60" class="flow" x1="568.0" y1="516.3" x2="568.0" y2="538.3"/>
+<line id="Mw61" class="w wf" x1="652.0" y1="336.6" x2="652.0" y2="488.3"/>
+<line id="Mfw61" class="flow" x1="652.0" y1="336.6" x2="652.0" y2="488.3"/>
+<line id="Mw62" class="w wn" x1="652.0" y1="516.3" x2="652.0" y2="538.3"/>
+<line id="Mfw62" class="flow" x1="652.0" y1="516.3" x2="652.0" y2="538.3"/>
+<line id="Mw63" class="w wf" x1="736.0" y1="175.7" x2="736.0" y2="488.3"/>
+<line id="Mfw63" class="flow" x1="736.0" y1="175.7" x2="736.0" y2="488.3"/>
+<line id="Mw64" class="w wn" x1="736.0" y1="512.3" x2="736.0" y2="538.3"/>
+<line id="Mfw64" class="flow" x1="736.0" y1="512.3" x2="736.0" y2="538.3"/>
+<line id="Mw65" class="w wf" x1="812.0" y1="175.7" x2="812.0" y2="488.3"/>
+<line id="Mfw65" class="flow" x1="812.0" y1="175.7" x2="812.0" y2="488.3"/>
+<line id="Mw66" class="w wn" x1="812.0" y1="512.3" x2="812.0" y2="538.3"/>
+<line id="Mfw66" class="flow" x1="812.0" y1="512.3" x2="812.0" y2="538.3"/>
+<line id="Mw67" class="w wf" x1="888.0" y1="175.7" x2="888.0" y2="488.3"/>
+<line id="Mfw67" class="flow" x1="888.0" y1="175.7" x2="888.0" y2="488.3"/>
+<line id="Mw68" class="w wn" x1="888.0" y1="512.3" x2="888.0" y2="538.3"/>
+<line id="Mfw68" class="flow" x1="888.0" y1="512.3" x2="888.0" y2="538.3"/>
+<line id="Mw69" class="w wf" x1="976.0" y1="150.0" x2="976.0" y2="488.3"/>
+<line id="Mfw69" class="flow" x1="976.0" y1="150.0" x2="976.0" y2="488.3"/>
+<line id="Mw70" class="w wn" x1="976.0" y1="516.3" x2="976.0" y2="538.3"/>
+<line id="Mfw70" class="flow" x1="976.0" y1="516.3" x2="976.0" y2="538.3"/>
+<line id="Mw71" class="w wn" x1="36.0" y1="538.3" x2="92.0" y2="538.3"/>
+<line id="Mfw71" class="flow" x1="36.0" y1="538.3" x2="92.0" y2="538.3"/>
+<line id="Mw72" class="w wn" x1="92.0" y1="538.3" x2="240.0" y2="538.3"/>
+<line id="Mfw72" class="flow" x1="92.0" y1="538.3" x2="240.0" y2="538.3"/>
+<line id="Mw73" class="w wn" x1="240.0" y1="538.3" x2="384.0" y2="538.3"/>
+<line id="Mfw73" class="flow" x1="240.0" y1="538.3" x2="384.0" y2="538.3"/>
+<line id="Mw74" class="w wn" x1="384.0" y1="538.3" x2="472.0" y2="538.3"/>
+<line id="Mfw74" class="flow" x1="384.0" y1="538.3" x2="472.0" y2="538.3"/>
+<line id="Mw75" class="w wn" x1="472.0" y1="538.3" x2="568.0" y2="538.3"/>
+<line id="Mfw75" class="flow" x1="472.0" y1="538.3" x2="568.0" y2="538.3"/>
+<line id="Mw76" class="w wn" x1="568.0" y1="538.3" x2="652.0" y2="538.3"/>
+<line id="Mfw76" class="flow" x1="568.0" y1="538.3" x2="652.0" y2="538.3"/>
+<line id="Mw77" class="w wn" x1="652.0" y1="538.3" x2="736.0" y2="538.3"/>
+<line id="Mfw77" class="flow" x1="652.0" y1="538.3" x2="736.0" y2="538.3"/>
+<line id="Mw78" class="w wn" x1="736.0" y1="538.3" x2="812.0" y2="538.3"/>
+<line id="Mfw78" class="flow" x1="736.0" y1="538.3" x2="812.0" y2="538.3"/>
+<line id="Mw79" class="w wn" x1="812.0" y1="538.3" x2="888.0" y2="538.3"/>
+<line id="Mfw79" class="flow" x1="812.0" y1="538.3" x2="888.0" y2="538.3"/>
+<line id="Mw80" class="w wn" x1="888.0" y1="538.3" x2="976.0" y2="538.3"/>
+<line id="Mfw80" class="flow" x1="888.0" y1="538.3" x2="976.0" y2="538.3"/></g><text x="92.0" y="14.2" font-size="12.0" text-anchor="middle" fill="#111111" font-weight="700">L</text>
 <g class="hit" data-dev="-Q2" data-hit="toggle">
 <g id="Mc1" class="ct" data-dev="-Q2">
 <g class="rest">
@@ -589,38 +613,58 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 <text x="45.2" y="224.5" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-S1</text>
 <rect class="hb" x="24.0" y="201.7" width="80.0" height="37.7" rx="6"/>
 </g>
-<circle cx="92.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
+<g class="hit" data-dev="-S3" data-hit="toggle">
+<g id="Mc4" class="ct" data-dev="-S3">
+<g class="rest">
+<polyline points="92.0,253.3 109.9,253.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="92.0,279.0 105.1,253.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g class="act">
+<polyline points="92.0,253.3 109.9,253.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="92.0,279.0 78.9,252.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="95.6" y="250.5" font-size="9.9" text-anchor="start" fill="#111111">COM</text>
+<text x="95.6" y="288.2" font-size="9.9" text-anchor="start" fill="#111111">NC</text>
+</g>
+<rect x="44.8" y="259.0" width="14.4" height="14.4" fill="none" stroke="#111111" stroke-width="1.98"/>
+<polyline points="48.0,269.4 55.2,263.0" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="51.2,270.2 55.2,263.0" fill="none" stroke="#111111" stroke-width="0.00" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="59.2,266.2 98.5,266.2" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
+<text x="41.6" y="270.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-S3</text>
+<rect class="hb" x="24.0" y="247.3" width="80.0" height="37.7" rx="6"/>
+</g>
+<circle cx="92.0" cy="291.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
 <g class="hit" data-dev="-S2" data-hit="push">
-<g id="Mc4" class="ct" data-dev="-S2">
+<g id="Mc5" class="ct" data-dev="-S2">
 <g class="rest">
-<polyline points="92.0,291.0 78.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="92.0,336.6 78.9,310.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g class="act">
-<polyline points="92.0,291.0 92.0,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="92.0,336.6 92.0,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="95.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">3</text>
-<text x="95.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">4</text>
+<text x="95.6" y="308.2" font-size="9.9" text-anchor="start" fill="#111111">3</text>
+<text x="95.6" y="345.8" font-size="9.9" text-anchor="start" fill="#111111">4</text>
 </g>
-<polyline points="50.0,285.0 50.0,271.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="50.0,278.2 58.8,278.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="58.8,278.2 85.5,278.2" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="45.2" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-S2</text>
-<rect class="hb" x="24.0" y="259.3" width="80.0" height="37.7" rx="6"/>
+<polyline points="50.0,330.6 50.0,317.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="50.0,323.8 58.8,323.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="58.8,323.8 85.5,323.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
+<text x="45.2" y="327.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-S2</text>
+<rect class="hb" x="24.0" y="305.0" width="80.0" height="37.7" rx="6"/>
 </g>
-<g id="Mc5" class="ct" data-dev="-KA1">
-<g class="rest">
-<polyline points="152.0,291.0 138.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="152.0,291.0 152.0,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="155.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">11</text>
-<text x="155.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">14</text>
-<text x="130.0" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KA1</text>
-</g>
-<circle cx="92.0" cy="307.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="92.0" cy="187.7" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
 <g id="Mc6" class="ct" data-dev="-KA1">
+<g class="rest">
+<polyline points="152.0,336.6 138.9,310.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g class="act">
+<polyline points="152.0,336.6 152.0,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="155.6" y="308.2" font-size="9.9" text-anchor="start" fill="#111111">11</text>
+<text x="155.6" y="345.8" font-size="9.9" text-anchor="start" fill="#111111">14</text>
+<text x="130.0" y="327.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KA1</text>
+</g>
+<circle cx="92.0" cy="353.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
+<circle cx="92.0" cy="187.7" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
+<g id="Mc7" class="ct" data-dev="-KA1">
 <g class="rest">
 <polyline points="240.0,233.3 226.9,206.9" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
@@ -632,12 +676,12 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 <text x="218.0" y="224.5" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KA1</text>
 </g>
 <circle cx="240.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="552.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
+<circle cx="568.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
 <circle cx="304.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
 <circle cx="368.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
 <circle cx="240.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
 <circle cx="304.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g id="Mc7" class="ct" data-dev="-KT3">
+<g id="Mc8" class="ct" data-dev="-KT3">
 <g class="rest">
 <polyline points="240.0,291.0 226.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
@@ -651,7 +695,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 <polyline points="215.2,278.2 233.5,278.2" fill="none" stroke="#111111" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
 <text x="209.6" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT3</text>
 <text class="cdt" data-dev="-KT3" x="244.8" y="313.0"></text>
-<g id="Mc8" class="ct" data-dev="-KM1">
+<g id="Mc9" class="ct" data-dev="-KM1">
 <g class="rest">
 <polyline points="304.0,291.0 290.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
@@ -662,7 +706,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 <text x="307.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">14</text>
 <text x="282.0" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
 </g>
-<g id="Mc9" class="ct" data-dev="-KM2">
+<g id="Mc10" class="ct" data-dev="-KM2">
 <g class="rest">
 <polyline points="368.0,291.0 354.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
@@ -675,7 +719,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 </g>
 <circle cx="240.0" cy="307.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
 <circle cx="304.0" cy="307.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g id="Mc10" class="ct" data-dev="-KT1">
+<g id="Mc11" class="ct" data-dev="-KT1">
 <g class="rest">
 <polyline points="240.0,327.3 257.9,327.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 <polyline points="240.0,353.0 253.1,327.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
@@ -691,7 +735,8 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 <polyline points="215.2,340.2 246.5,340.2" fill="none" stroke="#111111" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
 <text x="209.6" y="344.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT1</text>
 <text class="cdt" data-dev="-KT1" x="244.8" y="375.0"></text>
-<g id="Mc11" class="ct" data-dev="-KM2">
+<g class="hit" data-dev="-FC2" data-hit="toggle">
+<g id="Mc12" class="ct" data-dev="-FC2">
 <g class="rest">
 <polyline points="240.0,373.0 257.9,373.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 <polyline points="240.0,398.6 253.1,373.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
@@ -700,206 +745,251 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 <polyline points="240.0,373.0 257.9,373.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 <polyline points="240.0,398.6 226.9,372.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="243.6" y="370.2" font-size="9.9" text-anchor="start" fill="#111111">61</text>
-<text x="243.6" y="407.8" font-size="9.9" text-anchor="start" fill="#111111">62</text>
-<text x="218.0" y="389.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
+<text x="243.6" y="370.2" font-size="9.9" text-anchor="start" fill="#111111">21</text>
+<text x="243.6" y="407.8" font-size="9.9" text-anchor="start" fill="#111111">22</text>
 </g>
-<g id="Mc12" class="ct" data-dev="-KT1">
+<circle cx="200.0" cy="385.8" r="4.4" fill="none" stroke="#111111" stroke-width="1.98"/>
+<polyline points="204.4,385.8 212.0,385.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="212.0,385.8 246.5,385.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
+<text x="192.4" y="389.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-FC2</text>
+<rect class="hb" x="172.0" y="367.0" width="80.0" height="37.7" rx="6"/>
+</g>
+<g id="Mc13" class="ct" data-dev="-KM2">
 <g class="rest">
-<polyline points="368.0,353.0 354.9,326.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="240.0,418.6 257.9,418.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="240.0,444.3 253.1,418.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g class="act">
-<polyline points="368.0,353.0 368.0,327.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="240.0,418.6 257.9,418.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="240.0,444.3 226.9,417.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="371.6" y="324.5" font-size="9.9" text-anchor="start" fill="#111111">67</text>
-<text x="371.6" y="362.2" font-size="9.9" text-anchor="start" fill="#111111">68</text>
+<text x="243.6" y="415.9" font-size="9.9" text-anchor="start" fill="#111111">61</text>
+<text x="243.6" y="453.5" font-size="9.9" text-anchor="start" fill="#111111">62</text>
+<text x="218.0" y="435.5" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
 </g>
-<path d="M346.6 333.6 A8.0 8.0 0 0 0 346.6 346.7" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="343.2,340.2 361.5,340.2" fill="none" stroke="#111111" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="337.6" y="344.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT1</text>
-<text class="cdt" data-dev="-KT1" x="372.8" y="375.0"></text>
-<circle cx="368.0" cy="365.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g id="Mc13" class="ct" data-dev="-KM1">
+<g id="Mc14" class="ct" data-dev="-KT1">
 <g class="rest">
-<polyline points="368.0,385.0 385.9,385.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="368.0,410.6 381.1,385.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="384.0,353.0 370.9,326.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g class="act">
-<polyline points="368.0,385.0 385.9,385.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="368.0,410.6 354.9,384.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="384.0,353.0 384.0,327.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="371.6" y="382.2" font-size="9.9" text-anchor="start" fill="#111111">61</text>
-<text x="371.6" y="419.8" font-size="9.9" text-anchor="start" fill="#111111">62</text>
-<text x="346.0" y="401.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
+<text x="387.6" y="324.5" font-size="9.9" text-anchor="start" fill="#111111">67</text>
+<text x="387.6" y="362.2" font-size="9.9" text-anchor="start" fill="#111111">68</text>
 </g>
-<g id="Mc14" class="ct" data-dev="-KT2">
+<path d="M362.6 333.6 A8.0 8.0 0 0 0 362.6 346.7" fill="none" stroke="#111111" stroke-width="1.98"/>
+<polyline points="359.2,340.2 377.5,340.2" fill="none" stroke="#111111" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="353.6" y="344.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT1</text>
+<text class="cdt" data-dev="-KT1" x="388.8" y="375.0"></text>
+<circle cx="384.0" cy="365.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
+<g class="hit" data-dev="-FC1" data-hit="toggle">
+<g id="Mc15" class="ct" data-dev="-FC1">
 <g class="rest">
-<polyline points="552.0,265.3 569.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="552.0,291.0 565.1,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="384.0,385.0 401.9,385.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="384.0,410.6 397.1,385.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g class="act">
-<polyline points="552.0,265.3 569.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="552.0,291.0 538.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="384.0,385.0 401.9,385.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="384.0,410.6 370.9,384.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="555.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">55</text>
-<text x="555.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">56</text>
+<text x="387.6" y="382.2" font-size="9.9" text-anchor="start" fill="#111111">21</text>
+<text x="387.6" y="419.8" font-size="9.9" text-anchor="start" fill="#111111">22</text>
 </g>
-<path d="M530.6 271.6 A8.0 8.0 0 0 0 530.6 284.7" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="527.2,278.2 558.5,278.2" fill="none" stroke="#111111" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="521.6" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT2</text>
-<text class="cdt" data-dev="-KT2" x="556.8" y="313.0"></text>
-<g id="Mc15" class="ct" data-dev="-KM1">
+<circle cx="344.0" cy="397.8" r="4.4" fill="none" stroke="#111111" stroke-width="1.98"/>
+<polyline points="348.4,397.8 356.0,397.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="356.0,397.8 390.5,397.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
+<text x="336.4" y="401.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-FC1</text>
+<rect class="hb" x="316.0" y="379.0" width="80.0" height="37.7" rx="6"/>
+</g>
+<g id="Mc16" class="ct" data-dev="-KM1">
 <g class="rest">
-<polyline points="636.0,265.3 653.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="636.0,291.0 649.1,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="384.0,430.6 401.9,430.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="384.0,456.3 397.1,430.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g class="act">
-<polyline points="636.0,265.3 653.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="636.0,291.0 622.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="384.0,430.6 401.9,430.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="384.0,456.3 370.9,429.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="639.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">71</text>
-<text x="639.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">72</text>
-<text x="614.0" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
+<text x="387.6" y="427.9" font-size="9.9" text-anchor="start" fill="#111111">61</text>
+<text x="387.6" y="465.5" font-size="9.9" text-anchor="start" fill="#111111">62</text>
+<text x="362.0" y="447.5" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
 </g>
-<g id="Mc16" class="ct" data-dev="-KM2">
+<g id="Mc17" class="ct" data-dev="-KT2">
 <g class="rest">
-<polyline points="636.0,311.0 653.9,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="636.0,336.6 649.1,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="568.0,265.3 585.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="568.0,291.0 581.1,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g class="act">
-<polyline points="636.0,311.0 653.9,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="636.0,336.6 622.9,310.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="568.0,265.3 585.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="568.0,291.0 554.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="639.6" y="308.2" font-size="9.9" text-anchor="start" fill="#111111">71</text>
-<text x="639.6" y="345.8" font-size="9.9" text-anchor="start" fill="#111111">72</text>
-<text x="614.0" y="327.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
+<text x="571.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">55</text>
+<text x="571.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">56</text>
+</g>
+<path d="M546.6 271.6 A8.0 8.0 0 0 0 546.6 284.7" fill="none" stroke="#111111" stroke-width="1.98"/>
+<polyline points="543.2,278.2 574.5,278.2" fill="none" stroke="#111111" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="537.6" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT2</text>
+<text class="cdt" data-dev="-KT2" x="572.8" y="313.0"></text>
+<g id="Mc18" class="ct" data-dev="-KM1">
+<g class="rest">
+<polyline points="652.0,265.3 669.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="652.0,291.0 665.1,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g class="act">
+<polyline points="652.0,265.3 669.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="652.0,291.0 638.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="655.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">71</text>
+<text x="655.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">72</text>
+<text x="630.0" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
+</g>
+<g id="Mc19" class="ct" data-dev="-KM2">
+<g class="rest">
+<polyline points="652.0,311.0 669.9,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="652.0,336.6 665.1,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g class="act">
+<polyline points="652.0,311.0 669.9,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="652.0,336.6 638.9,310.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="655.6" y="308.2" font-size="9.9" text-anchor="start" fill="#111111">71</text>
+<text x="655.6" y="345.8" font-size="9.9" text-anchor="start" fill="#111111">72</text>
+<text x="630.0" y="327.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
 </g>
 <circle cx="92.0" cy="130.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="720.0" cy="130.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="800.0" cy="130.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g id="Mc17" class="ct" data-dev="-KM1">
+<circle cx="736.0" cy="130.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
+<circle cx="812.0" cy="130.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
+<circle cx="888.0" cy="130.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
+<g id="Mc20" class="ct" data-dev="-KM1">
 <g class="rest">
-<polyline points="720.0,175.7 706.9,149.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="736.0,175.7 722.9,149.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g class="act">
-<polyline points="720.0,175.7 720.0,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="736.0,175.7 736.0,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="723.6" y="147.2" font-size="9.9" text-anchor="start" fill="#111111">53</text>
-<text x="723.6" y="184.9" font-size="9.9" text-anchor="start" fill="#111111">54</text>
-<text x="698.0" y="166.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
+<text x="739.6" y="147.2" font-size="9.9" text-anchor="start" fill="#111111">53</text>
+<text x="739.6" y="184.9" font-size="9.9" text-anchor="start" fill="#111111">54</text>
+<text x="714.0" y="166.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
 </g>
-<g id="Mc18" class="ct" data-dev="-KM2">
+<g id="Mc21" class="ct" data-dev="-KM2">
 <g class="rest">
-<polyline points="800.0,175.7 786.9,149.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="812.0,175.7 798.9,149.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g class="act">
-<polyline points="800.0,175.7 800.0,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="812.0,175.7 812.0,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="803.6" y="147.2" font-size="9.9" text-anchor="start" fill="#111111">53</text>
-<text x="803.6" y="184.9" font-size="9.9" text-anchor="start" fill="#111111">54</text>
-<text x="778.0" y="166.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
+<text x="815.6" y="147.2" font-size="9.9" text-anchor="start" fill="#111111">53</text>
+<text x="815.6" y="184.9" font-size="9.9" text-anchor="start" fill="#111111">54</text>
+<text x="790.0" y="166.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
 </g>
 <g class="hit" data-dev="-F1" data-hit="trip">
-<g id="Mc19" class="ct" data-dev="-F1">
+<g id="Mc22" class="ct" data-dev="-F1">
 <g class="rest">
-<polyline points="880.0,175.7 866.9,149.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="888.0,175.7 874.9,149.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 <g class="act">
-<polyline points="880.0,175.7 880.0,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="888.0,175.7 888.0,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="883.6" y="147.2" font-size="9.9" text-anchor="start" fill="#111111">97</text>
-<text x="883.6" y="184.9" font-size="9.9" text-anchor="start" fill="#111111">98</text>
+<text x="891.6" y="147.2" font-size="9.9" text-anchor="start" fill="#111111">97</text>
+<text x="891.6" y="184.9" font-size="9.9" text-anchor="start" fill="#111111">98</text>
 </g>
-<rect x="836.0" y="154.8" width="12.0" height="16.0" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="842.0,154.8 842.0,158.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="842.0,158.4 846.4,158.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="846.4,158.4 846.4,167.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="846.4,167.2 842.0,167.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="842.0,167.2 842.0,170.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="848.0,162.8 873.5,162.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="832.0" y="166.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-F1</text>
+<rect x="844.0" y="154.8" width="12.0" height="16.0" fill="none" stroke="#111111" stroke-width="1.98"/>
+<polyline points="850.0,154.8 850.0,158.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="850.0,158.4 854.4,158.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="854.4,158.4 854.4,167.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="854.4,167.2 850.0,167.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="850.0,167.2 850.0,170.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="856.0,162.8 881.5,162.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
+<text x="840.0" y="166.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-F1</text>
 </g>
-<g id="Mk20" class="coil" data-dev="-KA1">
-<rect x="82.0" y="442.6" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<text x="95.6" y="439.9" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="95.6" y="479.8" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="77.2" y="460.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KA1</text>
+<g id="Mk23" class="coil" data-dev="-KA1">
+<rect x="82.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
+<text x="95.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
+<text x="95.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
+<text x="77.2" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KA1</text>
 </g>
-<g id="Mk21" class="coil" data-dev="-KM1">
-<rect x="230.0" y="442.6" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<text x="243.6" y="439.9" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="243.6" y="479.8" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="225.2" y="460.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
+<g id="Mk24" class="coil" data-dev="-KM1">
+<rect x="230.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
+<text x="243.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
+<text x="243.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
+<text x="225.2" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
 </g>
-<g id="Mk22" class="coil" data-dev="-KM2">
-<rect x="358.0" y="442.6" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<text x="371.6" y="439.9" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="371.6" y="479.8" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="353.2" y="460.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
+<g id="Mk25" class="coil" data-dev="-KM2">
+<rect x="374.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
+<text x="387.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
+<text x="387.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
+<text x="369.2" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
 </g>
-<g id="Mk23" class="coil" data-dev="-KT2">
-<rect x="446.0" y="442.6" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<rect x="436.4" y="442.6" width="9.6" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<polyline points="436.4,470.6 446.0,442.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="436.4,442.6 446.0,470.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="459.6" y="439.9" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="459.6" y="479.8" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="431.6" y="460.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT2</text>
+<g id="Mk26" class="coil" data-dev="-KT2">
+<rect x="462.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
+<rect x="452.4" y="488.3" width="9.6" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
+<polyline points="452.4,516.3 462.0,488.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="452.4,488.3 462.0,516.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="475.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
+<text x="475.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
+<text x="447.6" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT2</text>
 </g>
-<g id="Mk24" class="coil" data-dev="-KT1">
-<rect x="542.0" y="442.6" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<rect x="532.4" y="442.6" width="9.6" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<polyline points="532.4,470.6 542.0,442.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="532.4,442.6 542.0,470.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="555.6" y="439.9" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="555.6" y="479.8" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="527.6" y="460.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT1</text>
+<g id="Mk27" class="coil" data-dev="-KT1">
+<rect x="558.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
+<rect x="548.4" y="488.3" width="9.6" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
+<polyline points="548.4,516.3 558.0,488.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="548.4,488.3 558.0,516.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="571.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
+<text x="571.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
+<text x="543.6" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT1</text>
 </g>
-<g id="Mk25" class="coil" data-dev="-KT3">
-<rect x="626.0" y="442.6" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<rect x="616.4" y="442.6" width="9.6" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<polyline points="616.4,470.6 626.0,442.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="616.4,442.6 626.0,470.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="639.6" y="439.9" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="639.6" y="479.8" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="611.6" y="460.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT3</text>
+<g id="Mk28" class="coil" data-dev="-KT3">
+<rect x="642.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
+<rect x="632.4" y="488.3" width="9.6" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
+<polyline points="632.4,516.3 642.0,488.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="632.4,488.3 642.0,516.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="655.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
+<text x="655.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
+<text x="627.6" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT3</text>
 </g>
-<circle class="glow" id="Mgh26" cx="720.0" cy="454.6" r="20.4" fill="#9BE09B"/>
-<g id="Mh26" class="pil" data-dev="-H1">
-<circle cx="720.0" cy="454.6" r="12.0" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="711.5,463.1 728.5,446.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="711.5,446.2 728.5,463.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="723.6" y="439.9" font-size="9.9" text-anchor="start" fill="#111111">X1</text>
-<text x="723.6" y="475.8" font-size="9.9" text-anchor="start" fill="#111111">X2</text>
-<text x="703.2" y="458.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-H1</text>
+<circle class="glow" id="Mgh29" cx="736.0" cy="500.3" r="20.4" fill="#9BE09B"/>
+<g id="Mh29" class="pil" data-dev="-H1">
+<circle cx="736.0" cy="500.3" r="12.0" fill="none" stroke="#111111" stroke-width="1.98"/>
+<polyline points="727.5,508.8 744.5,491.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="727.5,491.8 744.5,508.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="739.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">X1</text>
+<text x="739.6" y="521.5" font-size="9.9" text-anchor="start" fill="#111111">X2</text>
+<text x="719.2" y="504.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-H1</text>
 </g>
-<circle class="glow" id="Mgh27" cx="800.0" cy="454.6" r="20.4" fill="#9BC8F0"/>
-<g id="Mh27" class="pil" data-dev="-H2">
-<circle cx="800.0" cy="454.6" r="12.0" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="791.5,463.1 808.5,446.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="791.5,446.2 808.5,463.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="803.6" y="439.9" font-size="9.9" text-anchor="start" fill="#111111">X1</text>
-<text x="803.6" y="475.8" font-size="9.9" text-anchor="start" fill="#111111">X2</text>
-<text x="783.2" y="458.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-H2</text>
+<circle class="glow" id="Mgh30" cx="812.0" cy="500.3" r="20.4" fill="#9BC8F0"/>
+<g id="Mh30" class="pil" data-dev="-H2">
+<circle cx="812.0" cy="500.3" r="12.0" fill="none" stroke="#111111" stroke-width="1.98"/>
+<polyline points="803.5,508.8 820.5,491.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="803.5,491.8 820.5,508.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="815.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">X1</text>
+<text x="815.6" y="521.5" font-size="9.9" text-anchor="start" fill="#111111">X2</text>
+<text x="795.2" y="504.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-H2</text>
 </g>
-<circle class="glow" id="Mgh28" cx="880.0" cy="454.6" r="20.4" fill="#F4A04A"/>
-<g id="Mh28" class="pil" data-dev="-H3">
-<circle cx="880.0" cy="454.6" r="12.0" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="871.5,463.1 888.5,446.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="871.5,446.2 888.5,463.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="883.6" y="439.9" font-size="9.9" text-anchor="start" fill="#111111">X1</text>
-<text x="883.6" y="475.8" font-size="9.9" text-anchor="start" fill="#111111">X2</text>
-<text x="863.2" y="458.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-H3</text>
+<circle class="glow" id="Mgh31" cx="888.0" cy="500.3" r="20.4" fill="#F4A04A"/>
+<g id="Mh31" class="pil" data-dev="-H3">
+<circle cx="888.0" cy="500.3" r="12.0" fill="none" stroke="#111111" stroke-width="1.98"/>
+<polyline points="879.5,508.8 896.5,491.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="879.5,491.8 896.5,508.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="891.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">X1</text>
+<text x="891.6" y="521.5" font-size="9.9" text-anchor="start" fill="#111111">X2</text>
+<text x="871.2" y="504.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-H3</text>
 </g>
-<text x="30.0" y="496.8" font-size="12.0" text-anchor="end" fill="#111111" font-weight="700">N</text>
-<circle cx="92.0" cy="492.6" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="240.0" cy="492.6" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="368.0" cy="492.6" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="456.0" cy="492.6" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="552.0" cy="492.6" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="636.0" cy="492.6" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="720.0" cy="492.6" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="800.0" cy="492.6" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/></svg></div></div>
+<g id="Mk32" class="coil" data-dev="-S3">
+<rect x="966.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
+<text x="979.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">L</text>
+<text x="979.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">N</text>
+<text x="961.2" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-S3</text>
+</g>
+<text x="30.0" y="542.5" font-size="12.0" text-anchor="end" fill="#111111" font-weight="700">N</text>
+<circle cx="92.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
+<circle cx="240.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
+<circle cx="384.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
+<circle cx="472.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
+<circle cx="568.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
+<circle cx="652.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
+<circle cx="736.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
+<circle cx="812.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
+<circle cx="888.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/></svg></div></div>
     <div class="side">
       <div class="card"><h2>Estado</h2><div id="leds" class="leds"></div></div>
       <div class="card"><h2>Ruletas de los temporizadores</h2><div id="ruletas"></div></div>
@@ -908,13 +998,14 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
     </div>
   </div>
   <div class="below">
+    <div class="card ojo"><h2>¡OJO! Sensores nuevos</h2><ul><li><b>Finales de carrera -FC1 y -FC2</b>: un interruptor que se acciona <b>mecánicamente</b>, cuando algo que se mueve (un carro, una puerta…) llega a su sitio y le empuja la palanca o la ruedecita.</li><li>Tiene dos contactos, como un pulsador: <b>NC 21-22</b> (se abre al pisarlo) y <b>NA 13-14</b> (se cierra al pisarlo). Se dibuja con un <b>circulito</b> (la ruedecita) a la izquierda del contacto.</li><li>No necesita alimentación: son solo contactos. Se queda accionado <b>mientras</b> está pisado.</li><li>La <b>barrera fotoeléctrica</b> (-S3) es un detector: un emisor manda un haz de luz y un receptor lo recibe. Si algo corta el haz, conmuta su contacto.</li><li><b>Necesita alimentación</b>: 230 V entre L y N (el recuadro de la derecha del mando). Su salida es un relé conmutado <b>COM / NC / NA</b>, sin números: se distinguen por los colores de los cables, según la leyenda del aparato.</li><li>Aquí se usa el <b>COM-NC en serie con el paro</b>: cortar el haz es como pulsar -S1.</li><li>En la animación, toca -FC1, -FC2 y -S3 en el esquema (o en sus botones) para pisarlos o cortar el haz, y otra vez para soltarlos.</li></ul></div>
     <div class="card explain"><h2>Qué está pasando</h2><div id="explain" aria-live="polite"></div></div>
-    <div class="card"><h2>Cómo funciona</h2><ul><li>-KA1 guarda que el ciclo está en marcha (realimentado con su 11-14); su 21-24 alimenta todo el ciclo.</li><li>-KT3 (3 s) hace la pausa: su bobina pasa por los 71-72 de -KM1 y -KM2, así que solo cuenta con el motor parado. Su 67-68 da paso a los contactores; los 13-14 los mantienen.</li><li>-KT1 y -KT2 se pasan la pelota, como en la baliza de la 4.8: mientras -KT1 cuenta, gira a derechas (55-56 de -KT1); cuando acaba, gira a izquierdas (67-68 de -KT1) y cuenta -KT2.</li><li>-KT1 = pausa + giro (3 + 7 = 10 s); -KT2 = giro a izquierdas (7 s). Enclavamiento con los 61-62.</li></ul></div>
-    <div class="card"><h2>Pruébalo</h2><ol><li>Pulsa -S2 y sigue el ciclo completo.</li><li>Mueve las ruletas y mira cómo cambian los tiempos.</li><li>Dispara -F1 a mitad de ciclo y rearma.</li><li>Pulsa -S1 en cualquier momento.</li></ol></div>
+    <div class="card"><h2>Cómo funciona</h2><ul><li>-KA1 guarda que el ciclo está en marcha (realimentado con su 11-14); su 21-24 alimenta todo el ciclo.</li><li>-KT3 (3 s) hace la pausa: su bobina pasa por los 71-72 de -KM1 y -KM2, así que solo cuenta con el motor parado. Su 67-68 da paso a los contactores; los 13-14 los mantienen.</li><li>-KT1 y -KT2 se pasan la pelota, como en la baliza de la 4.8: mientras -KT1 cuenta, gira a derechas (55-56 de -KT1); cuando acaba, gira a izquierdas (67-68 de -KT1) y cuenta -KT2.</li><li>-KT1 = pausa + giro (3 + 7 = 10 s); -KT2 = giro a izquierdas (7 s). Enclavamiento con los 61-62.</li><li>El 21-22 de -FC2 está en la rama de derechas y el de -FC1 en la de izquierdas: si el carro llega al extremo antes de tiempo, se para ese giro. Tras la pausa sale hacia el otro lado.</li><li>La barrera -S3 se alimenta a 230 V (L y N) y su COM-NC va en serie con el paro: al cortarla cae -KA1 y hay que volver a pulsar -S2.</li></ul></div>
+    <div class="card"><h2>Pruébalo</h2><ol><li>Pulsa -S2 y sigue el ciclo completo.</li><li>Mueve las ruletas y mira cómo cambian los tiempos.</li><li>Girando a derechas, pisa -FC2: el carro para y, tras la pausa, sale a izquierdas.</li><li>Corta la barrera -S3 y vuelve a dejarla libre: no arranca solo.</li><li>Dispara -F1 a mitad de ciclo y rearma.</li></ol></div>
   </div>
   <p class="foot"><span class="pin">Doble clic</span> en un pulsador (en el esquema o en su botón) lo deja <b>fijado</b>; un clic más lo suelta. Toca los aparatos del esquema: pulsadores, magnetotérmicos, térmicos (para dispararlos), finales de carrera y detectores. Cables en rojo vivo: tienen tensión. Línea amarilla: corriente.</p>
 </main>
-<script>var DRAW = [{"key": "F", "net": {"wires": [{"a": [2.4, 14.8], "b": [2.4, 14.5], "c": "f"}, {"a": [3.0, 14.8], "b": [3.0, 14.5], "c": "f"}, {"a": [3.6, 14.8], "b": [3.6, 14.5], "c": "f"}, {"a": [2.4, 12.6], "b": [2.4, 12.15], "c": "f"}, {"a": [2.4, 12.15], "b": [2.4, 11.05], "c": "f"}, {"a": [2.4, 12.15], "b": [5.6, 12.15], "c": "f"}, {"a": [5.6, 12.15], "b": [5.6, 11.05], "c": "f"}, {"a": [3.0, 12.6], "b": [3.0, 11.85], "c": "f"}, {"a": [3.0, 11.85], "b": [3.0, 11.05], "c": "f"}, {"a": [3.0, 11.85], "b": [6.2, 11.85], "c": "f"}, {"a": [6.2, 11.85], "b": [6.2, 11.05], "c": "f"}, {"a": [3.6, 12.6], "b": [3.6, 11.55], "c": "f"}, {"a": [3.6, 11.55], "b": [3.6, 11.05], "c": "f"}, {"a": [3.6, 11.55], "b": [6.8, 11.55], "c": "f"}, {"a": [6.8, 11.55], "b": [6.8, 11.05], "c": "f"}, {"a": [2.4, 10.408], "b": [2.4, 9.408], "c": "f"}, {"a": [2.4, 9.408], "b": [2.4, 8.958], "c": "f"}, {"a": [3.0, 10.408], "b": [3.0, 9.708], "c": "f"}, {"a": [3.0, 9.708], "b": [3.0, 8.958], "c": "f"}, {"a": [3.6, 10.408], "b": [3.6, 10.008], "c": "f"}, {"a": [3.6, 10.008], "b": [3.6, 8.958], "c": "f"}, {"a": [5.6, 10.408], "b": [5.6, 10.008], "c": "f"}, {"a": [5.6, 10.008], "b": [3.6, 10.008], "c": "f"}, {"a": [6.2, 10.408], "b": [6.2, 9.708], "c": "f"}, {"a": [6.2, 9.708], "b": [3.0, 9.708], "c": "f"}, {"a": [6.8, 10.408], "b": [6.8, 9.408], "c": "f"}, {"a": [6.8, 9.408], "b": [2.4, 9.408], "c": "f"}, {"a": [2.4, 8.058], "b": [2.4, 7.558], "c": "f"}, {"a": [3.0, 8.058], "b": [3.0, 7.558], "c": "f"}, {"a": [3.6, 8.058], "b": [3.6, 7.558], "c": "f"}, {"a": [2.4, 7.458], "b": [2.4, 7.008], "c": "f"}, {"a": [2.4, 7.008], "b": [2.585, 6.299], "c": "f"}, {"a": [3.0, 7.458], "b": [3.0, 6.458], "c": "f"}, {"a": [3.6, 7.458], "b": [3.6, 7.008], "c": "f"}, {"a": [3.6, 7.008], "b": [3.415, 6.299], "c": "f"}], "els": [{"id": "c1", "t": "contact", "dev": "-Q1", "kind": "na", "timed": null, "typ": "aux", "a": [2.4, 14.5], "b": [2.4, 13.858]}, {"id": "c2", "t": "contact", "dev": "-Q1", "kind": "na", "timed": null, "typ": "aux", "a": [3.0, 14.5], "b": [3.0, 13.858]}, {"id": "c3", "t": "contact", "dev": "-Q1", "kind": "na", "timed": null, "typ": "aux", "a": [3.6, 14.5], "b": [3.6, 13.858]}, {"id": "c4", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "main", "a": [2.4, 11.05], "b": [2.4, 10.408]}, {"id": "c5", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "main", "a": [3.0, 11.05], "b": [3.0, 10.408]}, {"id": "c6", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "main", "a": [3.6, 11.05], "b": [3.6, 10.408]}, {"id": "c7", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "main", "a": [5.6, 11.05], "b": [5.6, 10.408]}, {"id": "c8", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "main", "a": [6.2, 11.05], "b": [6.2, 10.408]}, {"id": "c9", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "main", "a": [6.8, 11.05], "b": [6.8, 10.408]}, {"id": "m10", "t": "motor", "dev": "-M1", "pts": [[2.4, 7.458], [3.0, 7.458], [3.6, 7.458]]}], "links": [[[2.4, 13.858], [2.4, 12.6]], [[3.0, 13.858], [3.0, 12.6]], [[3.6, 13.858], [3.6, 12.6]], [[2.4, 8.958], [2.4, 8.058]], [[3.0, 8.958], [3.0, 8.058]], [[3.6, 8.958], [3.6, 8.058]], [[2.4, 7.558], [2.4, 7.458]], [[3.0, 7.558], [3.0, 7.458]], [[3.6, 7.558], [3.6, 7.458]]], "src": [["L1", 2.4, 14.92], ["L2", 3.0, 14.92], ["L3", 3.6, 14.92]]}}, {"key": "M", "net": {"wires": [{"a": [2.3, 14.9], "b": [2.3, 14.7], "c": "f"}, {"a": [2.3, 14.7], "b": [2.3, 14.2], "c": "f"}, {"a": [2.3, 12.3], "b": [2.3, 12.15], "c": "f"}, {"a": [2.3, 12.15], "b": [2.3, 11.65], "c": "f"}, {"a": [2.3, 11.008], "b": [2.3, 10.708], "c": "f"}, {"a": [2.3, 10.708], "b": [2.3, 10.208], "c": "f"}, {"a": [2.3, 9.567], "b": [2.3, 9.267], "c": "f"}, {"a": [2.3, 9.267], "b": [3.8, 9.267], "c": "f"}, {"a": [2.3, 9.267], "b": [2.3, 8.767], "c": "f"}, {"a": [2.3, 8.125], "b": [2.3, 7.717], "c": "f"}, {"a": [3.8, 9.267], "b": [3.8, 8.767], "c": "f"}, {"a": [3.8, 8.125], "b": [3.8, 7.717], "c": "f"}, {"a": [2.3, 7.717], "b": [3.8, 7.717], "c": "f"}, {"a": [2.3, 10.708], "b": [6.0, 10.708], "c": "f"}, {"a": [6.0, 10.708], "b": [6.0, 10.208], "c": "f"}, {"a": [6.0, 9.567], "b": [6.0, 9.267], "c": "f"}, {"a": [6.0, 9.267], "b": [7.6, 9.267], "c": "f"}, {"a": [7.6, 9.267], "b": [9.2, 9.267], "c": "f"}, {"a": [9.2, 9.267], "b": [13.8, 9.267], "c": "f"}, {"a": [13.8, 9.267], "b": [15.9, 9.267], "c": "f"}, {"a": [6.0, 9.267], "b": [7.6, 9.267], "c": "f"}, {"a": [7.6, 9.267], "b": [9.2, 9.267], "c": "f"}, {"a": [6.0, 9.267], "b": [6.0, 8.767], "c": "f"}, {"a": [6.0, 8.125], "b": [6.0, 7.717], "c": "f"}, {"a": [7.6, 9.267], "b": [7.6, 8.767], "c": "f"}, {"a": [7.6, 8.125], "b": [7.6, 7.717], "c": "f"}, {"a": [9.2, 9.267], "b": [9.2, 8.767], "c": "f"}, {"a": [9.2, 8.125], "b": [9.2, 7.717], "c": "f"}, {"a": [6.0, 7.717], "b": [7.6, 7.717], "c": "f"}, {"a": [7.6, 7.717], "b": [9.2, 7.717], "c": "f"}, {"a": [6.0, 7.717], "b": [6.0, 7.217], "c": "f"}, {"a": [6.0, 6.575], "b": [6.0, 6.075], "c": "f"}, {"a": [9.2, 7.717], "b": [9.2, 7.217], "c": "f"}, {"a": [9.2, 6.575], "b": [9.2, 6.275], "c": "f"}, {"a": [9.2, 6.275], "b": [11.4, 6.275], "c": "f"}, {"a": [9.2, 6.275], "b": [9.2, 5.775], "c": "f"}, {"a": [13.8, 9.267], "b": [13.8, 8.767], "c": "f"}, {"a": [15.9, 9.267], "b": [15.9, 8.767], "c": "f"}, {"a": [15.9, 8.125], "b": [15.9, 7.625], "c": "f"}, {"a": [2.3, 12.15], "b": [18.0, 12.15], "c": "f"}, {"a": [18.0, 12.15], "b": [20.0, 12.15], "c": "f"}, {"a": [20.0, 12.15], "b": [22.0, 12.15], "c": "f"}, {"a": [18.0, 12.15], "b": [18.0, 11.65], "c": "f"}, {"a": [20.0, 12.15], "b": [20.0, 11.65], "c": "f"}, {"a": [22.0, 12.15], "b": [22.0, 11.65], "c": "f"}, {"a": [2.3, 7.717], "b": [2.3, 4.334], "c": "f"}, {"a": [2.3, 3.634], "b": [2.3, 3.084], "c": "n"}, {"a": [6.0, 5.434], "b": [6.0, 4.334], "c": "f"}, {"a": [6.0, 3.634], "b": [6.0, 3.084], "c": "n"}, {"a": [9.2, 5.134], "b": [9.2, 4.334], "c": "f"}, {"a": [9.2, 3.634], "b": [9.2, 3.084], "c": "n"}, {"a": [11.4, 6.275], "b": [11.4, 4.334], "c": "f"}, {"a": [11.4, 3.634], "b": [11.4, 3.084], "c": "n"}, {"a": [13.8, 8.125], "b": [13.8, 4.334], "c": "f"}, {"a": [13.8, 3.634], "b": [13.8, 3.084], "c": "n"}, {"a": [15.9, 6.984], "b": [15.9, 4.334], "c": "f"}, {"a": [15.9, 3.634], "b": [15.9, 3.084], "c": "n"}, {"a": [18.0, 11.008], "b": [18.0, 4.334], "c": "f"}, {"a": [18.0, 3.734], "b": [18.0, 3.084], "c": "n"}, {"a": [20.0, 11.008], "b": [20.0, 4.334], "c": "f"}, {"a": [20.0, 3.734], "b": [20.0, 3.084], "c": "n"}, {"a": [22.0, 11.008], "b": [22.0, 4.334], "c": "f"}, {"a": [22.0, 3.734], "b": [22.0, 3.084], "c": "n"}, {"a": [0.9, 3.084], "b": [2.3, 3.084], "c": "n"}, {"a": [2.3, 3.084], "b": [6.0, 3.084], "c": "n"}, {"a": [6.0, 3.084], "b": [9.2, 3.084], "c": "n"}, {"a": [9.2, 3.084], "b": [11.4, 3.084], "c": "n"}, {"a": [11.4, 3.084], "b": [13.8, 3.084], "c": "n"}, {"a": [13.8, 3.084], "b": [15.9, 3.084], "c": "n"}, {"a": [15.9, 3.084], "b": [18.0, 3.084], "c": "n"}, {"a": [18.0, 3.084], "b": [20.0, 3.084], "c": "n"}, {"a": [20.0, 3.084], "b": [22.0, 3.084], "c": "n"}], "els": [{"id": "c1", "t": "contact", "dev": "-Q2", "kind": "na", "timed": null, "typ": "aux", "a": [2.3, 14.2], "b": [2.3, 13.558]}, {"id": "c2", "t": "contact", "dev": "-F1", "kind": "nc", "timed": null, "typ": "aux", "a": [2.3, 11.65], "b": [2.3, 11.008]}, {"id": "c3", "t": "contact", "dev": "-S1", "kind": "nc", "timed": null, "typ": "aux", "a": [2.3, 10.208], "b": [2.3, 9.567]}, {"id": "c4", "t": "contact", "dev": "-S2", "kind": "na", "timed": null, "typ": "aux", "a": [2.3, 8.767], "b": [2.3, 8.125]}, {"id": "c5", "t": "contact", "dev": "-KA1", "kind": "na", "timed": null, "typ": "aux", "a": [3.8, 8.767], "b": [3.8, 8.125]}, {"id": "c6", "t": "contact", "dev": "-KA1", "kind": "na", "timed": null, "typ": "aux", "a": [6.0, 10.208], "b": [6.0, 9.567]}, {"id": "c7", "t": "contact", "dev": "-KT3", "kind": "na", "timed": "on", "typ": "aux", "a": [6.0, 8.767], "b": [6.0, 8.125]}, {"id": "c8", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "aux", "a": [7.6, 8.767], "b": [7.6, 8.125]}, {"id": "c9", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "aux", "a": [9.2, 8.767], "b": [9.2, 8.125]}, {"id": "c10", "t": "contact", "dev": "-KT1", "kind": "nc", "timed": "on", "typ": "aux", "a": [6.0, 7.217], "b": [6.0, 6.575]}, {"id": "c11", "t": "contact", "dev": "-KM2", "kind": "nc", "timed": null, "typ": "aux", "a": [6.0, 6.075], "b": [6.0, 5.434]}, {"id": "c12", "t": "contact", "dev": "-KT1", "kind": "na", "timed": "on", "typ": "aux", "a": [9.2, 7.217], "b": [9.2, 6.575]}, {"id": "c13", "t": "contact", "dev": "-KM1", "kind": "nc", "timed": null, "typ": "aux", "a": [9.2, 5.775], "b": [9.2, 5.134]}, {"id": "c14", "t": "contact", "dev": "-KT2", "kind": "nc", "timed": "on", "typ": "aux", "a": [13.8, 8.767], "b": [13.8, 8.125]}, {"id": "c15", "t": "contact", "dev": "-KM1", "kind": "nc", "timed": null, "typ": "aux", "a": [15.9, 8.767], "b": [15.9, 8.125]}, {"id": "c16", "t": "contact", "dev": "-KM2", "kind": "nc", "timed": null, "typ": "aux", "a": [15.9, 7.625], "b": [15.9, 6.984]}, {"id": "c17", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "aux", "a": [18.0, 11.65], "b": [18.0, 11.008]}, {"id": "c18", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "aux", "a": [20.0, 11.65], "b": [20.0, 11.008]}, {"id": "c19", "t": "contact", "dev": "-F1", "kind": "na", "timed": null, "typ": "aux", "a": [22.0, 11.65], "b": [22.0, 11.008]}, {"id": "k20", "t": "coil", "dev": "-KA1", "a": [2.3, 4.334], "b": [2.3, 3.634]}, {"id": "k21", "t": "coil", "dev": "-KM1", "a": [6.0, 4.334], "b": [6.0, 3.634]}, {"id": "k22", "t": "coil", "dev": "-KM2", "a": [9.2, 4.334], "b": [9.2, 3.634]}, {"id": "k23", "t": "coil", "dev": "-KT2", "timer": "on", "a": [11.4, 4.334], "b": [11.4, 3.634]}, {"id": "k24", "t": "coil", "dev": "-KT1", "timer": "on", "a": [13.8, 4.334], "b": [13.8, 3.634]}, {"id": "k25", "t": "coil", "dev": "-KT3", "timer": "on", "a": [15.9, 4.334], "b": [15.9, 3.634]}, {"id": "h26", "t": "pilot", "dev": "-H1", "color": "#9BE09B", "a": [18.0, 4.334], "b": [18.0, 3.734]}, {"id": "h27", "t": "pilot", "dev": "-H2", "color": "#9BC8F0", "a": [20.0, 4.334], "b": [20.0, 3.734]}, {"id": "h28", "t": "pilot", "dev": "-H3", "color": "#F4A04A", "a": [22.0, 4.334], "b": [22.0, 3.734]}], "links": [[[2.3, 13.558], [2.3, 12.3]]], "src": [["L", 2.3, 15.15], ["N", 0.75, 3.084]]}}]; var CFG = {"timers": {"-KT1": 10, "-KT2": 7, "-KT3": 3}}; var DRAWCOL = {"-H1": "#9BE09B", "-H2": "#9BC8F0", "-H3": "#F4A04A"};</script>
+<script>var DRAW = [{"key": "F", "net": {"wires": [{"a": [2.4, 14.8], "b": [2.4, 14.5], "c": "f"}, {"a": [3.0, 14.8], "b": [3.0, 14.5], "c": "f"}, {"a": [3.6, 14.8], "b": [3.6, 14.5], "c": "f"}, {"a": [2.4, 12.6], "b": [2.4, 12.15], "c": "f"}, {"a": [2.4, 12.15], "b": [2.4, 11.05], "c": "f"}, {"a": [2.4, 12.15], "b": [5.6, 12.15], "c": "f"}, {"a": [5.6, 12.15], "b": [5.6, 11.05], "c": "f"}, {"a": [3.0, 12.6], "b": [3.0, 11.85], "c": "f"}, {"a": [3.0, 11.85], "b": [3.0, 11.05], "c": "f"}, {"a": [3.0, 11.85], "b": [6.2, 11.85], "c": "f"}, {"a": [6.2, 11.85], "b": [6.2, 11.05], "c": "f"}, {"a": [3.6, 12.6], "b": [3.6, 11.55], "c": "f"}, {"a": [3.6, 11.55], "b": [3.6, 11.05], "c": "f"}, {"a": [3.6, 11.55], "b": [6.8, 11.55], "c": "f"}, {"a": [6.8, 11.55], "b": [6.8, 11.05], "c": "f"}, {"a": [2.4, 10.408], "b": [2.4, 9.408], "c": "f"}, {"a": [2.4, 9.408], "b": [2.4, 8.958], "c": "f"}, {"a": [3.0, 10.408], "b": [3.0, 9.708], "c": "f"}, {"a": [3.0, 9.708], "b": [3.0, 8.958], "c": "f"}, {"a": [3.6, 10.408], "b": [3.6, 10.008], "c": "f"}, {"a": [3.6, 10.008], "b": [3.6, 8.958], "c": "f"}, {"a": [5.6, 10.408], "b": [5.6, 10.008], "c": "f"}, {"a": [5.6, 10.008], "b": [3.6, 10.008], "c": "f"}, {"a": [6.2, 10.408], "b": [6.2, 9.708], "c": "f"}, {"a": [6.2, 9.708], "b": [3.0, 9.708], "c": "f"}, {"a": [6.8, 10.408], "b": [6.8, 9.408], "c": "f"}, {"a": [6.8, 9.408], "b": [2.4, 9.408], "c": "f"}, {"a": [2.4, 8.058], "b": [2.4, 7.558], "c": "f"}, {"a": [3.0, 8.058], "b": [3.0, 7.558], "c": "f"}, {"a": [3.6, 8.058], "b": [3.6, 7.558], "c": "f"}, {"a": [2.4, 7.458], "b": [2.4, 7.008], "c": "f"}, {"a": [2.4, 7.008], "b": [2.585, 6.299], "c": "f"}, {"a": [3.0, 7.458], "b": [3.0, 6.458], "c": "f"}, {"a": [3.6, 7.458], "b": [3.6, 7.008], "c": "f"}, {"a": [3.6, 7.008], "b": [3.415, 6.299], "c": "f"}], "els": [{"id": "c1", "t": "contact", "dev": "-Q1", "kind": "na", "timed": null, "typ": "aux", "a": [2.4, 14.5], "b": [2.4, 13.858]}, {"id": "c2", "t": "contact", "dev": "-Q1", "kind": "na", "timed": null, "typ": "aux", "a": [3.0, 14.5], "b": [3.0, 13.858]}, {"id": "c3", "t": "contact", "dev": "-Q1", "kind": "na", "timed": null, "typ": "aux", "a": [3.6, 14.5], "b": [3.6, 13.858]}, {"id": "c4", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "main", "a": [2.4, 11.05], "b": [2.4, 10.408]}, {"id": "c5", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "main", "a": [3.0, 11.05], "b": [3.0, 10.408]}, {"id": "c6", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "main", "a": [3.6, 11.05], "b": [3.6, 10.408]}, {"id": "c7", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "main", "a": [5.6, 11.05], "b": [5.6, 10.408]}, {"id": "c8", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "main", "a": [6.2, 11.05], "b": [6.2, 10.408]}, {"id": "c9", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "main", "a": [6.8, 11.05], "b": [6.8, 10.408]}, {"id": "m10", "t": "motor", "dev": "-M1", "pts": [[2.4, 7.458], [3.0, 7.458], [3.6, 7.458]]}], "links": [[[2.4, 13.858], [2.4, 12.6]], [[3.0, 13.858], [3.0, 12.6]], [[3.6, 13.858], [3.6, 12.6]], [[2.4, 8.958], [2.4, 8.058]], [[3.0, 8.958], [3.0, 8.058]], [[3.6, 8.958], [3.6, 8.058]], [[2.4, 7.558], [2.4, 7.458]], [[3.0, 7.558], [3.0, 7.458]], [[3.6, 7.558], [3.6, 7.458]]], "src": [["L1", 2.4, 14.92], ["L2", 3.0, 14.92], ["L3", 3.6, 14.92]]}}, {"key": "M", "net": {"wires": [{"a": [2.3, 17.1], "b": [2.3, 16.9], "c": "f"}, {"a": [2.3, 16.9], "b": [2.3, 16.4], "c": "f"}, {"a": [2.3, 14.5], "b": [2.3, 14.35], "c": "f"}, {"a": [2.3, 14.35], "b": [2.3, 13.85], "c": "f"}, {"a": [2.3, 13.208], "b": [2.3, 12.908], "c": "f"}, {"a": [2.3, 12.908], "b": [2.3, 12.408], "c": "f"}, {"a": [2.3, 11.767], "b": [2.3, 11.267], "c": "f"}, {"a": [2.3, 10.625], "b": [2.3, 10.325], "c": "f"}, {"a": [2.3, 10.325], "b": [3.8, 10.325], "c": "f"}, {"a": [2.3, 10.325], "b": [2.3, 9.825], "c": "f"}, {"a": [2.3, 9.184], "b": [2.3, 8.775], "c": "f"}, {"a": [3.8, 10.325], "b": [3.8, 9.825], "c": "f"}, {"a": [3.8, 9.184], "b": [3.8, 8.775], "c": "f"}, {"a": [2.3, 8.775], "b": [3.8, 8.775], "c": "f"}, {"a": [2.3, 12.908], "b": [6.0, 12.908], "c": "f"}, {"a": [6.0, 12.908], "b": [6.0, 12.408], "c": "f"}, {"a": [6.0, 11.767], "b": [6.0, 11.467], "c": "f"}, {"a": [6.0, 11.467], "b": [7.6, 11.467], "c": "f"}, {"a": [7.6, 11.467], "b": [9.2, 11.467], "c": "f"}, {"a": [9.2, 11.467], "b": [14.2, 11.467], "c": "f"}, {"a": [14.2, 11.467], "b": [16.3, 11.467], "c": "f"}, {"a": [6.0, 11.467], "b": [7.6, 11.467], "c": "f"}, {"a": [7.6, 11.467], "b": [9.2, 11.467], "c": "f"}, {"a": [6.0, 11.467], "b": [6.0, 10.967], "c": "f"}, {"a": [6.0, 10.325], "b": [6.0, 9.917], "c": "f"}, {"a": [7.6, 11.467], "b": [7.6, 10.967], "c": "f"}, {"a": [7.6, 10.325], "b": [7.6, 9.917], "c": "f"}, {"a": [9.2, 11.467], "b": [9.2, 10.967], "c": "f"}, {"a": [9.2, 10.325], "b": [9.2, 9.917], "c": "f"}, {"a": [6.0, 9.917], "b": [7.6, 9.917], "c": "f"}, {"a": [7.6, 9.917], "b": [9.2, 9.917], "c": "f"}, {"a": [6.0, 9.917], "b": [6.0, 9.417], "c": "f"}, {"a": [6.0, 8.775], "b": [6.0, 8.275], "c": "f"}, {"a": [6.0, 7.634], "b": [6.0, 7.134], "c": "f"}, {"a": [9.2, 9.917], "b": [9.6, 9.917], "c": "f"}, {"a": [9.6, 9.917], "b": [9.6, 9.417], "c": "f"}, {"a": [9.6, 8.775], "b": [9.6, 8.475], "c": "f"}, {"a": [9.6, 8.475], "b": [11.8, 8.475], "c": "f"}, {"a": [9.6, 8.475], "b": [9.6, 7.975], "c": "f"}, {"a": [9.6, 7.334], "b": [9.6, 6.834], "c": "f"}, {"a": [14.2, 11.467], "b": [14.2, 10.967], "c": "f"}, {"a": [16.3, 11.467], "b": [16.3, 10.967], "c": "f"}, {"a": [16.3, 10.325], "b": [16.3, 9.825], "c": "f"}, {"a": [2.3, 14.35], "b": [18.4, 14.35], "c": "f"}, {"a": [18.4, 14.35], "b": [20.3, 14.35], "c": "f"}, {"a": [20.3, 14.35], "b": [22.2, 14.35], "c": "f"}, {"a": [22.2, 14.35], "b": [24.4, 14.35], "c": "f"}, {"a": [18.4, 14.35], "b": [18.4, 13.85], "c": "f"}, {"a": [20.3, 14.35], "b": [20.3, 13.85], "c": "f"}, {"a": [22.2, 14.35], "b": [22.2, 13.85], "c": "f"}, {"a": [24.4, 14.35], "b": [24.4, 13.85], "c": "f"}, {"a": [2.3, 8.775], "b": [2.3, 5.392], "c": "f"}, {"a": [2.3, 4.692], "b": [2.3, 4.142], "c": "n"}, {"a": [6.0, 6.492], "b": [6.0, 5.392], "c": "f"}, {"a": [6.0, 4.692], "b": [6.0, 4.142], "c": "n"}, {"a": [9.6, 6.192], "b": [9.6, 5.392], "c": "f"}, {"a": [9.6, 4.692], "b": [9.6, 4.142], "c": "n"}, {"a": [11.8, 8.475], "b": [11.8, 5.392], "c": "f"}, {"a": [11.8, 4.692], "b": [11.8, 4.142], "c": "n"}, {"a": [14.2, 10.325], "b": [14.2, 5.392], "c": "f"}, {"a": [14.2, 4.692], "b": [14.2, 4.142], "c": "n"}, {"a": [16.3, 9.184], "b": [16.3, 5.392], "c": "f"}, {"a": [16.3, 4.692], "b": [16.3, 4.142], "c": "n"}, {"a": [18.4, 13.208], "b": [18.4, 5.392], "c": "f"}, {"a": [18.4, 4.792], "b": [18.4, 4.142], "c": "n"}, {"a": [20.3, 13.208], "b": [20.3, 5.392], "c": "f"}, {"a": [20.3, 4.792], "b": [20.3, 4.142], "c": "n"}, {"a": [22.2, 13.208], "b": [22.2, 5.392], "c": "f"}, {"a": [22.2, 4.792], "b": [22.2, 4.142], "c": "n"}, {"a": [24.4, 13.85], "b": [24.4, 5.392], "c": "f"}, {"a": [24.4, 4.692], "b": [24.4, 4.142], "c": "n"}, {"a": [0.9, 4.142], "b": [2.3, 4.142], "c": "n"}, {"a": [2.3, 4.142], "b": [6.0, 4.142], "c": "n"}, {"a": [6.0, 4.142], "b": [9.6, 4.142], "c": "n"}, {"a": [9.6, 4.142], "b": [11.8, 4.142], "c": "n"}, {"a": [11.8, 4.142], "b": [14.2, 4.142], "c": "n"}, {"a": [14.2, 4.142], "b": [16.3, 4.142], "c": "n"}, {"a": [16.3, 4.142], "b": [18.4, 4.142], "c": "n"}, {"a": [18.4, 4.142], "b": [20.3, 4.142], "c": "n"}, {"a": [20.3, 4.142], "b": [22.2, 4.142], "c": "n"}, {"a": [22.2, 4.142], "b": [24.4, 4.142], "c": "n"}], "els": [{"id": "c1", "t": "contact", "dev": "-Q2", "kind": "na", "timed": null, "typ": "aux", "a": [2.3, 16.4], "b": [2.3, 15.758]}, {"id": "c2", "t": "contact", "dev": "-F1", "kind": "nc", "timed": null, "typ": "aux", "a": [2.3, 13.85], "b": [2.3, 13.208]}, {"id": "c3", "t": "contact", "dev": "-S1", "kind": "nc", "timed": null, "typ": "aux", "a": [2.3, 12.408], "b": [2.3, 11.767]}, {"id": "c4", "t": "contact", "dev": "-S3", "kind": "nc", "timed": null, "typ": "aux", "a": [2.3, 11.267], "b": [2.3, 10.625]}, {"id": "c5", "t": "contact", "dev": "-S2", "kind": "na", "timed": null, "typ": "aux", "a": [2.3, 9.825], "b": [2.3, 9.184]}, {"id": "c6", "t": "contact", "dev": "-KA1", "kind": "na", "timed": null, "typ": "aux", "a": [3.8, 9.825], "b": [3.8, 9.184]}, {"id": "c7", "t": "contact", "dev": "-KA1", "kind": "na", "timed": null, "typ": "aux", "a": [6.0, 12.408], "b": [6.0, 11.767]}, {"id": "c8", "t": "contact", "dev": "-KT3", "kind": "na", "timed": "on", "typ": "aux", "a": [6.0, 10.967], "b": [6.0, 10.325]}, {"id": "c9", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "aux", "a": [7.6, 10.967], "b": [7.6, 10.325]}, {"id": "c10", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "aux", "a": [9.2, 10.967], "b": [9.2, 10.325]}, {"id": "c11", "t": "contact", "dev": "-KT1", "kind": "nc", "timed": "on", "typ": "aux", "a": [6.0, 9.417], "b": [6.0, 8.775]}, {"id": "c12", "t": "contact", "dev": "-FC2", "kind": "nc", "timed": null, "typ": "aux", "a": [6.0, 8.275], "b": [6.0, 7.634]}, {"id": "c13", "t": "contact", "dev": "-KM2", "kind": "nc", "timed": null, "typ": "aux", "a": [6.0, 7.134], "b": [6.0, 6.492]}, {"id": "c14", "t": "contact", "dev": "-KT1", "kind": "na", "timed": "on", "typ": "aux", "a": [9.6, 9.417], "b": [9.6, 8.775]}, {"id": "c15", "t": "contact", "dev": "-FC1", "kind": "nc", "timed": null, "typ": "aux", "a": [9.6, 7.975], "b": [9.6, 7.334]}, {"id": "c16", "t": "contact", "dev": "-KM1", "kind": "nc", "timed": null, "typ": "aux", "a": [9.6, 6.834], "b": [9.6, 6.192]}, {"id": "c17", "t": "contact", "dev": "-KT2", "kind": "nc", "timed": "on", "typ": "aux", "a": [14.2, 10.967], "b": [14.2, 10.325]}, {"id": "c18", "t": "contact", "dev": "-KM1", "kind": "nc", "timed": null, "typ": "aux", "a": [16.3, 10.967], "b": [16.3, 10.325]}, {"id": "c19", "t": "contact", "dev": "-KM2", "kind": "nc", "timed": null, "typ": "aux", "a": [16.3, 9.825], "b": [16.3, 9.184]}, {"id": "c20", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "aux", "a": [18.4, 13.85], "b": [18.4, 13.208]}, {"id": "c21", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "aux", "a": [20.3, 13.85], "b": [20.3, 13.208]}, {"id": "c22", "t": "contact", "dev": "-F1", "kind": "na", "timed": null, "typ": "aux", "a": [22.2, 13.85], "b": [22.2, 13.208]}, {"id": "k23", "t": "coil", "dev": "-KA1", "a": [2.3, 5.392], "b": [2.3, 4.692]}, {"id": "k24", "t": "coil", "dev": "-KM1", "a": [6.0, 5.392], "b": [6.0, 4.692]}, {"id": "k25", "t": "coil", "dev": "-KM2", "a": [9.6, 5.392], "b": [9.6, 4.692]}, {"id": "k26", "t": "coil", "dev": "-KT2", "timer": "on", "a": [11.8, 5.392], "b": [11.8, 4.692]}, {"id": "k27", "t": "coil", "dev": "-KT1", "timer": "on", "a": [14.2, 5.392], "b": [14.2, 4.692]}, {"id": "k28", "t": "coil", "dev": "-KT3", "timer": "on", "a": [16.3, 5.392], "b": [16.3, 4.692]}, {"id": "h29", "t": "pilot", "dev": "-H1", "color": "#9BE09B", "a": [18.4, 5.392], "b": [18.4, 4.792]}, {"id": "h30", "t": "pilot", "dev": "-H2", "color": "#9BC8F0", "a": [20.3, 5.392], "b": [20.3, 4.792]}, {"id": "h31", "t": "pilot", "dev": "-H3", "color": "#F4A04A", "a": [22.2, 5.392], "b": [22.2, 4.792]}, {"id": "k32", "t": "det", "dev": "-S3", "a": [24.4, 5.392], "b": [24.4, 4.692]}], "links": [[[2.3, 15.758], [2.3, 14.5]]], "src": [["L", 2.3, 17.35], ["N", 0.75, 4.142]]}}]; var CFG = {"timers": {"-KT1": 10, "-KT2": 7, "-KT3": 3}}; var DRAWCOL = {"-H1": "#9BE09B", "-H2": "#9BC8F0", "-H3": "#F4A04A"};</script>
 <script>(function(){
 'use strict';
 var $ = function(id){ return document.getElementById(id); };

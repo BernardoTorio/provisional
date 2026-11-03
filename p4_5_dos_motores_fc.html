@@ -88,6 +88,12 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 .ru{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:6px 0}
 .ru .rn{font-weight:700;white-space:nowrap}.ru .rn small{font-weight:400;color:var(--muted)}
 .ru input{width:100%;accent-color:#1F4E79}.ru b{min-width:3.2em;text-align:right}
+
+.card.ojo{grid-column:1/-1;border:2px solid #E0A100;background:#FFF6D6}
+.card.ojo h2{color:#9A6B00}
+[data-theme="dark"] .card.ojo{background:#3A3115;border-color:#C99A1E}
+[data-theme="dark"] .card.ojo h2{color:#F2C94C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card.ojo{background:#3A3115;border-color:#C99A1E}:root:not([data-theme="light"]) .card.ojo h2{color:#F2C94C}}
 </style>
 </head>
 <body>
@@ -681,8 +687,8 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 <g class="act">
 <polyline points="180.0,370.3 180.0,344.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<text x="183.6" y="341.9" font-size="9.9" text-anchor="start" fill="#111111">3</text>
-<text x="183.6" y="379.5" font-size="9.9" text-anchor="start" fill="#111111">4</text>
+<text x="183.6" y="341.9" font-size="9.9" text-anchor="start" fill="#111111">13</text>
+<text x="183.6" y="379.5" font-size="9.9" text-anchor="start" fill="#111111">14</text>
 </g>
 <circle cx="140.0" cy="357.5" r="4.4" fill="none" stroke="#111111" stroke-width="1.98"/>
 <polyline points="144.4,357.5 152.0,357.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
@@ -905,6 +911,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
     </div>
   </div>
   <div class="below">
+    <div class="card ojo"><h2>¡OJO! Sensores nuevos</h2><ul><li>Es un <b>final de carrera</b> (-FC): un interruptor que se acciona <b>mecánicamente</b>, cuando algo que se mueve (un carro, una puerta…) llega a su sitio y le empuja la palanca o la ruedecita.</li><li>Tiene dos contactos, como un pulsador: <b>NC 21-22</b> (se abre al pisarlo) y <b>NA 13-14</b> (se cierra al pisarlo). Se dibuja con un <b>circulito</b> (la ruedecita) a la izquierda del contacto.</li><li>No necesita alimentación: son solo contactos. Se queda accionado <b>mientras</b> está pisado.</li><li>En la animación, tócalo en el esquema (o en su botón) para pisarlo y vuelve a tocarlo para soltarlo.</li></ul></div>
     <div class="card explain"><h2>Qué está pasando</h2><div id="explain" aria-live="polite"></div></div>
     <div class="card"><h2>Cómo funciona</h2><ul><li>Marchas en paralelo: -S2, -FC1 y el 13-14 de -KM1. -KT1 (20 s) en paralelo con la bobina de -KM1; su 67-68 da paso a -KM2.</li><li>-KT2 (30 s) en paralelo con la bobina de -KM2: empieza a contar cuando arranca -M2.</li><li>El 55-56 de -KT2, en serie con -S1, para todo y deja los dos temporizadores a cero.</li><li>-H3 (todo parado): los 61-62 de -KM1 y -KM2 en serie.</li></ul></div>
     <div class="card"><h2>Pruébalo</h2><ol><li>Pulsa -S2 (o pisa -FC1 y suéltalo).</li><li>Pon «Tiempo ×5» y sigue las dos cuentas atrás.</li><li>Deja -FC1 pisado hasta el final: ¿qué pasa cuando se para todo?</li></ol></div>

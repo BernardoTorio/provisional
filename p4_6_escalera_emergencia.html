@@ -88,6 +88,12 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 .ru{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:6px 0}
 .ru .rn{font-weight:700;white-space:nowrap}.ru .rn small{font-weight:400;color:var(--muted)}
 .ru input{width:100%;accent-color:#1F4E79}.ru b{min-width:3.2em;text-align:right}
+
+.card.ojo{grid-column:1/-1;border:2px solid #E0A100;background:#FFF6D6}
+.card.ojo h2{color:#9A6B00}
+[data-theme="dark"] .card.ojo{background:#3A3115;border-color:#C99A1E}
+[data-theme="dark"] .card.ojo h2{color:#F2C94C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card.ojo{background:#3A3115;border-color:#C99A1E}:root:not([data-theme="light"]) .card.ojo h2{color:#F2C94C}}
 </style>
 </head>
 <body>
@@ -750,6 +756,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
     </div>
   </div>
   <div class="below">
+    
     <div class="card explain"><h2>Qué está pasando</h2><div id="explain" aria-live="polite"></div></div>
     <div class="card"><h2>Cómo funciona</h2><ul><li>Rama de la escalera: -S1 → 11-12 de -KA1 → 55-56 de -KT1 → (-S2 ‖ detector ‖ 13-14 de -KM1) → -KM1, con -KT1 (10 s) en paralelo.</li><li>Emergencia: rearme -S6 (NC) → (-S4 ‖ -S5 ‖ 21-24 de -KA1) → -KA1. El 31-34 de -KA1 enciende -H2.</li><li>El detector se alimenta entre L y N y su salida COM-NA hace de marcha.</li></ul></div>
     <div class="card"><h2>Pruébalo</h2><ol><li>Activa el detector -S3 y desactívalo.</li><li>Déjalo activado más de 10 s: ¿vuelve a arrancar?</li><li>Pulsa -S4: emergencia. Intenta arrancar.</li><li>Pulsa el rearme -S6.</li></ol></div>

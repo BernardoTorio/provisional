@@ -88,6 +88,12 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
 .ru{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:6px 0}
 .ru .rn{font-weight:700;white-space:nowrap}.ru .rn small{font-weight:400;color:var(--muted)}
 .ru input{width:100%;accent-color:#1F4E79}.ru b{min-width:3.2em;text-align:right}
+
+.card.ojo{grid-column:1/-1;border:2px solid #E0A100;background:#FFF6D6}
+.card.ojo h2{color:#9A6B00}
+[data-theme="dark"] .card.ojo{background:#3A3115;border-color:#C99A1E}
+[data-theme="dark"] .card.ojo h2{color:#F2C94C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card.ojo{background:#3A3115;border-color:#C99A1E}:root:not([data-theme="light"]) .card.ojo h2{color:#F2C94C}}
 </style>
 </head>
 <body>
@@ -784,6 +790,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
     </div>
   </div>
   <div class="below">
+    
     <div class="card explain"><h2>Qué está pasando</h2><div id="explain" aria-live="polite"></div></div>
     <div class="card"><h2>Cómo funciona</h2><ul><li>-S2 activa -KM1 y, en paralelo, -KT1 (a la conexión, 5 s).</li><li>Pasados 5 s se cierra el 67-68 de -KT1 y entra -KM2.</li><li>Mientras -KM1 sigue, -KT1 sigue con tensión: -KM2 no necesita realimentación.</li><li>Los dos 95-96 en serie antes del paro; -H3 con los dos 97-98 en paralelo.</li></ul></div>
     <div class="card"><h2>Pruébalo</h2><ol><li>Pulsa -S2 y mira la cuenta atrás.</li><li>Pulsa -S1 antes de 5 s: -M2 no llega a arrancar.</li><li>Dispara -F2 con los dos en marcha.</li></ol></div>

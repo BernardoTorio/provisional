@@ -101,7 +101,7 @@ button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;co
   <header class="topbar"><div class="tb-left"><a class="tbback" href="index.html" title="Volver al índice (tecla Esc)">← Volver al índice</a><nav class="crumbs" aria-label="Dónde estás"><span class="in"><a href="index.html">Provisional</a><span class="sep">›</span><a href="index.html#p5">Práctica 5</a><span class="sep">›</span><b>5.1 Arranque escalonado de dos motores</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
   <nav class="pnav"><a href="p5_1_arranque_escalonado.html" class="sel">5.1</a> <a href="p5_2_inversion_giro.html">5.2</a> <a href="p5_3_inversion_pausa.html">5.3</a></nav>
   <h1>5.1 Arranque escalonado de dos motores</h1>
-  <p class="sub">-S2 arranca -M1; 5 s después arranca -M2 solo. -S1 para los dos. Cualquier térmico para todo. En la animación, los tiempos se regulan con las ruletas, de 1 a 10 s.</p>
+  <p class="sub">-S2 arranca -M1; 5 s después arranca -M2 solo. -S1 para los dos. Cualquier térmico para todo. En la animación, los tiempos se regulan con las ruletas, de 1 a 5 s.</p>
   <div class="grid">
     <div class="sheets"><div class="sheet fz"><svg viewBox="6 0 372 361" xmlns="http://www.w3.org/2000/svg" font-family="Atkinson Hyperlegible,Verdana,sans-serif"><defs><marker id="Farr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2E8B3E"/></marker></defs><g class="wires"><line id="Fw0" class="w wf" x1="104.0" y1="16.0" x2="104.0" y2="28.0"/>
 <line id="Ffw0" class="flow" x1="104.0" y1="16.0" x2="104.0" y2="28.0"/>
@@ -834,7 +834,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.hit'), function(h){ var
 Object.keys(DEV).forEach(function(n){
   var D = DEV[n];
   if (/^-Q/.test(n)) D.kind = 'q';
-  if (D.timer){ D.T = Math.max(1, Math.min(10, (CFG.timers && CFG.timers[n]) || 5)); }
+  if (D.timer){ D.T = Math.max(1, Math.min(5, (CFG.animT && CFG.animT[n]) || (CFG.timers && CFG.timers[n]) || 3)); }
 });
 
 var short = false, speed = 1, lastMsg = '', ev = '';
@@ -1045,13 +1045,13 @@ var mot = G.cons.filter(function(c){ return c.t === 'motor'; });
 names.forEach(function(n){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot c"></span>' + n + (DEV[n].timer ? ' <small>(' + DEV[n].T + ' s)</small>' : ''); LD.appendChild(s); LEDS[n] = s.firstChild; });
 pil.forEach(function(c){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot" style="--lc:' + (c.el ? (DRAWCOL[c.dev] || '#3DBB4E') : '#3DBB4E') + '"></span>' + c.dev; LD.appendChild(s); LEDS[c.dev] = s.firstChild; });
 mot.forEach(function(c){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot m"></span>' + c.dev; LD.appendChild(s); LEDS[c.dev] = s.firstChild; });
-// ruletas: un deslizador de 1 a 10 s por temporizador
+// ruletas: un deslizador de 1 a 5 s por temporizador
 var RU = $('ruletas');
 Object.keys(DEV).filter(function(n){ return DEV[n].timer; }).sort(function(a, b){ return a.localeCompare(b, 'es', { numeric: true }); }).forEach(function(n){
   var D = DEV[n];
-  D.T = Math.max(1, Math.min(10, Math.round(D.T)));
+  D.T = Math.max(1, Math.min(5, Math.round(D.T)));
   var row = document.createElement('label'); row.className = 'ru';
-  row.innerHTML = '<span class="rn">' + n + ' <small>' + (D.timer === 'on' ? 'conexión' : 'desconexión') + '</small></span><input type="range" min="1" max="10" step="1" value="' + D.T + '" aria-label="Tiempo de ' + n + '"><b>' + D.T + ' s</b>';
+  row.innerHTML = '<span class="rn">' + n + ' <small>' + (D.timer === 'on' ? 'conexión' : 'desconexión') + '</small></span><input type="range" min="1" max="5" step="1" value="' + D.T + '" aria-label="Tiempo de ' + n + '"><b>' + D.T + ' s</b>';
   var inp = row.querySelector('input'), out = row.querySelector('b');
   inp.addEventListener('input', function(){ D.T = +inp.value; out.textContent = D.T + ' s'; var lab = LEDS[n] && LEDS[n].parentNode.querySelector('small'); if (lab) lab.textContent = '(' + D.T + ' s)'; });
   RU.appendChild(row);

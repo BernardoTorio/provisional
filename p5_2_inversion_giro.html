@@ -724,7 +724,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.hit'), function(h){ var
 Object.keys(DEV).forEach(function(n){
   var D = DEV[n];
   if (/^-Q/.test(n)) D.kind = 'q';
-  if (D.timer){ D.T = Math.max(1, Math.min(10, (CFG.timers && CFG.timers[n]) || 5)); }
+  if (D.timer){ D.T = Math.max(1, Math.min(5, (CFG.animT && CFG.animT[n]) || (CFG.timers && CFG.timers[n]) || 3)); }
 });
 
 var short = false, speed = 1, lastMsg = '', ev = '';
@@ -935,13 +935,13 @@ var mot = G.cons.filter(function(c){ return c.t === 'motor'; });
 names.forEach(function(n){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot c"></span>' + n + (DEV[n].timer ? ' <small>(' + DEV[n].T + ' s)</small>' : ''); LD.appendChild(s); LEDS[n] = s.firstChild; });
 pil.forEach(function(c){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot" style="--lc:' + (c.el ? (DRAWCOL[c.dev] || '#3DBB4E') : '#3DBB4E') + '"></span>' + c.dev; LD.appendChild(s); LEDS[c.dev] = s.firstChild; });
 mot.forEach(function(c){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot m"></span>' + c.dev; LD.appendChild(s); LEDS[c.dev] = s.firstChild; });
-// ruletas: un deslizador de 1 a 10 s por temporizador
+// ruletas: un deslizador de 1 a 5 s por temporizador
 var RU = $('ruletas');
 Object.keys(DEV).filter(function(n){ return DEV[n].timer; }).sort(function(a, b){ return a.localeCompare(b, 'es', { numeric: true }); }).forEach(function(n){
   var D = DEV[n];
-  D.T = Math.max(1, Math.min(10, Math.round(D.T)));
+  D.T = Math.max(1, Math.min(5, Math.round(D.T)));
   var row = document.createElement('label'); row.className = 'ru';
-  row.innerHTML = '<span class="rn">' + n + ' <small>' + (D.timer === 'on' ? 'conexión' : 'desconexión') + '</small></span><input type="range" min="1" max="10" step="1" value="' + D.T + '" aria-label="Tiempo de ' + n + '"><b>' + D.T + ' s</b>';
+  row.innerHTML = '<span class="rn">' + n + ' <small>' + (D.timer === 'on' ? 'conexión' : 'desconexión') + '</small></span><input type="range" min="1" max="5" step="1" value="' + D.T + '" aria-label="Tiempo de ' + n + '"><b>' + D.T + ' s</b>';
   var inp = row.querySelector('input'), out = row.querySelector('b');
   inp.addEventListener('input', function(){ D.T = +inp.value; out.textContent = D.T + ' s'; var lab = LEDS[n] && LEDS[n].parentNode.querySelector('small'); if (lab) lab.textContent = '(' + D.T + ' s)'; });
   RU.appendChild(row);

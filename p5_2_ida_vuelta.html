@@ -143,7 +143,7 @@ button:disabled{opacity:.45;cursor:default}
 <body>
 <main>
   <header class="topbar"><div class="tb-left"><a class="tbback" href="index.html#p5" title="Volver al índice (tecla Esc)" aria-label="Volver al índice">←</a><nav class="crumbs" aria-label="Dónde estás"><span class="in"><a href="index.html">Provisional</a><span class="sep">›</span><a href="index.html#p5">Práctica 5</a><span class="sep">›</span><b>5.2 Ida y vuelta automática con finales de carrera</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
-  <nav class="pnav"><a href="p5_1_inversion_giro.html">5.1</a> <a href="p5_2_ida_vuelta.html" class="sel">5.2</a> <a href="p5_3_inversion_pausa.html">5.3</a></nav>
+  <nav class="pnav"><a href="p5_1a_inversion_giro.html">5.1a</a> <a href="p5_1b_cambio_directo.html">5.1b</a> <a href="p5_2_ida_vuelta.html" class="sel">5.2</a> <a href="p5_3_inversion_pausa.html">5.3</a></nav>
   <h1>5.2 Ida y vuelta automática con finales de carrera</h1>
   <p class="sub">El carro sale del origen (-FC1), va hasta -FC2, espera y vuelve solo. -S2 solo arranca si el carro está en el origen. Los tiempos se regulan con las ruletas: -KT1 a 5 s y -KT2 a 3 s, como en la práctica.</p>
   <div class="grid">
@@ -348,7 +348,7 @@ function render(){
       var br = $('br_' + v.key); if (br) br.classList.toggle('on', !!st.rm[v.rm]); }
   });
   P.buttons.forEach(function(b){ var el = $('b_' + b); if (el){ el.classList.toggle('on', st.btn[b]); el.classList.toggle('latched', !!latched[b]); el.setAttribute('aria-pressed', st.btn[b]); }
-    var g = $('g_' + b); if (g) g.classList.toggle('latched', !!latched[b]); });
+    var g = $('g_' + b); if (g) g.classList.toggle('latched', !!latched[b]); var g2 = $('g_' + b + '_2'); if (g2) g2.classList.toggle('latched', !!latched[b]); });
   (P.removables||[]).forEach(function(r){ var c = $('t_' + r.id); if (c) c.checked = !st.rm[r.id]; });
   P.qs.forEach(function(q){ var b = $('bq_' + q); if (b) b.textContent = (st.q[q] ? 'Abrir ' : 'Cerrar ') + '-' + q; });
   if (P.status) P.status(st, R, $);
@@ -374,7 +374,7 @@ function hold(el, b){
   el.addEventListener('keyup', function(e){ if ((e.key === ' ' || e.key === 'Enter') && !latched[b]) press(b, false); });
 }
 function click(el, fn){ if (!el) return; el.addEventListener('click', fn); el.addEventListener('keydown', function(e){ if (el.tagName !== 'BUTTON' && (e.key === ' ' || e.key === 'Enter')){ e.preventDefault(); fn(); } }); }
-P.buttons.forEach(function(b){ hold($('b_' + b), b); hold($('g_' + b), b); });
+P.buttons.forEach(function(b){ hold($('b_' + b), b); hold($('g_' + b), b); var e2 = $('g_' + b + '_2'); if (e2) hold(e2, b); });
 P.qs.forEach(function(q){ var f = function(){ st.q[q] = !st.q[q]; st.last = 'q'; settle(); }; click($('bq_' + q), f); click($('g_' + q), f); });
 (P.removables||[]).forEach(function(r){
   var f = function(){ st.rm[r.id] = !st.rm[r.id]; st.last = 'rm_' + r.id; settle(); };

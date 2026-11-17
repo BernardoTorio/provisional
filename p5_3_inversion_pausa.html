@@ -5,1290 +5,405 @@
 <script>(function(){try{var t=localStorage.getItem('tema');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Práctica 5 · 5.3 Cambio de giro automático por tiempo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<style>:root{--paper:#fff;--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--flow:#F2B400;--panel:#fff;--line:#cfd6de;--btn:#fff;box-sizing:border-box}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--panel:#1f252c;--line:#36404b;--btn:#262d35}}
-:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--panel:#1f252c;--line:#36404b;--btn:#262d35}
+<style>
+:root{
+  --paper:#ffffff; --bg:#EEF1F4; --ink:#1a1a1a; --muted:#56606b;
+  --fase:#D0191C; --neutro:#1F5FBF; --flow:#F2B400; --ok:#2E8B3E; --warn:#C0392B;
+  --panel:#ffffff; --line:#cfd6de; --btn:#ffffff;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#15191e; --ink:#eef1f4; --muted:#a9b3bd; --panel:#1f252c; --line:#36404b; --btn:#262d35; }
+}
+:root[data-theme="dark"]{ --bg:#15191e; --ink:#eef1f4; --muted:#a9b3bd; --panel:#1f252c; --line:#36404b; --btn:#262d35; }
 *,*::before,*::after{box-sizing:inherit}
-html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:17px;line-height:1.45}
-main{max-width:1500px;margin:0 auto;padding:16px 14px 30px}
-h1{font-size:clamp(1.35rem,2.6vw,1.9rem);margin:0 0 4px;line-height:1.15}
-h2{font-size:1rem;margin:0 0 8px;color:var(--muted)}
-.sub{color:var(--muted);margin:0 0 14px;max-width:90ch}
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:14px;align-items:start}
-@media (max-width:1000px){.grid{grid-template-columns:1fr}}
-.sheets{display:flex;gap:10px;align-items:flex-start;flex-wrap:nowrap}
-.sheet.fz{flex:0 0 clamp(180px,24%,320px)}
-.sheet.md{flex:1 1 0;min-width:0}
-@media (max-width:760px){.sheets{flex-wrap:wrap}.sheet.fz{flex-basis:100%;max-width:360px}.sheet.md{flex-basis:100%}}
-.sheet{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px;overflow-x:auto}
-.sheet svg{display:block;width:100%;height:auto;max-height:80vh}
-.side{display:flex;flex-direction:column;gap:12px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-.card ul,.card ol{margin:4px 0 0;padding-left:20px}.card li{margin:4px 0}
-.below{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;margin-top:14px}
-@media (max-width:1000px){.below{grid-template-columns:1fr}}
-.explain{border-left:6px solid var(--flow)}
-.explain p{margin:4px 0}
-.k{background:#FFF1C2;color:#1a1a1a;border-radius:4px;padding:0 4px;font-weight:700}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-button{font:inherit;font-weight:700;border-radius:10px;border:2px solid var(--line);background:var(--btn);color:var(--ink);padding:10px 8px;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:20px 16px 32px}
+.back{display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--btn);color:var(--ink);text-decoration:none;font-weight:700}
+.back:hover,.back:focus-visible{border-color:#1F4E79;outline:none}
+h1{font-size:clamp(1.5rem,3.2vw,2.2rem);margin:0 0 4px;line-height:1.15}
+.sub{color:var(--muted);margin:0 0 16px;max-width:75ch}
+.grid{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(250px,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+.sheet{background:var(--paper);border-radius:10px;border:1px solid var(--line);padding:8px;overflow-x:auto}
+.sheet svg{display:block;width:100%;height:auto;max-height:74vh;min-width:320px}
+.side{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.boxes{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(250px,1fr);gap:16px;margin-top:16px}
+@media (max-width:820px){.boxes{grid-template-columns:1fr}}
+.boxes h2{font-size:1rem;margin:0 0 6px;color:var(--muted)}
+.explain{min-height:6.5em;font-size:1.08rem}
+.explain .k,.idea .k{background:#FFF1C2;color:#1a1a1a;border-radius:4px;padding:0 4px;font-weight:700}
+.idea{border-left:6px solid #548235}
+.idea p{margin:0 0 6px}
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.controls.two{grid-template-columns:1fr 1fr}
+button{font:inherit;font-weight:700;border-radius:10px;border:2px solid var(--line);background:var(--btn);color:var(--ink);padding:11px 6px;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
 button:focus-visible{outline:3px solid var(--flow);outline-offset:2px}
-button .small{display:block;font-size:.78rem;font-weight:400;opacity:.8}
-button.b-push{border-color:#2E8B3E}button.b-push.on{background:#2E8B3E;color:#fff}
-button.b-toggle.on{background:#1F4E79;color:#fff;border-color:#1F4E79}
-button.b-trip{border-color:#C0392B}button.b-trip.on{background:#C0392B;color:#fff}
-button.b-q.on{background:#555;color:#fff}
-button.b-speed{width:100%;margin-top:8px}button.b-speed.on{background:#1F4E79;color:#fff}
-.leds{display:flex;flex-wrap:wrap;gap:8px 14px}
-.led{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.95rem}.led small{font-weight:400;color:var(--muted)}
-.dot{width:20px;height:20px;border-radius:50%;border:3px solid #333;background:#fff;transition:background .15s,box-shadow .15s;--lc:#3DBB4E}
-.dot.on{background:var(--lc);box-shadow:0 0 12px var(--lc)}
-.dot.c{border-radius:4px;--lc:#FFC94D}.dot.m{--lc:#2E8B3E}
-.foot{color:var(--muted);font-size:.88rem;margin-top:12px}
+button.g{border-color:#2E8B3E} button.g.on{background:#2E8B3E;color:#fff}
+button.r{border-color:#C0392B} button.r.on{background:#C0392B;color:#fff}
+.small{font-size:.8rem;font-weight:400;display:block;opacity:.8}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.toggle{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700}
+.toggle input{width:22px;height:22px;accent-color:#2E8B3E}
+.leds{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.led{display:flex;align-items:center;gap:8px;font-weight:700}
+.dot{width:26px;height:26px;border-radius:50%;border:3px solid #333;background:#fff;transition:background .2s,box-shadow .2s}
+.dot.g.on{background:#3DBB4E;box-shadow:0 0 14px #3DBB4E}
+.dot.r.on{background:#E0413A;box-shadow:0 0 14px #E0413A}
+.dot.y.on{background:#FFD23F;box-shadow:0 0 14px #FFD23F}
+.dot.k.on{background:#F2B400;box-shadow:0 0 14px #F2B400}
+.state{font-size:1.1rem;font-weight:700}
+.state.run{color:var(--ok)} .state.stop{color:var(--muted)} .state.bad{color:var(--warn)}
+.alarm{display:none;background:#C0392B;color:#fff;border-radius:10px;padding:10px 14px;font-weight:700}
+.alarm.on{display:block}
+.foot{color:var(--muted);font-size:.9rem;margin-top:14px}
+kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;font-family:inherit;font-size:.85em}
+.w{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.wf{stroke:var(--fase)} .wn{stroke:var(--neutro)}
+.sym{fill:none;stroke:#111;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.symf{fill:#fff;stroke:#111;stroke-width:3}
+.dash{fill:none;stroke:#111;stroke-width:2;stroke-dasharray:7 5}
+.t{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;fill:#111;font-size:15px}
+.name{font-weight:700;font-size:18px}
+.flow{fill:none;stroke:#FFE28A;stroke-width:3;stroke-linecap:round;stroke-dasharray:0.5 17.5;opacity:0;transition:opacity .15s;pointer-events:none}
+.flow.on{opacity:.95;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.blade{transition:transform .18s ease}
+.rm{transition:opacity .25s} .rm.off{opacity:.18}
+.bridge{display:none} .bridge.on{display:inline}
+.glow{opacity:0;transition:opacity .2s} .glow.on{opacity:.9}
+.coilfill{transition:fill .2s}
+@media (prefers-reduced-motion: reduce){ .flow.on{animation:none;opacity:.8} .blade{transition:none} }
+.hit{cursor:pointer}
+.hit:hover .hitbox,.hit:focus-visible .hitbox{stroke:#F2B400;stroke-opacity:.9}
+.hit:focus{outline:none}
+.hitbox{fill:transparent;stroke:transparent;stroke-width:2;stroke-dasharray:4 4;rx:8}
+.hit.latched .hitbox{fill:#FFF3C4;fill-opacity:.35;stroke:#F2B400;stroke-opacity:1;stroke-width:3;stroke-dasharray:none}
+button.latched{box-shadow:0 0 0 4px #F2B400}
 .pin{display:inline-block;background:#FFF3C4;border:2px solid #F2B400;border-radius:6px;padding:0 6px;font-weight:700;color:#1a1a1a}
-/* esquema */
-.w{stroke-width:1.9;stroke-linecap:round}
-.wf{stroke:#D0191C;opacity:.45}.wn{stroke:#1F5FBF}
-.wf.live{opacity:1;stroke:#FF1F1F;stroke-width:3.4}
-.flow{stroke:var(--flow);stroke-width:4.5;stroke-linecap:round;stroke-dasharray:3 9;opacity:0;pointer-events:none}
-.flow.on{opacity:1;animation:run .7s linear infinite}
-@keyframes run{to{stroke-dashoffset:-12}}
-.ct .act{display:none}.ct.on .act{display:inline}.ct.on .rest{display:none}
-.coil.on rect:first-of-type{fill:#FFE9A8}
-.glow{opacity:0;transition:opacity .15s}.glow.on{opacity:.85}
-.rotor{opacity:0}.mot.run .rotor{opacity:1;animation:spin 1s linear infinite}.mot.run.rev .rotor{animation-direction:reverse}
+.motor{width:64px;height:64px;flex:none}
+.spinR{animation:spin .8s linear infinite} .spinL{animation:spin .8s linear infinite reverse}
 @keyframes spin{to{transform:rotate(360deg)}}
-.cdt{font-weight:700;font-size:12px;fill:#9a6a00}
-.hit{cursor:pointer}.hit:focus{outline:none}
-.hb{fill:transparent;stroke:transparent;stroke-width:2;stroke-dasharray:4 4}
-.hit:hover .hb,.hit:focus-visible .hb{stroke:#F2B400}
-.hit.latched .hb{fill:#FFF3C4;fill-opacity:.4;stroke:#F2B400;stroke-dasharray:none;stroke-width:3}
-@media (prefers-reduced-motion: reduce){.flow.on{animation:none;stroke-dasharray:none;opacity:.5}.mot.run .rotor{animation:none}}
-/* barra superior */
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px;padding:4px 0 10px;border-bottom:1px solid var(--line)}
-.tb-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
-.tbback{flex:none;display:inline-flex;align-items:center;height:36px;padding:0 12px;border-radius:10px;border:2px solid var(--line);color:var(--ink);text-decoration:none;font-weight:700}
-.crumbs{min-width:0;flex:1;overflow:hidden;white-space:nowrap;font-size:.92rem;color:var(--muted)}
-.crumbs a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)}
-.crumbs .sep{margin:0 6px;opacity:.7}.crumbs b{color:var(--ink)}
-.themebtn{flex:none;width:42px;height:36px;border-radius:10px;border:2px solid var(--line);background:transparent;color:var(--ink);font-size:1.1rem;cursor:pointer;padding:0}
-.pnav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
-.pnav a{border:2px solid var(--line);border-radius:8px;padding:2px 10px;text-decoration:none;color:var(--ink);font-weight:700;font-size:.9rem}
-.pnav a.sel{background:#2E7D32;border-color:#2E7D32;color:#fff}
-/* índice */
-.sec{font-size:1.15rem;color:var(--ink);margin:22px 0 10px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
-.card2{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-decoration:none;color:var(--ink)}
-.card2:hover{border-color:#2E7D32}
-.card2 .num{flex:none;background:#1F4E79;color:#fff;font-weight:700;border-radius:8px;padding:8px 10px;min-width:52px;text-align:center}
-.card2 h2{color:var(--ink);font-size:1.05rem;margin:0 0 2px}.card2 p{margin:0;color:var(--muted);font-size:.9rem}
-.ru{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:6px 0}
-.ru .rn{font-weight:700;white-space:nowrap}.ru .rn small{font-weight:400;color:var(--muted)}
-.ru input{width:100%;accent-color:#1F4E79}.ru b{min-width:3.2em;text-align:right}
+@media (prefers-reduced-motion: reduce){.spinR,.spinL{animation:none}}
 
-.card.ojo{grid-column:1/-1;border:2px solid #E0A100;background:#FFF6D6}
-.card.ojo h2{color:#9A6B00}
-[data-theme="dark"] .card.ojo{background:#3A3115;border-color:#C99A1E}
-[data-theme="dark"] .card.ojo h2{color:#F2C94C}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card.ojo{background:#3A3115;border-color:#C99A1E}:root:not([data-theme="light"]) .card.ojo h2{color:#F2C94C}}
+/* ---- barra superior: volver, dónde estás, tema ---- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:4px 0 10px;border-bottom:1px solid var(--line)}
+.tb-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.tbback{flex:none;display:inline-flex;align-items:center;justify-content:center;width:40px;height:36px;border-radius:10px;border:2px solid var(--line);color:var(--ink);text-decoration:none;font-size:1.25rem;font-weight:700;background:transparent}
+.tbback:hover,.themebtn:hover{border-color:#1F4E79}
+.crumbs{min-width:0;flex:1;overflow:hidden;white-space:nowrap;direction:rtl;text-align:left;font-size:.92rem;color:var(--muted)}
+.crumbs span.in{direction:ltr;unicode-bidi:bidi-override}
+.crumbs a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)}
+.crumbs a:hover{color:var(--ink)}
+.crumbs .sep{margin:0 6px;opacity:.7}
+.crumbs b{color:var(--ink)}
+.themebtn{flex:none;width:42px;height:36px;border-radius:10px;border:2px solid var(--line);background:transparent;color:var(--ink);font-size:1.15rem;cursor:pointer;line-height:1}
+/* ---- cables con tensión ---- */
+.w.wf{opacity:.42;transition:opacity .15s,stroke-width .15s}
+.w.wf.live{opacity:1;stroke:#FF1F1F;stroke-width:6;filter:drop-shadow(0 0 2px rgba(255,40,40,.55))}
+svg line.w.wf{opacity:1;stroke:#FF1F1F;stroke-width:6;filter:drop-shadow(0 0 2px rgba(255,40,40,.55))}
+.wlive{fill:none;stroke:#FF1F1F;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;opacity:0;pointer-events:none;transition:opacity .15s}
+.wlive.live{opacity:1;filter:drop-shadow(0 0 2px rgba(255,40,40,.55))}
+.howto{border-left:6px solid #1F4E79}
+.howto h2{font-size:1rem;margin:0 0 6px;color:var(--muted)}
+.howto ul{margin:4px 0 0;padding-left:20px}
+.howto li{margin:3px 0}
+.lv{display:inline-block;width:26px;height:6px;border-radius:3px;background:#FF1F1F;vertical-align:middle;box-shadow:0 0 3px rgba(255,40,40,.6)}
+.lvoff{display:inline-block;width:26px;height:3px;border-radius:2px;background:#D0191C;opacity:.42;vertical-align:middle}
+.lvflow{display:inline-block;width:26px;height:6px;border-radius:3px;background:repeating-linear-gradient(90deg,#F5B400 0 7px,transparent 7px 12px);vertical-align:middle}
+
+.cdt{font-weight:700;font-size:16px;fill:#9a6a00}
+.fcbody{fill:#dfe4ea;stroke:#333;stroke-width:3;transition:fill .15s}
+.fcbody.on{fill:#FFD23F}
+.lev{stroke:#333;stroke-width:4;stroke-linecap:round;transition:transform .15s}
+.rol{fill:#fff;stroke:#333;stroke-width:3;transition:transform .15s}
+#fcb1.on .lev,#fcb1.on .rol{transform:translate(-6px,6px)}
+#fcb2.on .lev,#fcb2.on .rol{transform:translate(6px,6px)}
+.beam{stroke:#E53935;stroke-width:3;stroke-dasharray:8 6}
+.beam.cut{stroke:#9aa3ad;stroke-dasharray:2 10}
+.pista{margin-bottom:8px}
+.ru{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:8px 0 0}
+.ru .rn{font-weight:700;white-space:nowrap}.ru .rn small{font-weight:400;color:var(--muted)}
+.ru input{width:100%;accent-color:#1F4E79}.ru b{min-width:2.6em;text-align:right}
+.dot.t.on{background:#FFC94D;box-shadow:0 0 14px #FFC94D}
+button:disabled{opacity:.45;cursor:default}
+.nextbig{display:flex;align-items:center;justify-content:center;margin:18px 0 0;padding:16px;border-radius:12px;background:#1F4E79;color:#fff;font-weight:700;font-size:1.1rem;text-decoration:none;text-align:center}
+.nextbig:hover{background:#163a5c}
+.sheet svg#pista{min-width:0;max-height:none}
+.swipe{display:none;color:var(--muted);font-size:.85rem;margin:4px 2px 0}
+.mscroll{overflow-x:auto;max-width:100%}
+.pnav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.pnav a{border:2px solid var(--line);border-radius:8px;padding:2px 10px;text-decoration:none;color:var(--ink);font-weight:700;font-size:.9rem}.pnav a.sel{background:#2E7D32;border-color:#2E7D32;color:#fff}
+.note{color:var(--muted);font-size:.88rem;margin:8px 0 0}
+.grid.wide{grid-template-columns:minmax(0,1fr)}
+.grid.wide .side{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.grid.wide .pista svg{max-width:820px;margin:0 auto}
+@media (max-width:820px){ .grid.wide .side{grid-template-columns:1fr} .grid.wide .sheet svg#mando{min-width:1150px} }
+
+@media (max-width:820px){ .grid{grid-template-columns:minmax(0,1fr)} .sheet svg#mando{min-width:760px} .swipe{display:block} }
 </style>
 </head>
 <body>
 <main>
-  <header class="topbar"><div class="tb-left"><a class="tbback" href="index.html" title="Volver al índice (tecla Esc)">← Volver al índice</a><nav class="crumbs" aria-label="Dónde estás"><span class="in"><a href="index.html">Provisional</a><span class="sep">›</span><a href="index.html#p5">Práctica 5</a><span class="sep">›</span><b>5.3 Cambio de giro automático por tiempo</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
-  <nav class="pnav"><a href="p5_1_inversion_giro.html">5.1</a> <a href="p5_2_ida_vuelta.html">5.2</a> <a href="p5_3_inversion_pausa.html" class="sel">5.3</a></nav>
+  <header class="topbar"><div class="tb-left"><a class="tbback" href="index.html#p5" title="Volver al índice (tecla Esc)" aria-label="Volver al índice">←</a><nav class="crumbs" aria-label="Dónde estás"><span class="in"><a href="index.html">Provisional</a><span class="sep">›</span><a href="index.html#p5">Práctica 5</a><span class="sep">›</span><b>5.3 Cambio de giro automático por tiempo</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
+  <nav class="pnav"><a href="p5_1a_inversion_giro.html">5.1a</a> <a href="p5_1b_cambio_directo.html">5.1b</a> <a href="p5_2_ida_vuelta.html">5.2</a> <a href="p5_3_inversion_pausa.html" class="sel">5.3</a></nav>
   <h1>5.3 Cambio de giro automático por tiempo</h1>
-  <p class="sub">Un carro va y viene solo. Con -S2 empieza el ciclo: 3 s parado, 7 s a derechas, 3 s parado, 7 s a izquierdas… hasta pulsar -S1 o cortar la barrera -S3. Los finales de carrera -FC1 y -FC2 lo paran en los extremos. -H3 avisa si salta el térmico. En la animación, los tiempos se regulan con las ruletas, de 1 a 5 s; al abrirla van más cortos: 2 s parado y 3 s de giro.</p>
-  <div class="grid">
-    <div class="sheets"><div class="sheet fz"><svg viewBox="0 0 364 399" xmlns="http://www.w3.org/2000/svg" font-family="Atkinson Hyperlegible,Verdana,sans-serif"><defs><marker id="Farr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2E8B3E"/></marker></defs><g class="wires"><line id="Fw0" class="w wf" x1="96.0" y1="16.0" x2="96.0" y2="28.0"/>
-<line id="Ffw0" class="flow" x1="96.0" y1="16.0" x2="96.0" y2="28.0"/>
-<line id="Fw1" class="w wf" x1="120.0" y1="16.0" x2="120.0" y2="28.0"/>
-<line id="Ffw1" class="flow" x1="120.0" y1="16.0" x2="120.0" y2="28.0"/>
-<line id="Fw2" class="w wf" x1="144.0" y1="16.0" x2="144.0" y2="28.0"/>
-<line id="Ffw2" class="flow" x1="144.0" y1="16.0" x2="144.0" y2="28.0"/>
-<line id="Fw3" class="w wf" x1="96.0" y1="104.0" x2="96.0" y2="122.0"/>
-<line id="Ffw3" class="flow" x1="96.0" y1="104.0" x2="96.0" y2="122.0"/>
-<line id="Fw4" class="w wf" x1="96.0" y1="122.0" x2="96.0" y2="166.0"/>
-<line id="Ffw4" class="flow" x1="96.0" y1="122.0" x2="96.0" y2="166.0"/>
-<line id="Fw5" class="w wf" x1="96.0" y1="122.0" x2="224.0" y2="122.0"/>
-<line id="Ffw5" class="flow" x1="96.0" y1="122.0" x2="224.0" y2="122.0"/>
-<line id="Fw6" class="w wf" x1="224.0" y1="122.0" x2="224.0" y2="166.0"/>
-<line id="Ffw6" class="flow" x1="224.0" y1="122.0" x2="224.0" y2="166.0"/>
-<line id="Fw7" class="w wf" x1="120.0" y1="104.0" x2="120.0" y2="134.0"/>
-<line id="Ffw7" class="flow" x1="120.0" y1="104.0" x2="120.0" y2="134.0"/>
-<line id="Fw8" class="w wf" x1="120.0" y1="134.0" x2="120.0" y2="166.0"/>
-<line id="Ffw8" class="flow" x1="120.0" y1="134.0" x2="120.0" y2="166.0"/>
-<line id="Fw9" class="w wf" x1="120.0" y1="134.0" x2="248.0" y2="134.0"/>
-<line id="Ffw9" class="flow" x1="120.0" y1="134.0" x2="248.0" y2="134.0"/>
-<line id="Fw10" class="w wf" x1="248.0" y1="134.0" x2="248.0" y2="166.0"/>
-<line id="Ffw10" class="flow" x1="248.0" y1="134.0" x2="248.0" y2="166.0"/>
-<line id="Fw11" class="w wf" x1="144.0" y1="104.0" x2="144.0" y2="146.0"/>
-<line id="Ffw11" class="flow" x1="144.0" y1="104.0" x2="144.0" y2="146.0"/>
-<line id="Fw12" class="w wf" x1="144.0" y1="146.0" x2="144.0" y2="166.0"/>
-<line id="Ffw12" class="flow" x1="144.0" y1="146.0" x2="144.0" y2="166.0"/>
-<line id="Fw13" class="w wf" x1="144.0" y1="146.0" x2="272.0" y2="146.0"/>
-<line id="Ffw13" class="flow" x1="144.0" y1="146.0" x2="272.0" y2="146.0"/>
-<line id="Fw14" class="w wf" x1="272.0" y1="146.0" x2="272.0" y2="166.0"/>
-<line id="Ffw14" class="flow" x1="272.0" y1="146.0" x2="272.0" y2="166.0"/>
-<line id="Fw15" class="w wf" x1="96.0" y1="191.7" x2="96.0" y2="231.7"/>
-<line id="Ffw15" class="flow" x1="96.0" y1="191.7" x2="96.0" y2="231.7"/>
-<line id="Fw16" class="w wf" x1="96.0" y1="231.7" x2="96.0" y2="249.7"/>
-<line id="Ffw16" class="flow" x1="96.0" y1="231.7" x2="96.0" y2="249.7"/>
-<line id="Fw17" class="w wf" x1="120.0" y1="191.7" x2="120.0" y2="219.7"/>
-<line id="Ffw17" class="flow" x1="120.0" y1="191.7" x2="120.0" y2="219.7"/>
-<line id="Fw18" class="w wf" x1="120.0" y1="219.7" x2="120.0" y2="249.7"/>
-<line id="Ffw18" class="flow" x1="120.0" y1="219.7" x2="120.0" y2="249.7"/>
-<line id="Fw19" class="w wf" x1="144.0" y1="191.7" x2="144.0" y2="207.7"/>
-<line id="Ffw19" class="flow" x1="144.0" y1="191.7" x2="144.0" y2="207.7"/>
-<line id="Fw20" class="w wf" x1="144.0" y1="207.7" x2="144.0" y2="249.7"/>
-<line id="Ffw20" class="flow" x1="144.0" y1="207.7" x2="144.0" y2="249.7"/>
-<line id="Fw21" class="w wf" x1="224.0" y1="191.7" x2="224.0" y2="207.7"/>
-<line id="Ffw21" class="flow" x1="224.0" y1="191.7" x2="224.0" y2="207.7"/>
-<line id="Fw22" class="w wf" x1="224.0" y1="207.7" x2="144.0" y2="207.7"/>
-<line id="Ffw22" class="flow" x1="224.0" y1="207.7" x2="144.0" y2="207.7"/>
-<line id="Fw23" class="w wf" x1="248.0" y1="191.7" x2="248.0" y2="219.7"/>
-<line id="Ffw23" class="flow" x1="248.0" y1="191.7" x2="248.0" y2="219.7"/>
-<line id="Fw24" class="w wf" x1="248.0" y1="219.7" x2="120.0" y2="219.7"/>
-<line id="Ffw24" class="flow" x1="248.0" y1="219.7" x2="120.0" y2="219.7"/>
-<line id="Fw25" class="w wf" x1="272.0" y1="191.7" x2="272.0" y2="231.7"/>
-<line id="Ffw25" class="flow" x1="272.0" y1="191.7" x2="272.0" y2="231.7"/>
-<line id="Fw26" class="w wf" x1="272.0" y1="231.7" x2="96.0" y2="231.7"/>
-<line id="Ffw26" class="flow" x1="272.0" y1="231.7" x2="96.0" y2="231.7"/>
-<line id="Fw27" class="w wf" x1="96.0" y1="285.7" x2="96.0" y2="305.7"/>
-<line id="Ffw27" class="flow" x1="96.0" y1="285.7" x2="96.0" y2="305.7"/>
-<line id="Fw28" class="w wf" x1="120.0" y1="285.7" x2="120.0" y2="305.7"/>
-<line id="Ffw28" class="flow" x1="120.0" y1="285.7" x2="120.0" y2="305.7"/>
-<line id="Fw29" class="w wf" x1="144.0" y1="285.7" x2="144.0" y2="305.7"/>
-<line id="Ffw29" class="flow" x1="144.0" y1="285.7" x2="144.0" y2="305.7"/>
-<line id="Fw30" class="w wf" x1="96.0" y1="309.7" x2="96.0" y2="327.7"/>
-<line id="Ffw30" class="flow" x1="96.0" y1="309.7" x2="96.0" y2="327.7"/>
-<line id="Fw31" class="w wf" x1="96.0" y1="327.7" x2="103.4" y2="356.0"/>
-<line id="Ffw31" class="flow" x1="96.0" y1="327.7" x2="103.4" y2="356.0"/>
-<line id="Fw32" class="w wf" x1="120.0" y1="309.7" x2="120.0" y2="349.7"/>
-<line id="Ffw32" class="flow" x1="120.0" y1="309.7" x2="120.0" y2="349.7"/>
-<line id="Fw33" class="w wf" x1="144.0" y1="309.7" x2="144.0" y2="327.7"/>
-<line id="Ffw33" class="flow" x1="144.0" y1="309.7" x2="144.0" y2="327.7"/>
-<line id="Fw34" class="w wf" x1="144.0" y1="327.7" x2="136.6" y2="356.0"/>
-<line id="Ffw34" class="flow" x1="144.0" y1="327.7" x2="136.6" y2="356.0"/></g><text x="96.0" y="8.9" font-size="11.6" text-anchor="middle" fill="#111111" font-weight="700">L1</text>
-<text x="120.0" y="8.9" font-size="11.6" text-anchor="middle" fill="#111111" font-weight="700">L2</text>
-<text x="144.0" y="8.9" font-size="11.6" text-anchor="middle" fill="#111111" font-weight="700">L3</text>
-<g class="hit" data-dev="-Q1" data-hit="toggle">
-<g id="Fc1" class="ct" data-dev="-Q1">
-<g class="rest">
-<polyline points="96.0,53.7 82.9,27.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="96.0,53.7 96.0,28.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-<polyline points="79.7,30.4 86.1,24.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="79.7,24.0 86.1,30.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="96.0,53.7 96.0,59.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="89.2" y="59.7" width="13.6" height="18.4" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="96.0,59.7 96.0,64.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="96.0,64.5 100.4,64.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="100.4,64.5 100.4,73.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="100.4,73.3 96.0,73.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="96.0,73.3 96.0,78.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="96.0,78.1 96.0,82.9" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="89.2" y="82.9" width="13.6" height="16.8" fill="none" stroke="#111111" stroke-width="1.98"/>
-<text x="96.0" y="94.3" font-size="8.7" text-anchor="middle" fill="#111111" font-weight="700">I&gt;</text>
-<polyline points="96.0,99.7 96.0,104.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="99.6" y="25.2" font-size="9.9" text-anchor="start" fill="#111111">1</text>
-<text x="99.6" y="113.2" font-size="9.9" text-anchor="start" fill="#111111">2</text>
-<g id="Fc2" class="ct" data-dev="-Q1">
-<g class="rest">
-<polyline points="120.0,53.7 106.9,27.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="120.0,53.7 120.0,28.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-<polyline points="103.7,30.4 110.1,24.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="103.7,24.0 110.1,30.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="120.0,53.7 120.0,59.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="113.2" y="59.7" width="13.6" height="18.4" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="120.0,59.7 120.0,64.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="120.0,64.5 124.4,64.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="124.4,64.5 124.4,73.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="124.4,73.3 120.0,73.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="120.0,73.3 120.0,78.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="120.0,78.1 120.0,82.9" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="113.2" y="82.9" width="13.6" height="16.8" fill="none" stroke="#111111" stroke-width="1.98"/>
-<text x="120.0" y="94.3" font-size="8.7" text-anchor="middle" fill="#111111" font-weight="700">I&gt;</text>
-<polyline points="120.0,99.7 120.0,104.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="123.6" y="25.2" font-size="9.9" text-anchor="start" fill="#111111">3</text>
-<text x="123.6" y="113.2" font-size="9.9" text-anchor="start" fill="#111111">4</text>
-<g id="Fc3" class="ct" data-dev="-Q1">
-<g class="rest">
-<polyline points="144.0,53.7 130.9,27.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="144.0,53.7 144.0,28.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-<polyline points="127.7,30.4 134.1,24.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="127.7,24.0 134.1,30.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="144.0,53.7 144.0,59.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="137.2" y="59.7" width="13.6" height="18.4" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="144.0,59.7 144.0,64.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="144.0,64.5 148.4,64.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="148.4,64.5 148.4,73.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="148.4,73.3 144.0,73.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="144.0,73.3 144.0,78.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="144.0,78.1 144.0,82.9" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="137.2" y="82.9" width="13.6" height="16.8" fill="none" stroke="#111111" stroke-width="1.98"/>
-<text x="144.0" y="94.3" font-size="8.7" text-anchor="middle" fill="#111111" font-weight="700">I&gt;</text>
-<polyline points="144.0,99.7 144.0,104.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="147.6" y="25.2" font-size="9.9" text-anchor="start" fill="#111111">5</text>
-<text x="147.6" y="113.2" font-size="9.9" text-anchor="start" fill="#111111">6</text>
-<polyline points="69.5,40.8 137.5,40.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="58.0" y="44.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-Q1</text>
-</g>
-<circle cx="96.0" cy="122.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="120.0" cy="134.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="144.0" cy="146.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g id="Fc4" class="ct" data-dev="-KM1">
-<g class="rest">
-<polyline points="96.0,191.7 82.9,165.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M91.9 167.5 A4.4 4.4 0 0 0 100.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<g class="act">
-<polyline points="96.0,191.7 96.0,166.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M91.9 167.5 A4.4 4.4 0 0 0 100.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<text x="99.6" y="163.2" font-size="9.9" text-anchor="start" fill="#111111">1</text>
-<text x="99.6" y="200.9" font-size="9.9" text-anchor="start" fill="#111111">2</text>
-</g>
-<g id="Fc5" class="ct" data-dev="-KM1">
-<g class="rest">
-<polyline points="120.0,191.7 106.9,165.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M115.9 167.5 A4.4 4.4 0 0 0 124.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<g class="act">
-<polyline points="120.0,191.7 120.0,166.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M115.9 167.5 A4.4 4.4 0 0 0 124.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<text x="123.6" y="163.2" font-size="9.9" text-anchor="start" fill="#111111">3</text>
-<text x="123.6" y="200.9" font-size="9.9" text-anchor="start" fill="#111111">4</text>
-</g>
-<g id="Fc6" class="ct" data-dev="-KM1">
-<g class="rest">
-<polyline points="144.0,191.7 130.9,165.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M139.9 167.5 A4.4 4.4 0 0 0 148.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<g class="act">
-<polyline points="144.0,191.7 144.0,166.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M139.9 167.5 A4.4 4.4 0 0 0 148.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<text x="147.6" y="163.2" font-size="9.9" text-anchor="start" fill="#111111">5</text>
-<text x="147.6" y="200.9" font-size="9.9" text-anchor="start" fill="#111111">6</text>
-</g>
-<polyline points="69.5,178.8 137.5,178.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="72.0" y="182.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
-<g id="Fc7" class="ct" data-dev="-KM2">
-<g class="rest">
-<polyline points="224.0,191.7 210.9,165.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M219.9 167.5 A4.4 4.4 0 0 0 228.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<g class="act">
-<polyline points="224.0,191.7 224.0,166.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M219.9 167.5 A4.4 4.4 0 0 0 228.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<text x="227.6" y="163.2" font-size="9.9" text-anchor="start" fill="#111111">1</text>
-<text x="227.6" y="200.9" font-size="9.9" text-anchor="start" fill="#111111">2</text>
-</g>
-<g id="Fc8" class="ct" data-dev="-KM2">
-<g class="rest">
-<polyline points="248.0,191.7 234.9,165.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M243.9 167.5 A4.4 4.4 0 0 0 252.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<g class="act">
-<polyline points="248.0,191.7 248.0,166.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M243.9 167.5 A4.4 4.4 0 0 0 252.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<text x="251.6" y="163.2" font-size="9.9" text-anchor="start" fill="#111111">3</text>
-<text x="251.6" y="200.9" font-size="9.9" text-anchor="start" fill="#111111">4</text>
-</g>
-<g id="Fc9" class="ct" data-dev="-KM2">
-<g class="rest">
-<polyline points="272.0,191.7 258.9,165.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M267.9 167.5 A4.4 4.4 0 0 0 276.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<g class="act">
-<polyline points="272.0,191.7 272.0,166.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M267.9 167.5 A4.4 4.4 0 0 0 276.1 167.5" fill="none" stroke="#111111" stroke-width="1.98"/>
-</g>
-<text x="275.6" y="163.2" font-size="9.9" text-anchor="start" fill="#111111">5</text>
-<text x="275.6" y="200.9" font-size="9.9" text-anchor="start" fill="#111111">6</text>
-</g>
-<polyline points="197.5,178.8 265.5,178.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="200.0" y="182.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
-<circle cx="144.0" cy="207.7" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="120.0" cy="219.7" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="96.0" cy="231.7" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g class="hit" data-dev="-F1" data-hit="trip">
-<polyline points="96.0,249.7 96.0,258.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="96.0,276.9 96.0,285.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="88.8" y="258.5" width="14.4" height="18.4" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="96.0,258.5 96.0,263.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="96.0,263.3 100.4,263.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="100.4,263.3 100.4,272.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="100.4,272.1 96.0,272.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="96.0,272.1 96.0,276.9" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="99.6" y="246.9" font-size="9.9" text-anchor="start" fill="#111111">1</text>
-<text x="99.6" y="294.9" font-size="9.9" text-anchor="start" fill="#111111">2</text>
-<polyline points="120.0,249.7 120.0,258.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="120.0,276.9 120.0,285.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="112.8" y="258.5" width="14.4" height="18.4" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="120.0,258.5 120.0,263.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="120.0,263.3 124.4,263.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="124.4,263.3 124.4,272.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="124.4,272.1 120.0,272.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="120.0,272.1 120.0,276.9" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="123.6" y="246.9" font-size="9.9" text-anchor="start" fill="#111111">3</text>
-<text x="123.6" y="294.9" font-size="9.9" text-anchor="start" fill="#111111">4</text>
-<polyline points="144.0,249.7 144.0,258.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="144.0,276.9 144.0,285.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="136.8" y="258.5" width="14.4" height="18.4" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="144.0,258.5 144.0,263.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="144.0,263.3 148.4,263.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="148.4,263.3 148.4,272.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="148.4,272.1 144.0,272.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="144.0,272.1 144.0,276.9" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="147.6" y="246.9" font-size="9.9" text-anchor="start" fill="#111111">5</text>
-<text x="147.6" y="294.9" font-size="9.9" text-anchor="start" fill="#111111">6</text>
-<polyline points="74.0,267.7 136.8,267.7" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="70.0" y="271.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-F1</text>
-</g>
-<circle cx="96.0" cy="305.7" r="4.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<text x="101.6" y="309.1" font-size="9.9" text-anchor="start" fill="#111111">1</text>
-<circle cx="120.0" cy="305.7" r="4.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<text x="125.6" y="309.1" font-size="9.9" text-anchor="start" fill="#111111">2</text>
-<circle cx="144.0" cy="305.7" r="4.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<text x="149.6" y="309.1" font-size="9.9" text-anchor="start" fill="#111111">3</text>
-<text x="78.0" y="309.7" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-X1</text>
-<g id="Fm10" class="mot" data-dev="-M1">
-<text x="99.2" y="322.1" font-size="9.0" text-anchor="start" fill="#111111">U1</text>
-<text x="123.2" y="322.1" font-size="9.0" text-anchor="start" fill="#111111">V1</text>
-<text x="147.2" y="322.1" font-size="9.0" text-anchor="start" fill="#111111">W1</text>
-<circle cx="120.0" cy="374.5" r="24.8" fill="#ffffff" stroke="#111111" stroke-width="2.26"/>
-<text x="120.0" y="375.1" font-size="15.5" text-anchor="middle" fill="#111111" font-weight="700">M</text>
-<text x="120.0" y="389.0" font-size="10.6" text-anchor="middle" fill="#111111">3~</text>
-<text x="42.0" y="378.5" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-M1</text>
-<g class="rotor" style="transform-origin:120.0px 374.5px"><path d="M101.4 370.7 A19.8 19.8 0 0 1 125.0 354.6" fill="none" stroke="#2E8B3E" stroke-width="3" marker-end="url(#Farr)"/></g>
-</g>
-<text x="320.0" y="211.3" font-size="9.9" text-anchor="middle" fill="#333">-KM2 cruza</text>
-<text x="320.0" y="223.1" font-size="9.9" text-anchor="middle" fill="#333">L1 y L3</text>
-<text x="320.0" y="235.0" font-size="9.9" text-anchor="middle" fill="#333">a la salida</text></svg></div><div class="sheet md"><svg viewBox="0 0 1024 552" xmlns="http://www.w3.org/2000/svg" font-family="Atkinson Hyperlegible,Verdana,sans-serif"><defs><marker id="Marr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2E8B3E"/></marker></defs><g class="wires"><line id="Mw0" class="w wf" x1="92.0" y1="20.0" x2="92.0" y2="28.0"/>
-<line id="Mfw0" class="flow" x1="92.0" y1="20.0" x2="92.0" y2="28.0"/>
-<line id="Mw1" class="w wf" x1="92.0" y1="28.0" x2="92.0" y2="48.0"/>
-<line id="Mfw1" class="flow" x1="92.0" y1="28.0" x2="92.0" y2="48.0"/>
-<line id="Mw2" class="w wf" x1="92.0" y1="124.0" x2="92.0" y2="130.0"/>
-<line id="Mfw2" class="flow" x1="92.0" y1="124.0" x2="92.0" y2="130.0"/>
-<line id="Mw3" class="w wf" x1="92.0" y1="130.0" x2="92.0" y2="150.0"/>
-<line id="Mfw3" class="flow" x1="92.0" y1="130.0" x2="92.0" y2="150.0"/>
-<line id="Mw4" class="w wf" x1="92.0" y1="175.7" x2="92.0" y2="187.7"/>
-<line id="Mfw4" class="flow" x1="92.0" y1="175.7" x2="92.0" y2="187.7"/>
-<line id="Mw5" class="w wf" x1="92.0" y1="187.7" x2="92.0" y2="207.7"/>
-<line id="Mfw5" class="flow" x1="92.0" y1="187.7" x2="92.0" y2="207.7"/>
-<line id="Mw6" class="w wf" x1="92.0" y1="233.3" x2="92.0" y2="253.3"/>
-<line id="Mfw6" class="flow" x1="92.0" y1="233.3" x2="92.0" y2="253.3"/>
-<line id="Mw7" class="w wf" x1="92.0" y1="279.0" x2="92.0" y2="291.0"/>
-<line id="Mfw7" class="flow" x1="92.0" y1="279.0" x2="92.0" y2="291.0"/>
-<line id="Mw8" class="w wf" x1="92.0" y1="291.0" x2="152.0" y2="291.0"/>
-<line id="Mfw8" class="flow" x1="92.0" y1="291.0" x2="152.0" y2="291.0"/>
-<line id="Mw9" class="w wf" x1="92.0" y1="291.0" x2="92.0" y2="311.0"/>
-<line id="Mfw9" class="flow" x1="92.0" y1="291.0" x2="92.0" y2="311.0"/>
-<line id="Mw10" class="w wf" x1="92.0" y1="336.6" x2="92.0" y2="353.0"/>
-<line id="Mfw10" class="flow" x1="92.0" y1="336.6" x2="92.0" y2="353.0"/>
-<line id="Mw11" class="w wf" x1="152.0" y1="291.0" x2="152.0" y2="311.0"/>
-<line id="Mfw11" class="flow" x1="152.0" y1="291.0" x2="152.0" y2="311.0"/>
-<line id="Mw12" class="w wf" x1="152.0" y1="336.6" x2="152.0" y2="353.0"/>
-<line id="Mfw12" class="flow" x1="152.0" y1="336.6" x2="152.0" y2="353.0"/>
-<line id="Mw13" class="w wf" x1="92.0" y1="353.0" x2="152.0" y2="353.0"/>
-<line id="Mfw13" class="flow" x1="92.0" y1="353.0" x2="152.0" y2="353.0"/>
-<line id="Mw14" class="w wf" x1="92.0" y1="187.7" x2="240.0" y2="187.7"/>
-<line id="Mfw14" class="flow" x1="92.0" y1="187.7" x2="240.0" y2="187.7"/>
-<line id="Mw15" class="w wf" x1="240.0" y1="187.7" x2="240.0" y2="207.7"/>
-<line id="Mfw15" class="flow" x1="240.0" y1="187.7" x2="240.0" y2="207.7"/>
-<line id="Mw16" class="w wf" x1="240.0" y1="233.3" x2="240.0" y2="245.3"/>
-<line id="Mfw16" class="flow" x1="240.0" y1="233.3" x2="240.0" y2="245.3"/>
-<line id="Mw17" class="w wf" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
-<line id="Mfw17" class="flow" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
-<line id="Mw18" class="w wf" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
-<line id="Mfw18" class="flow" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
-<line id="Mw19" class="w wf" x1="368.0" y1="245.3" x2="568.0" y2="245.3"/>
-<line id="Mfw19" class="flow" x1="368.0" y1="245.3" x2="568.0" y2="245.3"/>
-<line id="Mw20" class="w wf" x1="568.0" y1="245.3" x2="652.0" y2="245.3"/>
-<line id="Mfw20" class="flow" x1="568.0" y1="245.3" x2="652.0" y2="245.3"/>
-<line id="Mw21" class="w wf" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
-<line id="Mfw21" class="flow" x1="240.0" y1="245.3" x2="304.0" y2="245.3"/>
-<line id="Mw22" class="w wf" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
-<line id="Mfw22" class="flow" x1="304.0" y1="245.3" x2="368.0" y2="245.3"/>
-<line id="Mw23" class="w wf" x1="240.0" y1="245.3" x2="240.0" y2="265.3"/>
-<line id="Mfw23" class="flow" x1="240.0" y1="245.3" x2="240.0" y2="265.3"/>
-<line id="Mw24" class="w wf" x1="240.0" y1="291.0" x2="240.0" y2="307.3"/>
-<line id="Mfw24" class="flow" x1="240.0" y1="291.0" x2="240.0" y2="307.3"/>
-<line id="Mw25" class="w wf" x1="304.0" y1="245.3" x2="304.0" y2="265.3"/>
-<line id="Mfw25" class="flow" x1="304.0" y1="245.3" x2="304.0" y2="265.3"/>
-<line id="Mw26" class="w wf" x1="304.0" y1="291.0" x2="304.0" y2="307.3"/>
-<line id="Mfw26" class="flow" x1="304.0" y1="291.0" x2="304.0" y2="307.3"/>
-<line id="Mw27" class="w wf" x1="368.0" y1="245.3" x2="368.0" y2="265.3"/>
-<line id="Mfw27" class="flow" x1="368.0" y1="245.3" x2="368.0" y2="265.3"/>
-<line id="Mw28" class="w wf" x1="368.0" y1="291.0" x2="368.0" y2="307.3"/>
-<line id="Mfw28" class="flow" x1="368.0" y1="291.0" x2="368.0" y2="307.3"/>
-<line id="Mw29" class="w wf" x1="240.0" y1="307.3" x2="304.0" y2="307.3"/>
-<line id="Mfw29" class="flow" x1="240.0" y1="307.3" x2="304.0" y2="307.3"/>
-<line id="Mw30" class="w wf" x1="304.0" y1="307.3" x2="368.0" y2="307.3"/>
-<line id="Mfw30" class="flow" x1="304.0" y1="307.3" x2="368.0" y2="307.3"/>
-<line id="Mw31" class="w wf" x1="240.0" y1="307.3" x2="240.0" y2="327.3"/>
-<line id="Mfw31" class="flow" x1="240.0" y1="307.3" x2="240.0" y2="327.3"/>
-<line id="Mw32" class="w wf" x1="240.0" y1="353.0" x2="240.0" y2="373.0"/>
-<line id="Mfw32" class="flow" x1="240.0" y1="353.0" x2="240.0" y2="373.0"/>
-<line id="Mw33" class="w wf" x1="240.0" y1="398.6" x2="240.0" y2="418.6"/>
-<line id="Mfw33" class="flow" x1="240.0" y1="398.6" x2="240.0" y2="418.6"/>
-<line id="Mw34" class="w wf" x1="368.0" y1="307.3" x2="384.0" y2="307.3"/>
-<line id="Mfw34" class="flow" x1="368.0" y1="307.3" x2="384.0" y2="307.3"/>
-<line id="Mw35" class="w wf" x1="384.0" y1="307.3" x2="384.0" y2="327.3"/>
-<line id="Mfw35" class="flow" x1="384.0" y1="307.3" x2="384.0" y2="327.3"/>
-<line id="Mw36" class="w wf" x1="384.0" y1="353.0" x2="384.0" y2="365.0"/>
-<line id="Mfw36" class="flow" x1="384.0" y1="353.0" x2="384.0" y2="365.0"/>
-<line id="Mw37" class="w wf" x1="384.0" y1="365.0" x2="472.0" y2="365.0"/>
-<line id="Mfw37" class="flow" x1="384.0" y1="365.0" x2="472.0" y2="365.0"/>
-<line id="Mw38" class="w wf" x1="384.0" y1="365.0" x2="384.0" y2="385.0"/>
-<line id="Mfw38" class="flow" x1="384.0" y1="365.0" x2="384.0" y2="385.0"/>
-<line id="Mw39" class="w wf" x1="384.0" y1="410.6" x2="384.0" y2="430.6"/>
-<line id="Mfw39" class="flow" x1="384.0" y1="410.6" x2="384.0" y2="430.6"/>
-<line id="Mw40" class="w wf" x1="568.0" y1="245.3" x2="568.0" y2="265.3"/>
-<line id="Mfw40" class="flow" x1="568.0" y1="245.3" x2="568.0" y2="265.3"/>
-<line id="Mw41" class="w wf" x1="652.0" y1="245.3" x2="652.0" y2="265.3"/>
-<line id="Mfw41" class="flow" x1="652.0" y1="245.3" x2="652.0" y2="265.3"/>
-<line id="Mw42" class="w wf" x1="652.0" y1="291.0" x2="652.0" y2="311.0"/>
-<line id="Mfw42" class="flow" x1="652.0" y1="291.0" x2="652.0" y2="311.0"/>
-<line id="Mw43" class="w wf" x1="92.0" y1="130.0" x2="736.0" y2="130.0"/>
-<line id="Mfw43" class="flow" x1="92.0" y1="130.0" x2="736.0" y2="130.0"/>
-<line id="Mw44" class="w wf" x1="736.0" y1="130.0" x2="812.0" y2="130.0"/>
-<line id="Mfw44" class="flow" x1="736.0" y1="130.0" x2="812.0" y2="130.0"/>
-<line id="Mw45" class="w wf" x1="812.0" y1="130.0" x2="888.0" y2="130.0"/>
-<line id="Mfw45" class="flow" x1="812.0" y1="130.0" x2="888.0" y2="130.0"/>
-<line id="Mw46" class="w wf" x1="888.0" y1="130.0" x2="976.0" y2="130.0"/>
-<line id="Mfw46" class="flow" x1="888.0" y1="130.0" x2="976.0" y2="130.0"/>
-<line id="Mw47" class="w wf" x1="736.0" y1="130.0" x2="736.0" y2="150.0"/>
-<line id="Mfw47" class="flow" x1="736.0" y1="130.0" x2="736.0" y2="150.0"/>
-<line id="Mw48" class="w wf" x1="812.0" y1="130.0" x2="812.0" y2="150.0"/>
-<line id="Mfw48" class="flow" x1="812.0" y1="130.0" x2="812.0" y2="150.0"/>
-<line id="Mw49" class="w wf" x1="888.0" y1="130.0" x2="888.0" y2="150.0"/>
-<line id="Mfw49" class="flow" x1="888.0" y1="130.0" x2="888.0" y2="150.0"/>
-<line id="Mw50" class="w wf" x1="976.0" y1="130.0" x2="976.0" y2="150.0"/>
-<line id="Mfw50" class="flow" x1="976.0" y1="130.0" x2="976.0" y2="150.0"/>
-<line id="Mw51" class="w wf" x1="92.0" y1="353.0" x2="92.0" y2="488.3"/>
-<line id="Mfw51" class="flow" x1="92.0" y1="353.0" x2="92.0" y2="488.3"/>
-<line id="Mw52" class="w wn" x1="92.0" y1="516.3" x2="92.0" y2="538.3"/>
-<line id="Mfw52" class="flow" x1="92.0" y1="516.3" x2="92.0" y2="538.3"/>
-<line id="Mw53" class="w wf" x1="240.0" y1="444.3" x2="240.0" y2="488.3"/>
-<line id="Mfw53" class="flow" x1="240.0" y1="444.3" x2="240.0" y2="488.3"/>
-<line id="Mw54" class="w wn" x1="240.0" y1="516.3" x2="240.0" y2="538.3"/>
-<line id="Mfw54" class="flow" x1="240.0" y1="516.3" x2="240.0" y2="538.3"/>
-<line id="Mw55" class="w wf" x1="384.0" y1="456.3" x2="384.0" y2="488.3"/>
-<line id="Mfw55" class="flow" x1="384.0" y1="456.3" x2="384.0" y2="488.3"/>
-<line id="Mw56" class="w wn" x1="384.0" y1="516.3" x2="384.0" y2="538.3"/>
-<line id="Mfw56" class="flow" x1="384.0" y1="516.3" x2="384.0" y2="538.3"/>
-<line id="Mw57" class="w wf" x1="472.0" y1="365.0" x2="472.0" y2="488.3"/>
-<line id="Mfw57" class="flow" x1="472.0" y1="365.0" x2="472.0" y2="488.3"/>
-<line id="Mw58" class="w wn" x1="472.0" y1="516.3" x2="472.0" y2="538.3"/>
-<line id="Mfw58" class="flow" x1="472.0" y1="516.3" x2="472.0" y2="538.3"/>
-<line id="Mw59" class="w wf" x1="568.0" y1="291.0" x2="568.0" y2="488.3"/>
-<line id="Mfw59" class="flow" x1="568.0" y1="291.0" x2="568.0" y2="488.3"/>
-<line id="Mw60" class="w wn" x1="568.0" y1="516.3" x2="568.0" y2="538.3"/>
-<line id="Mfw60" class="flow" x1="568.0" y1="516.3" x2="568.0" y2="538.3"/>
-<line id="Mw61" class="w wf" x1="652.0" y1="336.6" x2="652.0" y2="488.3"/>
-<line id="Mfw61" class="flow" x1="652.0" y1="336.6" x2="652.0" y2="488.3"/>
-<line id="Mw62" class="w wn" x1="652.0" y1="516.3" x2="652.0" y2="538.3"/>
-<line id="Mfw62" class="flow" x1="652.0" y1="516.3" x2="652.0" y2="538.3"/>
-<line id="Mw63" class="w wf" x1="736.0" y1="175.7" x2="736.0" y2="488.3"/>
-<line id="Mfw63" class="flow" x1="736.0" y1="175.7" x2="736.0" y2="488.3"/>
-<line id="Mw64" class="w wn" x1="736.0" y1="512.3" x2="736.0" y2="538.3"/>
-<line id="Mfw64" class="flow" x1="736.0" y1="512.3" x2="736.0" y2="538.3"/>
-<line id="Mw65" class="w wf" x1="812.0" y1="175.7" x2="812.0" y2="488.3"/>
-<line id="Mfw65" class="flow" x1="812.0" y1="175.7" x2="812.0" y2="488.3"/>
-<line id="Mw66" class="w wn" x1="812.0" y1="512.3" x2="812.0" y2="538.3"/>
-<line id="Mfw66" class="flow" x1="812.0" y1="512.3" x2="812.0" y2="538.3"/>
-<line id="Mw67" class="w wf" x1="888.0" y1="175.7" x2="888.0" y2="488.3"/>
-<line id="Mfw67" class="flow" x1="888.0" y1="175.7" x2="888.0" y2="488.3"/>
-<line id="Mw68" class="w wn" x1="888.0" y1="512.3" x2="888.0" y2="538.3"/>
-<line id="Mfw68" class="flow" x1="888.0" y1="512.3" x2="888.0" y2="538.3"/>
-<line id="Mw69" class="w wf" x1="976.0" y1="150.0" x2="976.0" y2="488.3"/>
-<line id="Mfw69" class="flow" x1="976.0" y1="150.0" x2="976.0" y2="488.3"/>
-<line id="Mw70" class="w wn" x1="976.0" y1="516.3" x2="976.0" y2="538.3"/>
-<line id="Mfw70" class="flow" x1="976.0" y1="516.3" x2="976.0" y2="538.3"/>
-<line id="Mw71" class="w wn" x1="36.0" y1="538.3" x2="92.0" y2="538.3"/>
-<line id="Mfw71" class="flow" x1="36.0" y1="538.3" x2="92.0" y2="538.3"/>
-<line id="Mw72" class="w wn" x1="92.0" y1="538.3" x2="240.0" y2="538.3"/>
-<line id="Mfw72" class="flow" x1="92.0" y1="538.3" x2="240.0" y2="538.3"/>
-<line id="Mw73" class="w wn" x1="240.0" y1="538.3" x2="384.0" y2="538.3"/>
-<line id="Mfw73" class="flow" x1="240.0" y1="538.3" x2="384.0" y2="538.3"/>
-<line id="Mw74" class="w wn" x1="384.0" y1="538.3" x2="472.0" y2="538.3"/>
-<line id="Mfw74" class="flow" x1="384.0" y1="538.3" x2="472.0" y2="538.3"/>
-<line id="Mw75" class="w wn" x1="472.0" y1="538.3" x2="568.0" y2="538.3"/>
-<line id="Mfw75" class="flow" x1="472.0" y1="538.3" x2="568.0" y2="538.3"/>
-<line id="Mw76" class="w wn" x1="568.0" y1="538.3" x2="652.0" y2="538.3"/>
-<line id="Mfw76" class="flow" x1="568.0" y1="538.3" x2="652.0" y2="538.3"/>
-<line id="Mw77" class="w wn" x1="652.0" y1="538.3" x2="736.0" y2="538.3"/>
-<line id="Mfw77" class="flow" x1="652.0" y1="538.3" x2="736.0" y2="538.3"/>
-<line id="Mw78" class="w wn" x1="736.0" y1="538.3" x2="812.0" y2="538.3"/>
-<line id="Mfw78" class="flow" x1="736.0" y1="538.3" x2="812.0" y2="538.3"/>
-<line id="Mw79" class="w wn" x1="812.0" y1="538.3" x2="888.0" y2="538.3"/>
-<line id="Mfw79" class="flow" x1="812.0" y1="538.3" x2="888.0" y2="538.3"/>
-<line id="Mw80" class="w wn" x1="888.0" y1="538.3" x2="976.0" y2="538.3"/>
-<line id="Mfw80" class="flow" x1="888.0" y1="538.3" x2="976.0" y2="538.3"/></g><text x="92.0" y="14.2" font-size="12.0" text-anchor="middle" fill="#111111" font-weight="700">L</text>
-<g class="hit" data-dev="-Q2" data-hit="toggle">
-<g id="Mc1" class="ct" data-dev="-Q2">
-<g class="rest">
-<polyline points="92.0,73.7 78.9,47.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="92.0,73.7 92.0,48.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-<polyline points="75.7,50.4 82.1,44.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="75.7,44.0 82.1,50.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="92.0,73.7 92.0,79.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="85.2" y="79.7" width="13.6" height="18.4" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="92.0,79.7 92.0,84.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="92.0,84.5 96.4,84.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="96.4,84.5 96.4,93.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="96.4,93.3 92.0,93.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="92.0,93.3 92.0,98.1" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="92.0,98.1 92.0,102.9" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="85.2" y="102.9" width="13.6" height="16.8" fill="none" stroke="#111111" stroke-width="1.98"/>
-<text x="92.0" y="114.3" font-size="8.7" text-anchor="middle" fill="#111111" font-weight="700">I&gt;</text>
-<polyline points="92.0,119.7 92.0,124.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="95.6" y="45.2" font-size="9.9" text-anchor="start" fill="#111111">1</text>
-<text x="95.6" y="133.2" font-size="9.9" text-anchor="start" fill="#111111">2</text>
-<polyline points="65.5,60.8 85.5,60.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="54.0" y="64.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-Q2</text>
-</g>
-<g class="hit" data-dev="-F1" data-hit="trip">
-<g id="Mc2" class="ct" data-dev="-F1">
-<g class="rest">
-<polyline points="92.0,150.0 109.9,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="92.0,175.7 105.1,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="92.0,150.0 109.9,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="92.0,175.7 78.9,149.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="95.6" y="147.2" font-size="9.9" text-anchor="start" fill="#111111">95</text>
-<text x="95.6" y="184.9" font-size="9.9" text-anchor="start" fill="#111111">96</text>
-</g>
-<rect x="48.0" y="154.8" width="12.0" height="16.0" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="54.0,154.8 54.0,158.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="54.0,158.4 58.4,158.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="58.4,158.4 58.4,167.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="58.4,167.2 54.0,167.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="54.0,167.2 54.0,170.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="60.0,162.8 98.5,162.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="44.0" y="166.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-F1</text>
-</g>
-<g class="hit" data-dev="-S1" data-hit="push">
-<g id="Mc3" class="ct" data-dev="-S1">
-<g class="rest">
-<polyline points="92.0,207.7 109.9,207.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="92.0,233.3 105.1,207.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="92.0,207.7 109.9,207.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="92.0,233.3 78.9,206.9" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="95.6" y="204.9" font-size="9.9" text-anchor="start" fill="#111111">1</text>
-<text x="95.6" y="242.5" font-size="9.9" text-anchor="start" fill="#111111">2</text>
-</g>
-<polyline points="50.0,227.3 50.0,213.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="50.0,220.5 58.8,220.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="58.8,220.5 98.5,220.5" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="45.2" y="224.5" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-S1</text>
-<rect class="hb" x="24.0" y="201.7" width="80.0" height="37.7" rx="6"/>
-</g>
-<g class="hit" data-dev="-S3" data-hit="toggle">
-<g id="Mc4" class="ct" data-dev="-S3">
-<g class="rest">
-<polyline points="92.0,253.3 109.9,253.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="92.0,279.0 105.1,253.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="92.0,253.3 109.9,253.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="92.0,279.0 78.9,252.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="95.6" y="250.5" font-size="9.9" text-anchor="start" fill="#111111">COM</text>
-<text x="95.6" y="288.2" font-size="9.9" text-anchor="start" fill="#111111">NC</text>
-</g>
-<rect x="44.8" y="259.0" width="14.4" height="14.4" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="48.0,269.4 55.2,263.0" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="51.2,270.2 55.2,263.0" fill="none" stroke="#111111" stroke-width="0.00" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="59.2,266.2 98.5,266.2" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="41.6" y="270.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-S3</text>
-<rect class="hb" x="24.0" y="247.3" width="80.0" height="37.7" rx="6"/>
-</g>
-<circle cx="92.0" cy="291.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g class="hit" data-dev="-S2" data-hit="push">
-<g id="Mc5" class="ct" data-dev="-S2">
-<g class="rest">
-<polyline points="92.0,336.6 78.9,310.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="92.0,336.6 92.0,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="95.6" y="308.2" font-size="9.9" text-anchor="start" fill="#111111">3</text>
-<text x="95.6" y="345.8" font-size="9.9" text-anchor="start" fill="#111111">4</text>
-</g>
-<polyline points="50.0,330.6 50.0,317.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="50.0,323.8 58.8,323.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="58.8,323.8 85.5,323.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="45.2" y="327.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-S2</text>
-<rect class="hb" x="24.0" y="305.0" width="80.0" height="37.7" rx="6"/>
-</g>
-<g id="Mc6" class="ct" data-dev="-KA1">
-<g class="rest">
-<polyline points="152.0,336.6 138.9,310.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="152.0,336.6 152.0,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="155.6" y="308.2" font-size="9.9" text-anchor="start" fill="#111111">11</text>
-<text x="155.6" y="345.8" font-size="9.9" text-anchor="start" fill="#111111">14</text>
-<text x="130.0" y="327.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KA1</text>
-</g>
-<circle cx="92.0" cy="353.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="92.0" cy="187.7" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g id="Mc7" class="ct" data-dev="-KA1">
-<g class="rest">
-<polyline points="240.0,233.3 226.9,206.9" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="240.0,233.3 240.0,207.7" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="243.6" y="204.9" font-size="9.9" text-anchor="start" fill="#111111">21</text>
-<text x="243.6" y="242.5" font-size="9.9" text-anchor="start" fill="#111111">24</text>
-<text x="218.0" y="224.5" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KA1</text>
-</g>
-<circle cx="240.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="568.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="304.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="368.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="240.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="304.0" cy="245.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g id="Mc8" class="ct" data-dev="-KT3">
-<g class="rest">
-<polyline points="240.0,291.0 226.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="240.0,291.0 240.0,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="243.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">67</text>
-<text x="243.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">68</text>
-</g>
-<path d="M218.6 271.6 A8.0 8.0 0 0 0 218.6 284.7" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="215.2,278.2 233.5,278.2" fill="none" stroke="#111111" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="209.6" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT3</text>
-<text class="cdt" data-dev="-KT3" x="244.8" y="313.0"></text>
-<g id="Mc9" class="ct" data-dev="-KM1">
-<g class="rest">
-<polyline points="304.0,291.0 290.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="304.0,291.0 304.0,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="307.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">13</text>
-<text x="307.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">14</text>
-<text x="282.0" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
-</g>
-<g id="Mc10" class="ct" data-dev="-KM2">
-<g class="rest">
-<polyline points="368.0,291.0 354.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="368.0,291.0 368.0,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="371.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">13</text>
-<text x="371.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">14</text>
-<text x="346.0" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
-</g>
-<circle cx="240.0" cy="307.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="304.0" cy="307.3" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g id="Mc11" class="ct" data-dev="-KT1">
-<g class="rest">
-<polyline points="240.0,327.3 257.9,327.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="240.0,353.0 253.1,327.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="240.0,327.3 257.9,327.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="240.0,353.0 226.9,326.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="243.6" y="324.5" font-size="9.9" text-anchor="start" fill="#111111">55</text>
-<text x="243.6" y="362.2" font-size="9.9" text-anchor="start" fill="#111111">56</text>
-</g>
-<path d="M218.6 333.6 A8.0 8.0 0 0 0 218.6 346.7" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="215.2,340.2 246.5,340.2" fill="none" stroke="#111111" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="209.6" y="344.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT1</text>
-<text class="cdt" data-dev="-KT1" x="244.8" y="375.0"></text>
-<g class="hit" data-dev="-FC2" data-hit="toggle">
-<g id="Mc12" class="ct" data-dev="-FC2">
-<g class="rest">
-<polyline points="240.0,373.0 257.9,373.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="240.0,398.6 253.1,373.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="240.0,373.0 257.9,373.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="240.0,398.6 226.9,372.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="243.6" y="370.2" font-size="9.9" text-anchor="start" fill="#111111">1</text>
-<text x="243.6" y="407.8" font-size="9.9" text-anchor="start" fill="#111111">2</text>
-</g>
-<circle cx="200.0" cy="385.8" r="4.4" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="204.4,385.8 212.0,385.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="212.0,385.8 246.5,385.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="192.4" y="389.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-FC2</text>
-<rect class="hb" x="172.0" y="367.0" width="80.0" height="37.7" rx="6"/>
-</g>
-<g id="Mc13" class="ct" data-dev="-KM2">
-<g class="rest">
-<polyline points="240.0,418.6 257.9,418.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="240.0,444.3 253.1,418.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="240.0,418.6 257.9,418.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="240.0,444.3 226.9,417.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="243.6" y="415.9" font-size="9.9" text-anchor="start" fill="#111111">61</text>
-<text x="243.6" y="453.5" font-size="9.9" text-anchor="start" fill="#111111">62</text>
-<text x="218.0" y="435.5" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
-</g>
-<g id="Mc14" class="ct" data-dev="-KT1">
-<g class="rest">
-<polyline points="384.0,353.0 370.9,326.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="384.0,353.0 384.0,327.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="387.6" y="324.5" font-size="9.9" text-anchor="start" fill="#111111">67</text>
-<text x="387.6" y="362.2" font-size="9.9" text-anchor="start" fill="#111111">68</text>
-</g>
-<path d="M362.6 333.6 A8.0 8.0 0 0 0 362.6 346.7" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="359.2,340.2 377.5,340.2" fill="none" stroke="#111111" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="353.6" y="344.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT1</text>
-<text class="cdt" data-dev="-KT1" x="388.8" y="375.0"></text>
-<circle cx="384.0" cy="365.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g class="hit" data-dev="-FC1" data-hit="toggle">
-<g id="Mc15" class="ct" data-dev="-FC1">
-<g class="rest">
-<polyline points="384.0,385.0 401.9,385.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="384.0,410.6 397.1,385.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="384.0,385.0 401.9,385.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="384.0,410.6 370.9,384.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="387.6" y="382.2" font-size="9.9" text-anchor="start" fill="#111111">1</text>
-<text x="387.6" y="419.8" font-size="9.9" text-anchor="start" fill="#111111">2</text>
-</g>
-<circle cx="344.0" cy="397.8" r="4.4" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="348.4,397.8 356.0,397.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="356.0,397.8 390.5,397.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="336.4" y="401.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-FC1</text>
-<rect class="hb" x="316.0" y="379.0" width="80.0" height="37.7" rx="6"/>
-</g>
-<g id="Mc16" class="ct" data-dev="-KM1">
-<g class="rest">
-<polyline points="384.0,430.6 401.9,430.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="384.0,456.3 397.1,430.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="384.0,430.6 401.9,430.6" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="384.0,456.3 370.9,429.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="387.6" y="427.9" font-size="9.9" text-anchor="start" fill="#111111">61</text>
-<text x="387.6" y="465.5" font-size="9.9" text-anchor="start" fill="#111111">62</text>
-<text x="362.0" y="447.5" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
-</g>
-<g id="Mc17" class="ct" data-dev="-KT2">
-<g class="rest">
-<polyline points="568.0,265.3 585.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="568.0,291.0 581.1,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="568.0,265.3 585.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="568.0,291.0 554.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="571.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">55</text>
-<text x="571.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">56</text>
-</g>
-<path d="M546.6 271.6 A8.0 8.0 0 0 0 546.6 284.7" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="543.2,278.2 574.5,278.2" fill="none" stroke="#111111" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="537.6" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT2</text>
-<text class="cdt" data-dev="-KT2" x="572.8" y="313.0"></text>
-<g id="Mc18" class="ct" data-dev="-KM1">
-<g class="rest">
-<polyline points="652.0,265.3 669.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="652.0,291.0 665.1,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="652.0,265.3 669.9,265.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="652.0,291.0 638.9,264.5" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="655.6" y="262.5" font-size="9.9" text-anchor="start" fill="#111111">71</text>
-<text x="655.6" y="300.2" font-size="9.9" text-anchor="start" fill="#111111">72</text>
-<text x="630.0" y="282.2" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
-</g>
-<g id="Mc19" class="ct" data-dev="-KM2">
-<g class="rest">
-<polyline points="652.0,311.0 669.9,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="652.0,336.6 665.1,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="652.0,311.0 669.9,311.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="652.0,336.6 638.9,310.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="655.6" y="308.2" font-size="9.9" text-anchor="start" fill="#111111">71</text>
-<text x="655.6" y="345.8" font-size="9.9" text-anchor="start" fill="#111111">72</text>
-<text x="630.0" y="327.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
-</g>
-<circle cx="92.0" cy="130.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="736.0" cy="130.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="812.0" cy="130.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<circle cx="888.0" cy="130.0" r="2.8" fill="#111111" stroke="#111111" stroke-width="1.41"/>
-<g id="Mc20" class="ct" data-dev="-KM1">
-<g class="rest">
-<polyline points="736.0,175.7 722.9,149.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="736.0,175.7 736.0,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="739.6" y="147.2" font-size="9.9" text-anchor="start" fill="#111111">53</text>
-<text x="739.6" y="184.9" font-size="9.9" text-anchor="start" fill="#111111">54</text>
-<text x="714.0" y="166.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
-</g>
-<g id="Mc21" class="ct" data-dev="-KM2">
-<g class="rest">
-<polyline points="812.0,175.7 798.9,149.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="812.0,175.7 812.0,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="815.6" y="147.2" font-size="9.9" text-anchor="start" fill="#111111">53</text>
-<text x="815.6" y="184.9" font-size="9.9" text-anchor="start" fill="#111111">54</text>
-<text x="790.0" y="166.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
-</g>
-<g class="hit" data-dev="-F1" data-hit="trip">
-<g id="Mc22" class="ct" data-dev="-F1">
-<g class="rest">
-<polyline points="888.0,175.7 874.9,149.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g class="act">
-<polyline points="888.0,175.7 888.0,150.0" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<text x="891.6" y="147.2" font-size="9.9" text-anchor="start" fill="#111111">97</text>
-<text x="891.6" y="184.9" font-size="9.9" text-anchor="start" fill="#111111">98</text>
-</g>
-<rect x="844.0" y="154.8" width="12.0" height="16.0" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="850.0,154.8 850.0,158.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="850.0,158.4 854.4,158.4" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="854.4,158.4 854.4,167.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="854.4,167.2 850.0,167.2" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="850.0,167.2 850.0,170.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="856.0,162.8 881.5,162.8" fill="none" stroke="#111111" stroke-width="1.41" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3.1 2.8"/>
-<text x="840.0" y="166.9" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-F1</text>
-</g>
-<g id="Mk23" class="coil" data-dev="-KA1">
-<rect x="82.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<text x="95.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="95.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="77.2" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KA1</text>
-</g>
-<g id="Mk24" class="coil" data-dev="-KM1">
-<rect x="230.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<text x="243.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="243.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="225.2" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM1</text>
-</g>
-<g id="Mk25" class="coil" data-dev="-KM2">
-<rect x="374.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<text x="387.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="387.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="369.2" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KM2</text>
-</g>
-<g id="Mk26" class="coil" data-dev="-KT2">
-<rect x="462.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<rect x="452.4" y="488.3" width="9.6" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<polyline points="452.4,516.3 462.0,488.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="452.4,488.3 462.0,516.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="475.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="475.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="447.6" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT2</text>
-</g>
-<g id="Mk27" class="coil" data-dev="-KT1">
-<rect x="558.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<rect x="548.4" y="488.3" width="9.6" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<polyline points="548.4,516.3 558.0,488.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="548.4,488.3 558.0,516.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="571.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="571.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="543.6" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT1</text>
-</g>
-<g id="Mk28" class="coil" data-dev="-KT3">
-<rect x="642.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<rect x="632.4" y="488.3" width="9.6" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<polyline points="632.4,516.3 642.0,488.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="632.4,488.3 642.0,516.3" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="655.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">A1</text>
-<text x="655.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">A2</text>
-<text x="627.6" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-KT3</text>
-</g>
-<circle class="glow" id="Mgh29" cx="736.0" cy="500.3" r="20.4" fill="#9BE09B"/>
-<g id="Mh29" class="pil" data-dev="-H1">
-<circle cx="736.0" cy="500.3" r="12.0" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="727.5,508.8 744.5,491.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="727.5,491.8 744.5,508.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="739.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">X1</text>
-<text x="739.6" y="521.5" font-size="9.9" text-anchor="start" fill="#111111">X2</text>
-<text x="719.2" y="504.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-H1</text>
-</g>
-<circle class="glow" id="Mgh30" cx="812.0" cy="500.3" r="20.4" fill="#9BC8F0"/>
-<g id="Mh30" class="pil" data-dev="-H2">
-<circle cx="812.0" cy="500.3" r="12.0" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="803.5,508.8 820.5,491.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="803.5,491.8 820.5,508.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="815.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">X1</text>
-<text x="815.6" y="521.5" font-size="9.9" text-anchor="start" fill="#111111">X2</text>
-<text x="795.2" y="504.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-H2</text>
-</g>
-<circle class="glow" id="Mgh31" cx="888.0" cy="500.3" r="20.4" fill="#F4A04A"/>
-<g id="Mh31" class="pil" data-dev="-H3">
-<circle cx="888.0" cy="500.3" r="12.0" fill="none" stroke="#111111" stroke-width="1.98"/>
-<polyline points="879.5,508.8 896.5,491.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="879.5,491.8 896.5,508.8" fill="none" stroke="#111111" stroke-width="1.98" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="891.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">X1</text>
-<text x="891.6" y="521.5" font-size="9.9" text-anchor="start" fill="#111111">X2</text>
-<text x="871.2" y="504.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-H3</text>
-</g>
-<g id="Mk32" class="coil" data-dev="-S3">
-<rect x="966.0" y="488.3" width="20.0" height="28.0" fill="#ffffff" stroke="#111111" stroke-width="1.98"/>
-<text x="979.6" y="485.5" font-size="9.9" text-anchor="start" fill="#111111">L</text>
-<text x="979.6" y="525.5" font-size="9.9" text-anchor="start" fill="#111111">N</text>
-<text x="961.2" y="506.4" font-size="11.6" text-anchor="end" fill="#111111" font-weight="700">-S3</text>
-</g>
-<text x="30.0" y="542.5" font-size="12.0" text-anchor="end" fill="#111111" font-weight="700">N</text>
-<circle cx="92.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="240.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="384.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="472.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="568.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="652.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="736.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="812.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/>
-<circle cx="888.0" cy="538.3" r="2.8" fill="#1f5fbf" stroke="#1f5fbf" stroke-width="1.41"/></svg></div></div>
-    <div class="side">
-      <div class="card"><h2>Estado</h2><div id="leds" class="leds"></div></div>
-      <div class="card"><h2>Ruletas de los temporizadores</h2><div id="ruletas"></div></div>
-      <div class="card"><div id="btns" class="controls"></div>
-        <button id="bSpeed" type="button" class="b-speed">Tiempo normal<span class="small">acelera los temporizadores</span></button></div>
-    </div>
+  <p class="sub">Con -S2 empieza el ciclo: pausa (-KT3), a derechas (-KM1), pausa y a izquierdas (-KM2), una y otra vez. Los finales de carrera -FC1 y -FC2 lo paran en los extremos; si se abre la puerta (-FC3) o salta el térmico, se para todo.</p>
+  <div class="grid wide">
+    <div class="sheet" style="overflow:visible"><div class="pista"><svg id="pista" viewBox="0 0 760 132" role="img" aria-labelledby="pt"><title id="pt">El carro va y viene entre los finales de carrera -FC1 y -FC2</title><line x1="70" y1="106" x2="690" y2="106" stroke="#8a95a1" stroke-width="6" stroke-linecap="round"/><g id="fcb1"><rect id="fc1box" x="22" y="56" width="38" height="50" rx="5" class="fcbody"/><line x1="60" y1="68" x2="78" y2="56" class="lev"/><circle cx="80" cy="54" r="6" class="rol"/><text class="t name" x="41" y="40" text-anchor="middle" style="font-size:21px">-FC1</text><text class="t" x="41" y="128" text-anchor="middle" style="font-size:16px">izquierda</text></g><g id="fcb2"><rect id="fc2box" x="700" y="56" width="38" height="50" rx="5" class="fcbody"/><line x1="700" y1="68" x2="682" y2="56" class="lev"/><circle cx="680" cy="54" r="6" class="rol"/><text class="t name" x="719" y="40" text-anchor="middle" style="font-size:21px">-FC2</text><text class="t" x="719" y="128" text-anchor="middle" style="font-size:16px">derecha</text></g><g id="carro"><rect x="0" y="50" width="120" height="42" rx="8" fill="#F2B400" stroke="#7a5a00" stroke-width="3"/><circle cx="24" cy="96" r="9" fill="#444"/><circle cx="96" cy="96" r="9" fill="#444"/><text x="60" y="78" text-anchor="middle" class="t name" style="fill:#3a2a00;font-size:19px">CARRO</text><text id="carroDir" x="60" y="40" text-anchor="middle" class="t name" style="fill:#1F4E79;font-size:28px"></text></g><g id="puerta"><rect x="300" y="8" width="160" height="10" rx="3" fill="#5b6570"/><rect id="hoja" x="372" y="18" width="16" height="72" rx="3" fill="#8d6e63" stroke="#4e342e" stroke-width="2" style="transform-origin:380px 18px;transition:transform .3s"/><rect id="fc3box" x="396" y="22" width="26" height="24" rx="4" class="fcbody"/><text class="t name" x="430" y="40" style="font-size:17px">-FC3</text><text id="doorTxt" class="t" x="292" y="40" text-anchor="end" style="font-size:16px">puerta cerrada</text></g></svg></div><div class="mscroll"><svg id="mando" viewBox="0 0 1520 1090" role="img" aria-labelledby="svgt"><title id="svgt">Mando de la 5.3: cambio de giro automático por tiempo, con la puerta -FC3</title><text class="t name" x="170" y="26" text-anchor="middle" style="fill:var(--fase)">L</text><path class="w wf" d="M170 34 L170 58"/><path class="w wf" d="M170 200 L170 220"/><path class="w wf" d="M170 220 L170 236"/><path class="w wf" d="M170 302 L170 330"/><path class="w wf" d="M170 330 L170 350"/><path class="w wf" d="M170 330 L430 330"/><path class="w wf" d="M430 330 L430 350"/><path class="w wf" d="M170 416 L170 446"/><path class="w wf" d="M170 512 L170 540"/><path class="w wf" d="M170 540 L170 570"/><path class="w wf" d="M170 540 L280 540"/><path class="w wf" d="M280 540 L280 570"/><path class="w wf" d="M280 636 L280 666"/><path class="w wf" d="M280 666 L170 666"/><path class="w wf" d="M170 636 L170 666"/><path class="w wf" d="M170 666 L170 970"/><path class="w wf" d="M430 416 L430 448"/><path class="w wf" d="M430 448 L540 448"/><path class="w wf" d="M540 448 L650 448"/><path class="w wf" d="M650 448 L950 448"/><path class="w wf" d="M950 448 L1090 448"/><path class="w wf" d="M430 448 L430 478"/><path class="w wf" d="M540 448 L540 478"/><path class="w wf" d="M650 448 L650 478"/><path class="w wf" d="M950 448 L950 478"/><path class="w wf" d="M1090 448 L1090 478"/><path class="w wf" d="M430 544 L430 574"/><path class="w wf" d="M540 544 L540 574"/><path class="w wf" d="M650 544 L650 574"/><path class="w wf" d="M430 574 L540 574"/><path class="w wf" d="M540 574 L650 574"/><path class="w wf" d="M430 574 L430 604"/><path class="w wf" d="M430 670 L430 730"/><path class="w wf" d="M430 796 L430 860"/><path class="w wf" d="M430 926 L430 970"/><path class="w wf" d="M650 574 L650 604"/><path class="w wf" d="M650 670 L650 700"/><path class="w wf" d="M650 700 L650 730"/><path class="w wf" d="M650 700 L800 700"/><path class="w wf" d="M800 700 L800 970"/><path class="w wf" d="M650 796 L650 860"/><path class="w wf" d="M650 926 L650 970"/><path class="w wf" d="M950 544 L950 970"/><path class="w wf" d="M1090 544 L1090 604"/><path class="w wf" d="M1090 670 L1090 970"/><path class="w wf" d="M170 220 L1200 220"/><path class="w wf" d="M1200 220 L1320 220"/><path class="w wf" d="M1320 220 L1450 220"/><path class="w wf" d="M1200 220 L1200 236"/><path class="w wf" d="M1200 302 L1200 970"/><path class="w wf" d="M1320 220 L1320 236"/><path class="w wf" d="M1320 302 L1320 970"/><path class="w wf" d="M1450 220 L1450 236"/><path class="w wf" d="M1450 302 L1450 970"/><path class="w wn" d="M170 1030 L170 1062"/><path class="w wn" d="M430 1030 L430 1062"/><path class="w wn" d="M650 1030 L650 1062"/><path class="w wn" d="M800 1030 L800 1062"/><path class="w wn" d="M950 1030 L950 1062"/><path class="w wn" d="M1090 1030 L1090 1062"/><path class="w wn" d="M1200 1030 L1200 1062"/><path class="w wn" d="M1320 1030 L1320 1062"/><path class="w wn" d="M1450 1030 L1450 1062"/><path class="w wn" d="M90 1062 L170 1062"/><path class="w wn" d="M170 1062 L430 1062"/><path class="w wn" d="M430 1062 L650 1062"/><path class="w wn" d="M650 1062 L800 1062"/><path class="w wn" d="M800 1062 L950 1062"/><path class="w wn" d="M950 1062 L1090 1062"/><path class="w wn" d="M1090 1062 L1200 1062"/><path class="w wn" d="M1200 1062 L1320 1062"/><path class="w wn" d="M1320 1062 L1450 1062"/><text class="t name" x="80" y="1068" text-anchor="end" style="fill:var(--neutro)">N</text><path id="fl0" class="flow" d="M170 34 L170 58"/><path id="fl1" class="flow" d="M170 58 L170 200"/><path id="fl2" class="flow" d="M170 200 L170 220"/><path id="fl3" class="flow" d="M170 220 L170 236"/><path id="fl4" class="flow" d="M170 236 L170 302"/><path id="fl5" class="flow" d="M170 302 L170 330"/><path id="fl6" class="flow" d="M170 330 L170 350"/><path id="fl7" class="flow" d="M170 330 L430 330"/><path id="fl8" class="flow" d="M430 330 L430 350"/><path id="fl9" class="flow" d="M170 350 L170 416"/><path id="fl10" class="flow" d="M170 416 L170 446"/><path id="fl11" class="flow" d="M170 446 L170 512"/><path id="fl12" class="flow" d="M170 512 L170 540"/><path id="fl13" class="flow" d="M170 540 L170 570"/><path id="fl14" class="flow" d="M170 540 L280 540"/><path id="fl15" class="flow" d="M280 540 L280 570"/><path id="fl16" class="flow" d="M170 570 L170 636"/><path id="fl17" class="flow" d="M280 570 L280 636"/><path id="fl18" class="flow" d="M280 636 L280 666"/><path id="fl19" class="flow" d="M280 666 L170 666"/><path id="fl20" class="flow" d="M170 636 L170 666"/><path id="fl21" class="flow" d="M170 666 L170 970"/><path id="fl22" class="flow" d="M170 970 L170 1030"/><path id="fl23" class="flow" d="M430 350 L430 416"/><path id="fl24" class="flow" d="M430 416 L430 448"/><path id="fl25" class="flow" d="M430 448 L540 448"/><path id="fl26" class="flow" d="M540 448 L650 448"/><path id="fl27" class="flow" d="M650 448 L950 448"/><path id="fl28" class="flow" d="M950 448 L1090 448"/><path id="fl29" class="flow" d="M430 448 L430 478"/><path id="fl30" class="flow" d="M540 448 L540 478"/><path id="fl31" class="flow" d="M650 448 L650 478"/><path id="fl32" class="flow" d="M950 448 L950 478"/><path id="fl33" class="flow" d="M1090 448 L1090 478"/><path id="fl34" class="flow" d="M430 478 L430 544"/><path id="fl35" class="flow" d="M540 478 L540 544"/><path id="fl36" class="flow" d="M650 478 L650 544"/><path id="fl37" class="flow" d="M430 544 L430 574"/><path id="fl38" class="flow" d="M540 544 L540 574"/><path id="fl39" class="flow" d="M650 544 L650 574"/><path id="fl40" class="flow" d="M430 574 L540 574"/><path id="fl41" class="flow" d="M540 574 L650 574"/><path id="fl42" class="flow" d="M430 574 L430 604"/><path id="fl43" class="flow" d="M430 604 L430 670"/><path id="fl44" class="flow" d="M430 670 L430 730"/><path id="fl45" class="flow" d="M430 730 L430 796"/><path id="fl46" class="flow" d="M430 796 L430 860"/><path id="fl47" class="flow" d="M430 860 L430 926"/><path id="fl48" class="flow" d="M430 926 L430 970"/><path id="fl49" class="flow" d="M430 970 L430 1030"/><path id="fl50" class="flow" d="M650 574 L650 604"/><path id="fl51" class="flow" d="M650 604 L650 670"/><path id="fl52" class="flow" d="M650 670 L650 700"/><path id="fl53" class="flow" d="M650 700 L650 730"/><path id="fl54" class="flow" d="M650 700 L800 700"/><path id="fl55" class="flow" d="M800 700 L800 970"/><path id="fl56" class="flow" d="M800 970 L800 1030"/><path id="fl57" class="flow" d="M650 730 L650 796"/><path id="fl58" class="flow" d="M650 796 L650 860"/><path id="fl59" class="flow" d="M650 860 L650 926"/><path id="fl60" class="flow" d="M650 926 L650 970"/><path id="fl61" class="flow" d="M650 970 L650 1030"/><path id="fl62" class="flow" d="M950 478 L950 544"/><path id="fl63" class="flow" d="M950 544 L950 970"/><path id="fl64" class="flow" d="M950 970 L950 1030"/><path id="fl65" class="flow" d="M1090 478 L1090 544"/><path id="fl66" class="flow" d="M1090 544 L1090 604"/><path id="fl67" class="flow" d="M1090 604 L1090 670"/><path id="fl68" class="flow" d="M1090 670 L1090 970"/><path id="fl69" class="flow" d="M1090 970 L1090 1030"/><path id="fl70" class="flow" d="M170 220 L1200 220"/><path id="fl71" class="flow" d="M1200 220 L1320 220"/><path id="fl72" class="flow" d="M1320 220 L1450 220"/><path id="fl73" class="flow" d="M1200 220 L1200 236"/><path id="fl74" class="flow" d="M1200 236 L1200 302"/><path id="fl75" class="flow" d="M1200 302 L1200 970"/><path id="fl76" class="flow" d="M1200 970 L1200 1030"/><path id="fl77" class="flow" d="M1320 220 L1320 236"/><path id="fl78" class="flow" d="M1320 236 L1320 302"/><path id="fl79" class="flow" d="M1320 302 L1320 970"/><path id="fl80" class="flow" d="M1320 970 L1320 1030"/><path id="fl81" class="flow" d="M1450 220 L1450 236"/><path id="fl82" class="flow" d="M1450 236 L1450 302"/><path id="fl83" class="flow" d="M1450 302 L1450 970"/><path id="fl84" class="flow" d="M1450 970 L1450 1030"/><path id="fl85" class="flow" d="M170 1030 L170 1062"/><path id="fl86" class="flow" d="M430 1030 L430 1062"/><path id="fl87" class="flow" d="M650 1030 L650 1062"/><path id="fl88" class="flow" d="M800 1030 L800 1062"/><path id="fl89" class="flow" d="M950 1030 L950 1062"/><path id="fl90" class="flow" d="M1090 1030 L1090 1062"/><path id="fl91" class="flow" d="M1200 1030 L1200 1062"/><path id="fl92" class="flow" d="M1320 1030 L1320 1062"/><path id="fl93" class="flow" d="M1450 1030 L1450 1062"/><path id="fl94" class="flow" d="M90 1062 L170 1062"/><path id="fl95" class="flow" d="M170 1062 L430 1062"/><path id="fl96" class="flow" d="M430 1062 L650 1062"/><path id="fl97" class="flow" d="M650 1062 L800 1062"/><path id="fl98" class="flow" d="M800 1062 L950 1062"/><path id="fl99" class="flow" d="M950 1062 L1090 1062"/><path id="fl100" class="flow" d="M1090 1062 L1200 1062"/><path id="fl101" class="flow" d="M1200 1062 L1320 1062"/><path id="fl102" class="flow" d="M1320 1062 L1450 1062"/><g id="g_Q2" class="hit" tabindex="0" role="button" aria-label="Magnetotérmico -Q2: abrir o cerrar"><rect class="hitbox" x="88" y="50" width="120" height="156"/><line class="sym" x1="170" y1="58" x2="170" y2="76"/><line class="sym" x1="162" y1="68" x2="178" y2="84" style="stroke-width:2.4"/><line class="sym" x1="162" y1="84" x2="178" y2="68" style="stroke-width:2.4"/><line id="bl_d1" class="sym blade" x1="170" y1="110" x2="170" y2="78" style="transform-origin:170px 110px"/><line class="sym" x1="170" y1="110" x2="170" y2="124"/><rect class="symf" x="156" y="124" width="28" height="30"/><path class="sym" d="M170 124 V135 H178 V143 H170 V154" style="stroke-width:2.4"/><line class="sym" x1="170" y1="154" x2="170" y2="162"/><rect class="symf" x="156" y="162" width="28" height="26"/><text class="t" x="170" y="180" text-anchor="middle" style="font-size:13px;font-weight:700">I&gt;</text><line class="sym" x1="170" y1="188" x2="170" y2="200"/><g id="ac_d1" class="blade"><line class="dash" x1="120" y1="94" x2="162" y2="94"/><line class="sym" x1="120" y1="82" x2="120" y2="106"/></g><text class="t" x="178" y="58">1</text><text class="t" x="178" y="214">2</text><text class="t name" x="110" y="100" text-anchor="end">-Q2</text></g><g id="gF1" class="hit" tabindex="0" role="button" aria-label="Relé térmico -F1: provocar o quitar la sobrecarga"><rect class="hitbox" x="42" y="228" width="162" height="82"/><line class="sym" x1="170" y1="236" x2="170" y2="256"/><line class="sym" x1="170" y1="286" x2="170" y2="302"/><line class="sym" x1="170" y1="256" x2="188" y2="256"/><line id="bl_d2" class="sym blade" x1="170" y1="286" x2="192" y2="250" style="transform-origin:170px 286px"/><text class="t" x="178" y="234">95</text><text class="t" x="178" y="316">96</text><rect class="symf" x="100" y="258" width="24" height="24"/><path class="sym" d="M112 258 V265 H119 V275 H112 V282" style="stroke-width:2.2"/><line class="dash" x1="124" y1="270" x2="178" y2="270"/><text class="t name" x="92" y="276" text-anchor="end">-F1</text></g><g id="g_S1" class="hit" tabindex="0" role="button" aria-label="Pulsador de paro -S1"><rect class="hitbox" x="60" y="342" width="144" height="82"/><line class="sym" x1="170" y1="350" x2="170" y2="370"/><line class="sym" x1="170" y1="400" x2="170" y2="416"/><line class="sym" x1="170" y1="370" x2="188" y2="370"/><line id="bl_d3" class="sym blade" x1="170" y1="400" x2="192" y2="364" style="transform-origin:170px 400px"/><text class="t" x="178" y="348">1</text><text class="t" x="178" y="430">2</text><g id="ac_d3" class="blade"><line class="dash" x1="120" y1="384" x2="178" y2="384"/><path class="sym" d="M128 373 H120 V395 H128"/></g><text class="t name" x="110" y="390" text-anchor="end">-S1</text></g><g id="gFC3" class="hit" tabindex="0" role="button" aria-label="Puerta: abrir o cerrar (-FC3)"><rect class="hitbox" x="50" y="438" width="154" height="82"/><line class="sym" x1="170" y1="446" x2="170" y2="466"/><line class="sym" x1="170" y1="496" x2="170" y2="512"/><line class="sym" x1="170" y1="466" x2="188" y2="466"/><line id="bl_d4" class="sym blade" x1="170" y1="496" x2="192" y2="460" style="transform-origin:170px 496px"/><text class="t" x="178" y="444">1</text><text class="t" x="178" y="526">2</text><g id="ac_d4" class="blade"><circle class="symf" cx="114" cy="480" r="6"/><line class="dash" x1="120" y1="480" x2="178" y2="480"/></g><text class="t name" x="100" y="486" text-anchor="end">-FC3</text></g><g id="g_S2" class="hit" tabindex="0" role="button" aria-label="Pulsador de marcha -S2"><rect class="hitbox" x="60" y="562" width="144" height="82"/><line class="sym" x1="170" y1="570" x2="170" y2="590"/><line class="sym" x1="170" y1="620" x2="170" y2="636"/><line id="bl_d5" class="sym blade" x1="170" y1="620" x2="150" y2="588" style="transform-origin:170px 620px"/><text class="t" x="178" y="568">3</text><text class="t" x="178" y="650">4</text><g id="ac_d5" class="blade"><line class="dash" x1="120" y1="604" x2="160" y2="604"/><path class="sym" d="M128 593 H120 V615 H128"/></g><text class="t name" x="110" y="610" text-anchor="end">-S2</text></g><line class="sym" x1="280" y1="570" x2="280" y2="590"/><line class="sym" x1="280" y1="620" x2="280" y2="636"/><line id="bl_d6" class="sym blade" x1="280" y1="620" x2="260" y2="588" style="transform-origin:280px 620px"/><text class="t" x="288" y="568">11</text><text class="t" x="288" y="650">14</text><text class="t name" x="252" y="610" text-anchor="end">-KA1</text><line class="sym" x1="170" y1="970" x2="170" y2="988"/><line class="sym" x1="170" y1="1012" x2="170" y2="1030"/><rect id="cf_d7" class="symf coilfill" x="142" y="988" width="56" height="24"/><text class="t" x="178" y="982">A1</text><text class="t" x="178" y="1028">A2</text><text class="t name" x="132" y="1006" text-anchor="end">-KA1</text><line class="sym" x1="430" y1="350" x2="430" y2="370"/><line class="sym" x1="430" y1="400" x2="430" y2="416"/><line id="bl_d8" class="sym blade" x1="430" y1="400" x2="410" y2="368" style="transform-origin:430px 400px"/><text class="t" x="438" y="348">21</text><text class="t" x="438" y="430">24</text><text class="t name" x="402" y="390" text-anchor="end">-KA1</text><line class="sym" x1="430" y1="478" x2="430" y2="498"/><line class="sym" x1="430" y1="528" x2="430" y2="544"/><line id="bl_d9" class="sym blade" x1="430" y1="528" x2="410" y2="496" style="transform-origin:430px 528px"/><text class="t" x="438" y="476">67</text><text class="t" x="438" y="558">68</text><path class="sym" d="M391 500 A13 15 0 0 0 391 524"/><line class="sym" x1="386" y1="512" x2="420" y2="512"/><text class="t name" x="370" y="518" text-anchor="end">-KT3</text><line class="sym" x1="540" y1="478" x2="540" y2="498"/><line class="sym" x1="540" y1="528" x2="540" y2="544"/><line id="bl_d10" class="sym blade" x1="540" y1="528" x2="520" y2="496" style="transform-origin:540px 528px"/><text class="t" x="548" y="476">13</text><text class="t" x="548" y="558">14</text><text class="t name" x="512" y="518" text-anchor="end">-KM1</text><line class="sym" x1="650" y1="478" x2="650" y2="498"/><line class="sym" x1="650" y1="528" x2="650" y2="544"/><line id="bl_d11" class="sym blade" x1="650" y1="528" x2="630" y2="496" style="transform-origin:650px 528px"/><text class="t" x="658" y="476">13</text><text class="t" x="658" y="558">14</text><text class="t name" x="622" y="518" text-anchor="end">-KM2</text><line class="sym" x1="430" y1="604" x2="430" y2="624"/><line class="sym" x1="430" y1="654" x2="430" y2="670"/><line class="sym" x1="430" y1="624" x2="448" y2="624"/><line id="bl_d12" class="sym blade" x1="430" y1="654" x2="452" y2="618" style="transform-origin:430px 654px"/><text class="t" x="438" y="602">55</text><text class="t" x="438" y="684">56</text><path class="sym" d="M391 626 A13 15 0 0 0 391 650"/><line class="sym" x1="386" y1="638" x2="438" y2="638"/><text class="t name" x="370" y="644" text-anchor="end">-KT1</text><line class="sym" x1="430" y1="730" x2="430" y2="750"/><line class="sym" x1="430" y1="780" x2="430" y2="796"/><line class="sym" x1="430" y1="750" x2="448" y2="750"/><line id="bl_d13" class="sym blade" x1="430" y1="780" x2="452" y2="744" style="transform-origin:430px 780px"/><text class="t" x="438" y="728">1</text><text class="t" x="438" y="810">2</text><g id="ac_d13" class="blade"><circle class="symf" cx="374" cy="764" r="6"/><line class="dash" x1="380" y1="764" x2="438" y2="764"/></g><text class="t name" x="360" y="770" text-anchor="end">-FC2</text><line class="sym" x1="430" y1="860" x2="430" y2="880"/><line class="sym" x1="430" y1="910" x2="430" y2="926"/><line class="sym" x1="430" y1="880" x2="448" y2="880"/><line id="bl_d14" class="sym blade" x1="430" y1="910" x2="452" y2="874" style="transform-origin:430px 910px"/><text class="t" x="438" y="858">61</text><text class="t" x="438" y="940">62</text><text class="t name" x="402" y="900" text-anchor="end">-KM2</text><line class="sym" x1="430" y1="970" x2="430" y2="988"/><line class="sym" x1="430" y1="1012" x2="430" y2="1030"/><rect id="cf_d15" class="symf coilfill" x="402" y="988" width="56" height="24"/><text class="t" x="438" y="982">A1</text><text class="t" x="438" y="1028">A2</text><text class="t name" x="392" y="1006" text-anchor="end">-KM1</text><line class="sym" x1="650" y1="604" x2="650" y2="624"/><line class="sym" x1="650" y1="654" x2="650" y2="670"/><line id="bl_d16" class="sym blade" x1="650" y1="654" x2="630" y2="622" style="transform-origin:650px 654px"/><text class="t" x="658" y="602">67</text><text class="t" x="658" y="684">68</text><path class="sym" d="M611 626 A13 15 0 0 0 611 650"/><line class="sym" x1="606" y1="638" x2="640" y2="638"/><text class="t name" x="590" y="644" text-anchor="end">-KT1</text><line class="sym" x1="800" y1="970" x2="800" y2="988"/><line class="sym" x1="800" y1="1012" x2="800" y2="1030"/><rect id="cf_d17" class="symf coilfill" x="772" y="988" width="56" height="24"/><rect class="symf" x="754" y="988" width="18" height="24"/><line class="sym" x1="754" y1="988" x2="772" y2="1012" style="stroke-width:2.2"/><line class="sym" x1="754" y1="1012" x2="772" y2="988" style="stroke-width:2.2"/><text id="cd_KT2" class="t cdt" x="790" y="978" text-anchor="end"></text><text class="t" x="808" y="982">A1</text><text class="t" x="808" y="1028">A2</text><text class="t name" x="744" y="1006" text-anchor="end">-KT2</text><line class="sym" x1="650" y1="730" x2="650" y2="750"/><line class="sym" x1="650" y1="780" x2="650" y2="796"/><line class="sym" x1="650" y1="750" x2="668" y2="750"/><line id="bl_d18" class="sym blade" x1="650" y1="780" x2="672" y2="744" style="transform-origin:650px 780px"/><text class="t" x="658" y="728">1</text><text class="t" x="658" y="810">2</text><g id="ac_d18" class="blade"><circle class="symf" cx="594" cy="764" r="6"/><line class="dash" x1="600" y1="764" x2="658" y2="764"/></g><text class="t name" x="580" y="770" text-anchor="end">-FC1</text><line class="sym" x1="650" y1="860" x2="650" y2="880"/><line class="sym" x1="650" y1="910" x2="650" y2="926"/><line class="sym" x1="650" y1="880" x2="668" y2="880"/><line id="bl_d19" class="sym blade" x1="650" y1="910" x2="672" y2="874" style="transform-origin:650px 910px"/><text class="t" x="658" y="858">61</text><text class="t" x="658" y="940">62</text><text class="t name" x="622" y="900" text-anchor="end">-KM1</text><line class="sym" x1="650" y1="970" x2="650" y2="988"/><line class="sym" x1="650" y1="1012" x2="650" y2="1030"/><rect id="cf_d20" class="symf coilfill" x="622" y="988" width="56" height="24"/><text class="t" x="658" y="982">A1</text><text class="t" x="658" y="1028">A2</text><text class="t name" x="612" y="1006" text-anchor="end">-KM2</text><line class="sym" x1="950" y1="478" x2="950" y2="498"/><line class="sym" x1="950" y1="528" x2="950" y2="544"/><line class="sym" x1="950" y1="498" x2="968" y2="498"/><line id="bl_d21" class="sym blade" x1="950" y1="528" x2="972" y2="492" style="transform-origin:950px 528px"/><text class="t" x="958" y="476">55</text><text class="t" x="958" y="558">56</text><path class="sym" d="M911 500 A13 15 0 0 0 911 524"/><line class="sym" x1="906" y1="512" x2="958" y2="512"/><text class="t name" x="890" y="518" text-anchor="end">-KT2</text><line class="sym" x1="950" y1="970" x2="950" y2="988"/><line class="sym" x1="950" y1="1012" x2="950" y2="1030"/><rect id="cf_d22" class="symf coilfill" x="922" y="988" width="56" height="24"/><rect class="symf" x="904" y="988" width="18" height="24"/><line class="sym" x1="904" y1="988" x2="922" y2="1012" style="stroke-width:2.2"/><line class="sym" x1="904" y1="1012" x2="922" y2="988" style="stroke-width:2.2"/><text id="cd_KT1" class="t cdt" x="940" y="978" text-anchor="end"></text><text class="t" x="958" y="982">A1</text><text class="t" x="958" y="1028">A2</text><text class="t name" x="894" y="1006" text-anchor="end">-KT1</text><line class="sym" x1="1090" y1="478" x2="1090" y2="498"/><line class="sym" x1="1090" y1="528" x2="1090" y2="544"/><line class="sym" x1="1090" y1="498" x2="1108" y2="498"/><line id="bl_d23" class="sym blade" x1="1090" y1="528" x2="1112" y2="492" style="transform-origin:1090px 528px"/><text class="t" x="1098" y="476">71</text><text class="t" x="1098" y="558">72</text><text class="t name" x="1062" y="518" text-anchor="end">-KM1</text><line class="sym" x1="1090" y1="604" x2="1090" y2="624"/><line class="sym" x1="1090" y1="654" x2="1090" y2="670"/><line class="sym" x1="1090" y1="624" x2="1108" y2="624"/><line id="bl_d24" class="sym blade" x1="1090" y1="654" x2="1112" y2="618" style="transform-origin:1090px 654px"/><text class="t" x="1098" y="602">71</text><text class="t" x="1098" y="684">72</text><text class="t name" x="1062" y="644" text-anchor="end">-KM2</text><line class="sym" x1="1090" y1="970" x2="1090" y2="988"/><line class="sym" x1="1090" y1="1012" x2="1090" y2="1030"/><rect id="cf_d25" class="symf coilfill" x="1062" y="988" width="56" height="24"/><rect class="symf" x="1044" y="988" width="18" height="24"/><line class="sym" x1="1044" y1="988" x2="1062" y2="1012" style="stroke-width:2.2"/><line class="sym" x1="1044" y1="1012" x2="1062" y2="988" style="stroke-width:2.2"/><text id="cd_KT3" class="t cdt" x="1080" y="978" text-anchor="end"></text><text class="t" x="1098" y="982">A1</text><text class="t" x="1098" y="1028">A2</text><text class="t name" x="1034" y="1006" text-anchor="end">-KT3</text><line class="sym" x1="1200" y1="236" x2="1200" y2="256"/><line class="sym" x1="1200" y1="286" x2="1200" y2="302"/><line id="bl_d26" class="sym blade" x1="1200" y1="286" x2="1180" y2="254" style="transform-origin:1200px 286px"/><text class="t" x="1208" y="234">53</text><text class="t" x="1208" y="316">54</text><text class="t name" x="1172" y="276" text-anchor="end">-KM1</text><circle id="gl_d27" class="glow" cx="1200" cy="1000" r="30" style="fill:#8FE08F"/><line class="sym" x1="1200" y1="970" x2="1200" y2="982"/><line class="sym" x1="1200" y1="1018" x2="1200" y2="1030"/><circle class="symf" cx="1200" cy="1000" r="18" style="fill:transparent"/><line class="sym" x1="1187" y1="987" x2="1213" y2="1013"/><line class="sym" x1="1187" y1="1013" x2="1213" y2="987"/><text class="t" x="1208" y="976">X1</text><text class="t" x="1208" y="1036">X2</text><text class="t name" x="1164" y="1006" text-anchor="end">-H1</text><line class="sym" x1="1320" y1="236" x2="1320" y2="256"/><line class="sym" x1="1320" y1="286" x2="1320" y2="302"/><line id="bl_d28" class="sym blade" x1="1320" y1="286" x2="1300" y2="254" style="transform-origin:1320px 286px"/><text class="t" x="1328" y="234">53</text><text class="t" x="1328" y="316">54</text><text class="t name" x="1292" y="276" text-anchor="end">-KM2</text><circle id="gl_d29" class="glow" cx="1320" cy="1000" r="30" style="fill:#9CC8F0"/><line class="sym" x1="1320" y1="970" x2="1320" y2="982"/><line class="sym" x1="1320" y1="1018" x2="1320" y2="1030"/><circle class="symf" cx="1320" cy="1000" r="18" style="fill:transparent"/><line class="sym" x1="1307" y1="987" x2="1333" y2="1013"/><line class="sym" x1="1307" y1="1013" x2="1333" y2="987"/><text class="t" x="1328" y="976">X1</text><text class="t" x="1328" y="1036">X2</text><text class="t name" x="1284" y="1006" text-anchor="end">-H2</text><line class="sym" x1="1450" y1="236" x2="1450" y2="256"/><line class="sym" x1="1450" y1="286" x2="1450" y2="302"/><line id="bl_d30" class="sym blade" x1="1450" y1="286" x2="1430" y2="254" style="transform-origin:1450px 286px"/><text class="t" x="1458" y="234">97</text><text class="t" x="1458" y="316">98</text><rect class="symf" x="1380" y="258" width="24" height="24"/><path class="sym" d="M1392 258 V265 H1399 V275 H1392 V282" style="stroke-width:2.2"/><line class="dash" x1="1404" y1="270" x2="1440" y2="270"/><text class="t name" x="1372" y="276" text-anchor="end">-F1</text><circle id="gl_d31" class="glow" cx="1450" cy="1000" r="30" style="fill:#F4A259"/><line class="sym" x1="1450" y1="970" x2="1450" y2="982"/><line class="sym" x1="1450" y1="1018" x2="1450" y2="1030"/><circle class="symf" cx="1450" cy="1000" r="18" style="fill:transparent"/><line class="sym" x1="1437" y1="987" x2="1463" y2="1013"/><line class="sym" x1="1437" y1="1013" x2="1463" y2="987"/><text class="t" x="1458" y="976">X1</text><text class="t" x="1458" y="1036">X2</text><text class="t name" x="1414" y="1006" text-anchor="end">-H3</text><circle cx="170" cy="220" r="5" fill="var(--fase)"/><circle cx="170" cy="330" r="5" fill="var(--fase)"/><circle cx="170" cy="540" r="5" fill="var(--fase)"/><circle cx="170" cy="666" r="5" fill="var(--fase)"/><circle cx="430" cy="448" r="5" fill="var(--fase)"/><circle cx="540" cy="448" r="5" fill="var(--fase)"/><circle cx="650" cy="448" r="5" fill="var(--fase)"/><circle cx="950" cy="448" r="5" fill="var(--fase)"/><circle cx="430" cy="574" r="5" fill="var(--fase)"/><circle cx="540" cy="574" r="5" fill="var(--fase)"/><circle cx="650" cy="574" r="5" fill="var(--fase)"/><circle cx="650" cy="700" r="5" fill="var(--fase)"/><circle cx="1200" cy="220" r="5" fill="var(--fase)"/><circle cx="1320" cy="220" r="5" fill="var(--fase)"/><circle cx="170" cy="1062" r="5" fill="var(--neutro)"/><circle cx="430" cy="1062" r="5" fill="var(--neutro)"/><circle cx="650" cy="1062" r="5" fill="var(--neutro)"/><circle cx="800" cy="1062" r="5" fill="var(--neutro)"/><circle cx="950" cy="1062" r="5" fill="var(--neutro)"/><circle cx="1090" cy="1062" r="5" fill="var(--neutro)"/><circle cx="1200" cy="1062" r="5" fill="var(--neutro)"/><circle cx="1320" cy="1062" r="5" fill="var(--neutro)"/></svg></div><p class="swipe">Desliza el esquema hacia los lados para verlo entero →</p></div>
+    <div class="side"><div class="card"><div style="display:flex;gap:14px;align-items:center"><svg class="motor" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" fill="#E9EAEC" stroke="#444" stroke-width="3"/>
+<g id="rotorR" style="transform-origin:32px 32px;display:none"><path d="M32 8 A24 24 0 0 1 56 32" fill="none" stroke="#1F4E79" stroke-width="5"/><path d="M50 24 L56 34 L62 24 Z" fill="#1F4E79"/></g><g id="rotorL" style="transform-origin:32px 32px;display:none"><path d="M32 8 A24 24 0 0 0 8 32" fill="none" stroke="#1F4E79" stroke-width="5"/><path d="M14 24 L8 34 L2 24 Z" fill="#1F4E79"/></g>
+<text x="32" y="38" text-anchor="middle" font-family="Atkinson Hyperlegible,Verdana,sans-serif" font-weight="700" font-size="15" fill="#222">M</text></svg><div><div id="stxt" class="state stop"></div><div class="leds" style="margin-top:6px"><span class="led"><span data-led="KA1" class="dot k"></span>KA1</span><span class="led"><span data-led="KT3" class="dot t"></span>KT3</span><span class="led"><span data-led="KT1" class="dot t"></span>KT1</span><span class="led"><span data-led="KT2" class="dot t"></span>KT2</span><span class="led"><span data-led="KM1" class="dot k"></span>KM1</span><span class="led"><span data-led="KM2" class="dot k"></span>KM2</span></div></div></div><div class="ru"><span class="rn">-KT3 <small id="cdx_KT3"></small></span><input id="r_KT3" type="range" min="1" max="5" step="1" value="2" aria-label="Tiempo de -KT3"><b id="v_KT3">2 s</b></div><div class="ru"><span class="rn">-KT1 <small id="cdx_KT1"></small></span><input id="r_KT1" type="range" min="1" max="5" step="1" value="5" aria-label="Tiempo de -KT1"><b id="v_KT1">5 s</b></div><div class="ru"><span class="rn">-KT2 <small id="cdx_KT2"></small></span><input id="r_KT2" type="range" min="1" max="5" step="1" value="3" aria-label="Tiempo de -KT2"><b id="v_KT2">3 s</b></div><p class="note">En la práctica: -KT3 = 3 s, -KT1 = 10 s y -KT2 = 7 s. Aquí van más cortos para no esperar tanto: 2 s de pausa y 3 s de giro.</p></div><div class="card"><div class="controls two"><button id="b_S2" class="g" aria-pressed="false">Marcha -S2<span class="small">mantén · tecla M</span></button><button id="b_S1" class="r" aria-pressed="false">Paro -S1<span class="small">mantén · tecla P</span></button></div><div class="row"><button id="bDoor" style="padding:9px 12px">Abrir la puerta (-FC3)</button><button id="bCentro" style="padding:9px 12px">Carro al centro</button></div><div class="row" style="justify-content:space-between"><button id="bOver" style="padding:9px 12px">Provocar sobrecarga (-F1)</button><button id="bq_Q2" style="padding:9px 12px">Abrir -Q2</button></div></div></div>
   </div>
-  <div class="below">
-    <div class="card ojo"><h2>¡OJO! Sensores nuevos</h2><ul><li><b>Finales de carrera -FC1 y -FC2</b>: un interruptor que se acciona <b>mecánicamente</b>, cuando algo que se mueve (un carro, una puerta…) llega a su sitio y le empuja la palanca o la ruedecita.</li><li>Tiene dos contactos, como un pulsador: <b>NC 1-2</b> (se abre al pisarlo) y <b>NA 3-4</b> (se cierra al pisarlo). Se dibuja con un <b>circulito</b> (la ruedecita) a la izquierda del contacto.</li><li>No necesita alimentación: son solo contactos. Se queda accionado <b>mientras</b> está pisado.</li><li>La <b>barrera fotoeléctrica</b> (-S3) es un detector: un emisor manda un haz de luz y un receptor lo recibe. Si algo corta el haz, conmuta su contacto.</li><li><b>Necesita alimentación</b>: 230 V entre L y N (el recuadro de la derecha del mando). Su salida es un relé conmutado <b>COM / NC / NA</b>, sin números: se distinguen por los colores de los cables, según la leyenda del aparato.</li><li>Aquí se usa el <b>COM-NC en serie con el paro</b>: cortar el haz es como pulsar -S1.</li><li>En la animación, toca -FC1, -FC2 y -S3 en el esquema (o en sus botones) para pisarlos o cortar el haz, y otra vez para soltarlos.</li></ul></div>
+  <div class="boxes">
     <div class="card explain"><h2>Qué está pasando</h2><div id="explain" aria-live="polite"></div></div>
-    <div class="card"><h2>Cómo funciona</h2><ul><li>-KA1 guarda que el ciclo está en marcha (realimentado con su 11-14); su 21-24 alimenta todo el ciclo.</li><li>-KT3 (3 s) hace la pausa: su bobina pasa por los 71-72 de -KM1 y -KM2, así que solo cuenta con el motor parado. Su 67-68 da paso a los contactores; los 13-14 los mantienen.</li><li>-KT1 y -KT2 se pasan la pelota, como en la baliza de la 4.8: mientras -KT1 cuenta, gira a derechas (55-56 de -KT1); cuando acaba, gira a izquierdas (67-68 de -KT1) y cuenta -KT2.</li><li>-KT1 = pausa + giro (3 + 7 = 10 s); -KT2 = giro a izquierdas (7 s). Enclavamiento con los 61-62.</li><li>El NC 1-2 de -FC2 está en la rama de derechas y el de -FC1 en la de izquierdas: si el carro llega al extremo antes de tiempo, se para ese giro. Tras la pausa sale hacia el otro lado.</li><li>La barrera -S3 se alimenta a 230 V (L y N) y su COM-NC va en serie con el paro: al cortarla cae -KA1 y hay que volver a pulsar -S2.</li></ul></div>
-    <div class="card"><h2>Pruébalo</h2><ol><li>Pulsa -S2 y sigue el ciclo completo.</li><li>Mueve las ruletas y mira cómo cambian los tiempos.</li><li>Girando a derechas, pisa -FC2: el carro para y, tras la pausa, sale a izquierdas.</li><li>Corta la barrera -S3 y vuelve a dejarla libre: no arranca solo.</li><li>Dispara -F1 a mitad de ciclo y rearma.</li></ol></div>
+    <div class="card idea"><h2>Para qué sirve</h2><p>Es el automatismo de una máquina que <b>va y viene sola</b>: un carro de pintura, una cuba que se agita, un portón de pruebas.</p><p>Los <b>temporizadores</b> marcan cuánto dura cada parte del ciclo, los <b>finales de carrera</b> lo paran si llega antes a un extremo y la <b>puerta</b> lo para todo si alguien la abre.</p></div>
   </div>
-  <p class="foot"><span class="pin">Doble clic</span> en un pulsador (en el esquema o en su botón) lo deja <b>fijado</b>; un clic más lo suelta. Toca los aparatos del esquema: pulsadores, magnetotérmicos, térmicos (para dispararlos), finales de carrera y detectores. Cables en rojo vivo: tienen tensión. Línea amarilla: corriente.</p>
+  <p class="foot"><span class="pin">Doble clic</span> en un pulsador (en el esquema o en su botón) lo deja <b>fijado</b>; un clic más lo suelta. Los puntos amarillos que se mueven son la <b>corriente</b>. Toca en el esquema -Q2, el térmico <b>-F1</b>, la puerta <b>-FC3</b> y los pulsadores. El carro tarda 4 s de un extremo al otro. Teclado: <kbd>M</kbd> marcha, <kbd>P</kbd> paro, <kbd>Esc</kbd> volver.</p>
+  <a class="nextbig" href="index.html#p5">Volver al índice →</a>
 </main>
-<script>var DRAW = [{"key": "F", "net": {"wires": [{"a": [2.4, 14.8], "b": [2.4, 14.5], "c": "f"}, {"a": [3.0, 14.8], "b": [3.0, 14.5], "c": "f"}, {"a": [3.6, 14.8], "b": [3.6, 14.5], "c": "f"}, {"a": [2.4, 12.6], "b": [2.4, 12.15], "c": "f"}, {"a": [2.4, 12.15], "b": [2.4, 11.05], "c": "f"}, {"a": [2.4, 12.15], "b": [5.6, 12.15], "c": "f"}, {"a": [5.6, 12.15], "b": [5.6, 11.05], "c": "f"}, {"a": [3.0, 12.6], "b": [3.0, 11.85], "c": "f"}, {"a": [3.0, 11.85], "b": [3.0, 11.05], "c": "f"}, {"a": [3.0, 11.85], "b": [6.2, 11.85], "c": "f"}, {"a": [6.2, 11.85], "b": [6.2, 11.05], "c": "f"}, {"a": [3.6, 12.6], "b": [3.6, 11.55], "c": "f"}, {"a": [3.6, 11.55], "b": [3.6, 11.05], "c": "f"}, {"a": [3.6, 11.55], "b": [6.8, 11.55], "c": "f"}, {"a": [6.8, 11.55], "b": [6.8, 11.05], "c": "f"}, {"a": [2.4, 10.408], "b": [2.4, 9.408], "c": "f"}, {"a": [2.4, 9.408], "b": [2.4, 8.958], "c": "f"}, {"a": [3.0, 10.408], "b": [3.0, 9.708], "c": "f"}, {"a": [3.0, 9.708], "b": [3.0, 8.958], "c": "f"}, {"a": [3.6, 10.408], "b": [3.6, 10.008], "c": "f"}, {"a": [3.6, 10.008], "b": [3.6, 8.958], "c": "f"}, {"a": [5.6, 10.408], "b": [5.6, 10.008], "c": "f"}, {"a": [5.6, 10.008], "b": [3.6, 10.008], "c": "f"}, {"a": [6.2, 10.408], "b": [6.2, 9.708], "c": "f"}, {"a": [6.2, 9.708], "b": [3.0, 9.708], "c": "f"}, {"a": [6.8, 10.408], "b": [6.8, 9.408], "c": "f"}, {"a": [6.8, 9.408], "b": [2.4, 9.408], "c": "f"}, {"a": [2.4, 8.058], "b": [2.4, 7.558], "c": "f"}, {"a": [3.0, 8.058], "b": [3.0, 7.558], "c": "f"}, {"a": [3.6, 8.058], "b": [3.6, 7.558], "c": "f"}, {"a": [2.4, 7.458], "b": [2.4, 7.008], "c": "f"}, {"a": [2.4, 7.008], "b": [2.585, 6.299], "c": "f"}, {"a": [3.0, 7.458], "b": [3.0, 6.458], "c": "f"}, {"a": [3.6, 7.458], "b": [3.6, 7.008], "c": "f"}, {"a": [3.6, 7.008], "b": [3.415, 6.299], "c": "f"}], "els": [{"id": "c1", "t": "contact", "dev": "-Q1", "kind": "na", "timed": null, "typ": "aux", "a": [2.4, 14.5], "b": [2.4, 13.858]}, {"id": "c2", "t": "contact", "dev": "-Q1", "kind": "na", "timed": null, "typ": "aux", "a": [3.0, 14.5], "b": [3.0, 13.858]}, {"id": "c3", "t": "contact", "dev": "-Q1", "kind": "na", "timed": null, "typ": "aux", "a": [3.6, 14.5], "b": [3.6, 13.858]}, {"id": "c4", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "main", "a": [2.4, 11.05], "b": [2.4, 10.408]}, {"id": "c5", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "main", "a": [3.0, 11.05], "b": [3.0, 10.408]}, {"id": "c6", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "main", "a": [3.6, 11.05], "b": [3.6, 10.408]}, {"id": "c7", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "main", "a": [5.6, 11.05], "b": [5.6, 10.408]}, {"id": "c8", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "main", "a": [6.2, 11.05], "b": [6.2, 10.408]}, {"id": "c9", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "main", "a": [6.8, 11.05], "b": [6.8, 10.408]}, {"id": "m10", "t": "motor", "dev": "-M1", "pts": [[2.4, 7.458], [3.0, 7.458], [3.6, 7.458]]}], "links": [[[2.4, 13.858], [2.4, 12.6]], [[3.0, 13.858], [3.0, 12.6]], [[3.6, 13.858], [3.6, 12.6]], [[2.4, 8.958], [2.4, 8.058]], [[3.0, 8.958], [3.0, 8.058]], [[3.6, 8.958], [3.6, 8.058]], [[2.4, 7.558], [2.4, 7.458]], [[3.0, 7.558], [3.0, 7.458]], [[3.6, 7.558], [3.6, 7.458]]], "src": [["L1", 2.4, 14.92], ["L2", 3.0, 14.92], ["L3", 3.6, 14.92]]}}, {"key": "M", "net": {"wires": [{"a": [2.3, 17.1], "b": [2.3, 16.9], "c": "f"}, {"a": [2.3, 16.9], "b": [2.3, 16.4], "c": "f"}, {"a": [2.3, 14.5], "b": [2.3, 14.35], "c": "f"}, {"a": [2.3, 14.35], "b": [2.3, 13.85], "c": "f"}, {"a": [2.3, 13.208], "b": [2.3, 12.908], "c": "f"}, {"a": [2.3, 12.908], "b": [2.3, 12.408], "c": "f"}, {"a": [2.3, 11.767], "b": [2.3, 11.267], "c": "f"}, {"a": [2.3, 10.625], "b": [2.3, 10.325], "c": "f"}, {"a": [2.3, 10.325], "b": [3.8, 10.325], "c": "f"}, {"a": [2.3, 10.325], "b": [2.3, 9.825], "c": "f"}, {"a": [2.3, 9.184], "b": [2.3, 8.775], "c": "f"}, {"a": [3.8, 10.325], "b": [3.8, 9.825], "c": "f"}, {"a": [3.8, 9.184], "b": [3.8, 8.775], "c": "f"}, {"a": [2.3, 8.775], "b": [3.8, 8.775], "c": "f"}, {"a": [2.3, 12.908], "b": [6.0, 12.908], "c": "f"}, {"a": [6.0, 12.908], "b": [6.0, 12.408], "c": "f"}, {"a": [6.0, 11.767], "b": [6.0, 11.467], "c": "f"}, {"a": [6.0, 11.467], "b": [7.6, 11.467], "c": "f"}, {"a": [7.6, 11.467], "b": [9.2, 11.467], "c": "f"}, {"a": [9.2, 11.467], "b": [14.2, 11.467], "c": "f"}, {"a": [14.2, 11.467], "b": [16.3, 11.467], "c": "f"}, {"a": [6.0, 11.467], "b": [7.6, 11.467], "c": "f"}, {"a": [7.6, 11.467], "b": [9.2, 11.467], "c": "f"}, {"a": [6.0, 11.467], "b": [6.0, 10.967], "c": "f"}, {"a": [6.0, 10.325], "b": [6.0, 9.917], "c": "f"}, {"a": [7.6, 11.467], "b": [7.6, 10.967], "c": "f"}, {"a": [7.6, 10.325], "b": [7.6, 9.917], "c": "f"}, {"a": [9.2, 11.467], "b": [9.2, 10.967], "c": "f"}, {"a": [9.2, 10.325], "b": [9.2, 9.917], "c": "f"}, {"a": [6.0, 9.917], "b": [7.6, 9.917], "c": "f"}, {"a": [7.6, 9.917], "b": [9.2, 9.917], "c": "f"}, {"a": [6.0, 9.917], "b": [6.0, 9.417], "c": "f"}, {"a": [6.0, 8.775], "b": [6.0, 8.275], "c": "f"}, {"a": [6.0, 7.634], "b": [6.0, 7.134], "c": "f"}, {"a": [9.2, 9.917], "b": [9.6, 9.917], "c": "f"}, {"a": [9.6, 9.917], "b": [9.6, 9.417], "c": "f"}, {"a": [9.6, 8.775], "b": [9.6, 8.475], "c": "f"}, {"a": [9.6, 8.475], "b": [11.8, 8.475], "c": "f"}, {"a": [9.6, 8.475], "b": [9.6, 7.975], "c": "f"}, {"a": [9.6, 7.334], "b": [9.6, 6.834], "c": "f"}, {"a": [14.2, 11.467], "b": [14.2, 10.967], "c": "f"}, {"a": [16.3, 11.467], "b": [16.3, 10.967], "c": "f"}, {"a": [16.3, 10.325], "b": [16.3, 9.825], "c": "f"}, {"a": [2.3, 14.35], "b": [18.4, 14.35], "c": "f"}, {"a": [18.4, 14.35], "b": [20.3, 14.35], "c": "f"}, {"a": [20.3, 14.35], "b": [22.2, 14.35], "c": "f"}, {"a": [22.2, 14.35], "b": [24.4, 14.35], "c": "f"}, {"a": [18.4, 14.35], "b": [18.4, 13.85], "c": "f"}, {"a": [20.3, 14.35], "b": [20.3, 13.85], "c": "f"}, {"a": [22.2, 14.35], "b": [22.2, 13.85], "c": "f"}, {"a": [24.4, 14.35], "b": [24.4, 13.85], "c": "f"}, {"a": [2.3, 8.775], "b": [2.3, 5.392], "c": "f"}, {"a": [2.3, 4.692], "b": [2.3, 4.142], "c": "n"}, {"a": [6.0, 6.492], "b": [6.0, 5.392], "c": "f"}, {"a": [6.0, 4.692], "b": [6.0, 4.142], "c": "n"}, {"a": [9.6, 6.192], "b": [9.6, 5.392], "c": "f"}, {"a": [9.6, 4.692], "b": [9.6, 4.142], "c": "n"}, {"a": [11.8, 8.475], "b": [11.8, 5.392], "c": "f"}, {"a": [11.8, 4.692], "b": [11.8, 4.142], "c": "n"}, {"a": [14.2, 10.325], "b": [14.2, 5.392], "c": "f"}, {"a": [14.2, 4.692], "b": [14.2, 4.142], "c": "n"}, {"a": [16.3, 9.184], "b": [16.3, 5.392], "c": "f"}, {"a": [16.3, 4.692], "b": [16.3, 4.142], "c": "n"}, {"a": [18.4, 13.208], "b": [18.4, 5.392], "c": "f"}, {"a": [18.4, 4.792], "b": [18.4, 4.142], "c": "n"}, {"a": [20.3, 13.208], "b": [20.3, 5.392], "c": "f"}, {"a": [20.3, 4.792], "b": [20.3, 4.142], "c": "n"}, {"a": [22.2, 13.208], "b": [22.2, 5.392], "c": "f"}, {"a": [22.2, 4.792], "b": [22.2, 4.142], "c": "n"}, {"a": [24.4, 13.85], "b": [24.4, 5.392], "c": "f"}, {"a": [24.4, 4.692], "b": [24.4, 4.142], "c": "n"}, {"a": [0.9, 4.142], "b": [2.3, 4.142], "c": "n"}, {"a": [2.3, 4.142], "b": [6.0, 4.142], "c": "n"}, {"a": [6.0, 4.142], "b": [9.6, 4.142], "c": "n"}, {"a": [9.6, 4.142], "b": [11.8, 4.142], "c": "n"}, {"a": [11.8, 4.142], "b": [14.2, 4.142], "c": "n"}, {"a": [14.2, 4.142], "b": [16.3, 4.142], "c": "n"}, {"a": [16.3, 4.142], "b": [18.4, 4.142], "c": "n"}, {"a": [18.4, 4.142], "b": [20.3, 4.142], "c": "n"}, {"a": [20.3, 4.142], "b": [22.2, 4.142], "c": "n"}, {"a": [22.2, 4.142], "b": [24.4, 4.142], "c": "n"}], "els": [{"id": "c1", "t": "contact", "dev": "-Q2", "kind": "na", "timed": null, "typ": "aux", "a": [2.3, 16.4], "b": [2.3, 15.758]}, {"id": "c2", "t": "contact", "dev": "-F1", "kind": "nc", "timed": null, "typ": "aux", "a": [2.3, 13.85], "b": [2.3, 13.208]}, {"id": "c3", "t": "contact", "dev": "-S1", "kind": "nc", "timed": null, "typ": "aux", "a": [2.3, 12.408], "b": [2.3, 11.767]}, {"id": "c4", "t": "contact", "dev": "-S3", "kind": "nc", "timed": null, "typ": "aux", "a": [2.3, 11.267], "b": [2.3, 10.625]}, {"id": "c5", "t": "contact", "dev": "-S2", "kind": "na", "timed": null, "typ": "aux", "a": [2.3, 9.825], "b": [2.3, 9.184]}, {"id": "c6", "t": "contact", "dev": "-KA1", "kind": "na", "timed": null, "typ": "aux", "a": [3.8, 9.825], "b": [3.8, 9.184]}, {"id": "c7", "t": "contact", "dev": "-KA1", "kind": "na", "timed": null, "typ": "aux", "a": [6.0, 12.408], "b": [6.0, 11.767]}, {"id": "c8", "t": "contact", "dev": "-KT3", "kind": "na", "timed": "on", "typ": "aux", "a": [6.0, 10.967], "b": [6.0, 10.325]}, {"id": "c9", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "aux", "a": [7.6, 10.967], "b": [7.6, 10.325]}, {"id": "c10", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "aux", "a": [9.2, 10.967], "b": [9.2, 10.325]}, {"id": "c11", "t": "contact", "dev": "-KT1", "kind": "nc", "timed": "on", "typ": "aux", "a": [6.0, 9.417], "b": [6.0, 8.775]}, {"id": "c12", "t": "contact", "dev": "-FC2", "kind": "nc", "timed": null, "typ": "aux", "a": [6.0, 8.275], "b": [6.0, 7.634]}, {"id": "c13", "t": "contact", "dev": "-KM2", "kind": "nc", "timed": null, "typ": "aux", "a": [6.0, 7.134], "b": [6.0, 6.492]}, {"id": "c14", "t": "contact", "dev": "-KT1", "kind": "na", "timed": "on", "typ": "aux", "a": [9.6, 9.417], "b": [9.6, 8.775]}, {"id": "c15", "t": "contact", "dev": "-FC1", "kind": "nc", "timed": null, "typ": "aux", "a": [9.6, 7.975], "b": [9.6, 7.334]}, {"id": "c16", "t": "contact", "dev": "-KM1", "kind": "nc", "timed": null, "typ": "aux", "a": [9.6, 6.834], "b": [9.6, 6.192]}, {"id": "c17", "t": "contact", "dev": "-KT2", "kind": "nc", "timed": "on", "typ": "aux", "a": [14.2, 10.967], "b": [14.2, 10.325]}, {"id": "c18", "t": "contact", "dev": "-KM1", "kind": "nc", "timed": null, "typ": "aux", "a": [16.3, 10.967], "b": [16.3, 10.325]}, {"id": "c19", "t": "contact", "dev": "-KM2", "kind": "nc", "timed": null, "typ": "aux", "a": [16.3, 9.825], "b": [16.3, 9.184]}, {"id": "c20", "t": "contact", "dev": "-KM1", "kind": "na", "timed": null, "typ": "aux", "a": [18.4, 13.85], "b": [18.4, 13.208]}, {"id": "c21", "t": "contact", "dev": "-KM2", "kind": "na", "timed": null, "typ": "aux", "a": [20.3, 13.85], "b": [20.3, 13.208]}, {"id": "c22", "t": "contact", "dev": "-F1", "kind": "na", "timed": null, "typ": "aux", "a": [22.2, 13.85], "b": [22.2, 13.208]}, {"id": "k23", "t": "coil", "dev": "-KA1", "a": [2.3, 5.392], "b": [2.3, 4.692]}, {"id": "k24", "t": "coil", "dev": "-KM1", "a": [6.0, 5.392], "b": [6.0, 4.692]}, {"id": "k25", "t": "coil", "dev": "-KM2", "a": [9.6, 5.392], "b": [9.6, 4.692]}, {"id": "k26", "t": "coil", "dev": "-KT2", "timer": "on", "a": [11.8, 5.392], "b": [11.8, 4.692]}, {"id": "k27", "t": "coil", "dev": "-KT1", "timer": "on", "a": [14.2, 5.392], "b": [14.2, 4.692]}, {"id": "k28", "t": "coil", "dev": "-KT3", "timer": "on", "a": [16.3, 5.392], "b": [16.3, 4.692]}, {"id": "h29", "t": "pilot", "dev": "-H1", "color": "#9BE09B", "a": [18.4, 5.392], "b": [18.4, 4.792]}, {"id": "h30", "t": "pilot", "dev": "-H2", "color": "#9BC8F0", "a": [20.3, 5.392], "b": [20.3, 4.792]}, {"id": "h31", "t": "pilot", "dev": "-H3", "color": "#F4A04A", "a": [22.2, 5.392], "b": [22.2, 4.792]}, {"id": "k32", "t": "det", "dev": "-S3", "a": [24.4, 5.392], "b": [24.4, 4.692]}], "links": [[[2.3, 15.758], [2.3, 14.5]]], "src": [["L", 2.3, 17.35], ["N", 0.75, 4.142]]}}]; var CFG = {"timers": {"-KT1": 10, "-KT2": 7, "-KT3": 3}, "animT": {"-KT1": 5, "-KT2": 3, "-KT3": 2}}; var DRAWCOL = {"-H1": "#9BE09B", "-H2": "#9BC8F0", "-H3": "#F4A04A"};</script>
-<script>(function(){
-'use strict';
+<script>
+window.PAGE = {"edges": [{"t": "w", "a": "L", "b": "170,58", "d": "M170 34 L170 58", "dr": "M170 58 L170 34"}, {"t": "q", "a": "170,58", "b": "170,200", "d": "M170 58 L170 200", "dr": "M170 200 L170 58", "id": "Q2"}, {"t": "w", "a": "170,200", "b": "170,220", "d": "M170 200 L170 220", "dr": "M170 220 L170 200"}, {"t": "w", "a": "170,220", "b": "170,236", "d": "M170 220 L170 236", "dr": "M170 236 L170 220"}, {"t": "nc", "a": "170,236", "b": "170,302", "d": "M170 236 L170 302", "dr": "M170 302 L170 236", "ctl": "F1", "rmode": "open"}, {"t": "w", "a": "170,302", "b": "170,330", "d": "M170 302 L170 330", "dr": "M170 330 L170 302"}, {"t": "w", "a": "170,330", "b": "170,350", "d": "M170 330 L170 350", "dr": "M170 350 L170 330"}, {"t": "w", "a": "170,330", "b": "430,330", "d": "M170 330 L430 330", "dr": "M430 330 L170 330"}, {"t": "w", "a": "430,330", "b": "430,350", "d": "M430 330 L430 350", "dr": "M430 350 L430 330"}, {"t": "nc", "a": "170,350", "b": "170,416", "d": "M170 350 L170 416", "dr": "M170 416 L170 350", "ctl": "S1", "rmode": "open"}, {"t": "w", "a": "170,416", "b": "170,446", "d": "M170 416 L170 446", "dr": "M170 446 L170 416"}, {"t": "nc", "a": "170,446", "b": "170,512", "d": "M170 446 L170 512", "dr": "M170 512 L170 446", "ctl": "FC3", "rmode": "open"}, {"t": "w", "a": "170,512", "b": "170,540", "d": "M170 512 L170 540", "dr": "M170 540 L170 512"}, {"t": "w", "a": "170,540", "b": "170,570", "d": "M170 540 L170 570", "dr": "M170 570 L170 540"}, {"t": "w", "a": "170,540", "b": "280,540", "d": "M170 540 L280 540", "dr": "M280 540 L170 540"}, {"t": "w", "a": "280,540", "b": "280,570", "d": "M280 540 L280 570", "dr": "M280 570 L280 540"}, {"t": "no", "a": "170,570", "b": "170,636", "d": "M170 570 L170 636", "dr": "M170 636 L170 570", "ctl": "S2", "rmode": "open"}, {"t": "no", "a": "280,570", "b": "280,636", "d": "M280 570 L280 636", "dr": "M280 636 L280 570", "ctl": "KA1", "rmode": "open"}, {"t": "w", "a": "280,636", "b": "280,666", "d": "M280 636 L280 666", "dr": "M280 666 L280 636"}, {"t": "w", "a": "280,666", "b": "170,666", "d": "M280 666 L170 666", "dr": "M170 666 L280 666"}, {"t": "w", "a": "170,636", "b": "170,666", "d": "M170 636 L170 666", "dr": "M170 666 L170 636"}, {"t": "w", "a": "170,666", "b": "170,970", "d": "M170 666 L170 970", "dr": "M170 970 L170 666"}, {"t": "load", "a": "170,970", "b": "170,1030", "d": "M170 970 L170 1030", "dr": "M170 1030 L170 970", "load": true, "id": "KA1"}, {"t": "no", "a": "430,350", "b": "430,416", "d": "M430 350 L430 416", "dr": "M430 416 L430 350", "ctl": "KA1", "rmode": "open"}, {"t": "w", "a": "430,416", "b": "430,448", "d": "M430 416 L430 448", "dr": "M430 448 L430 416"}, {"t": "w", "a": "430,448", "b": "540,448", "d": "M430 448 L540 448", "dr": "M540 448 L430 448"}, {"t": "w", "a": "540,448", "b": "650,448", "d": "M540 448 L650 448", "dr": "M650 448 L540 448"}, {"t": "w", "a": "650,448", "b": "950,448", "d": "M650 448 L950 448", "dr": "M950 448 L650 448"}, {"t": "w", "a": "950,448", "b": "1090,448", "d": "M950 448 L1090 448", "dr": "M1090 448 L950 448"}, {"t": "w", "a": "430,448", "b": "430,478", "d": "M430 448 L430 478", "dr": "M430 478 L430 448"}, {"t": "w", "a": "540,448", "b": "540,478", "d": "M540 448 L540 478", "dr": "M540 478 L540 448"}, {"t": "w", "a": "650,448", "b": "650,478", "d": "M650 448 L650 478", "dr": "M650 478 L650 448"}, {"t": "w", "a": "950,448", "b": "950,478", "d": "M950 448 L950 478", "dr": "M950 478 L950 448"}, {"t": "w", "a": "1090,448", "b": "1090,478", "d": "M1090 448 L1090 478", "dr": "M1090 478 L1090 448"}, {"t": "no", "a": "430,478", "b": "430,544", "d": "M430 478 L430 544", "dr": "M430 544 L430 478", "ctl": "KT3t", "rmode": "open"}, {"t": "no", "a": "540,478", "b": "540,544", "d": "M540 478 L540 544", "dr": "M540 544 L540 478", "ctl": "KM1", "rmode": "open"}, {"t": "no", "a": "650,478", "b": "650,544", "d": "M650 478 L650 544", "dr": "M650 544 L650 478", "ctl": "KM2", "rmode": "open"}, {"t": "w", "a": "430,544", "b": "430,574", "d": "M430 544 L430 574", "dr": "M430 574 L430 544"}, {"t": "w", "a": "540,544", "b": "540,574", "d": "M540 544 L540 574", "dr": "M540 574 L540 544"}, {"t": "w", "a": "650,544", "b": "650,574", "d": "M650 544 L650 574", "dr": "M650 574 L650 544"}, {"t": "w", "a": "430,574", "b": "540,574", "d": "M430 574 L540 574", "dr": "M540 574 L430 574"}, {"t": "w", "a": "540,574", "b": "650,574", "d": "M540 574 L650 574", "dr": "M650 574 L540 574"}, {"t": "w", "a": "430,574", "b": "430,604", "d": "M430 574 L430 604", "dr": "M430 604 L430 574"}, {"t": "nc", "a": "430,604", "b": "430,670", "d": "M430 604 L430 670", "dr": "M430 670 L430 604", "ctl": "KT1t", "rmode": "open"}, {"t": "w", "a": "430,670", "b": "430,730", "d": "M430 670 L430 730", "dr": "M430 730 L430 670"}, {"t": "nc", "a": "430,730", "b": "430,796", "d": "M430 730 L430 796", "dr": "M430 796 L430 730", "ctl": "FC2", "rmode": "open"}, {"t": "w", "a": "430,796", "b": "430,860", "d": "M430 796 L430 860", "dr": "M430 860 L430 796"}, {"t": "nc", "a": "430,860", "b": "430,926", "d": "M430 860 L430 926", "dr": "M430 926 L430 860", "ctl": "KM2", "rmode": "open"}, {"t": "w", "a": "430,926", "b": "430,970", "d": "M430 926 L430 970", "dr": "M430 970 L430 926"}, {"t": "load", "a": "430,970", "b": "430,1030", "d": "M430 970 L430 1030", "dr": "M430 1030 L430 970", "load": true, "id": "KM1"}, {"t": "w", "a": "650,574", "b": "650,604", "d": "M650 574 L650 604", "dr": "M650 604 L650 574"}, {"t": "no", "a": "650,604", "b": "650,670", "d": "M650 604 L650 670", "dr": "M650 670 L650 604", "ctl": "KT1t", "rmode": "open"}, {"t": "w", "a": "650,670", "b": "650,700", "d": "M650 670 L650 700", "dr": "M650 700 L650 670"}, {"t": "w", "a": "650,700", "b": "650,730", "d": "M650 700 L650 730", "dr": "M650 730 L650 700"}, {"t": "w", "a": "650,700", "b": "800,700", "d": "M650 700 L800 700", "dr": "M800 700 L650 700"}, {"t": "w", "a": "800,700", "b": "800,970", "d": "M800 700 L800 970", "dr": "M800 970 L800 700"}, {"t": "load", "a": "800,970", "b": "800,1030", "d": "M800 970 L800 1030", "dr": "M800 1030 L800 970", "load": true, "id": "KT2"}, {"t": "nc", "a": "650,730", "b": "650,796", "d": "M650 730 L650 796", "dr": "M650 796 L650 730", "ctl": "FC1", "rmode": "open"}, {"t": "w", "a": "650,796", "b": "650,860", "d": "M650 796 L650 860", "dr": "M650 860 L650 796"}, {"t": "nc", "a": "650,860", "b": "650,926", "d": "M650 860 L650 926", "dr": "M650 926 L650 860", "ctl": "KM1", "rmode": "open"}, {"t": "w", "a": "650,926", "b": "650,970", "d": "M650 926 L650 970", "dr": "M650 970 L650 926"}, {"t": "load", "a": "650,970", "b": "650,1030", "d": "M650 970 L650 1030", "dr": "M650 1030 L650 970", "load": true, "id": "KM2"}, {"t": "nc", "a": "950,478", "b": "950,544", "d": "M950 478 L950 544", "dr": "M950 544 L950 478", "ctl": "KT2t", "rmode": "open"}, {"t": "w", "a": "950,544", "b": "950,970", "d": "M950 544 L950 970", "dr": "M950 970 L950 544"}, {"t": "load", "a": "950,970", "b": "950,1030", "d": "M950 970 L950 1030", "dr": "M950 1030 L950 970", "load": true, "id": "KT1"}, {"t": "nc", "a": "1090,478", "b": "1090,544", "d": "M1090 478 L1090 544", "dr": "M1090 544 L1090 478", "ctl": "KM1", "rmode": "open"}, {"t": "w", "a": "1090,544", "b": "1090,604", "d": "M1090 544 L1090 604", "dr": "M1090 604 L1090 544"}, {"t": "nc", "a": "1090,604", "b": "1090,670", "d": "M1090 604 L1090 670", "dr": "M1090 670 L1090 604", "ctl": "KM2", "rmode": "open"}, {"t": "w", "a": "1090,670", "b": "1090,970", "d": "M1090 670 L1090 970", "dr": "M1090 970 L1090 670"}, {"t": "load", "a": "1090,970", "b": "1090,1030", "d": "M1090 970 L1090 1030", "dr": "M1090 1030 L1090 970", "load": true, "id": "KT3"}, {"t": "w", "a": "170,220", "b": "1200,220", "d": "M170 220 L1200 220", "dr": "M1200 220 L170 220"}, {"t": "w", "a": "1200,220", "b": "1320,220", "d": "M1200 220 L1320 220", "dr": "M1320 220 L1200 220"}, {"t": "w", "a": "1320,220", "b": "1450,220", "d": "M1320 220 L1450 220", "dr": "M1450 220 L1320 220"}, {"t": "w", "a": "1200,220", "b": "1200,236", "d": "M1200 220 L1200 236", "dr": "M1200 236 L1200 220"}, {"t": "no", "a": "1200,236", "b": "1200,302", "d": "M1200 236 L1200 302", "dr": "M1200 302 L1200 236", "ctl": "KM1", "rmode": "open"}, {"t": "w", "a": "1200,302", "b": "1200,970", "d": "M1200 302 L1200 970", "dr": "M1200 970 L1200 302"}, {"t": "load", "a": "1200,970", "b": "1200,1030", "d": "M1200 970 L1200 1030", "dr": "M1200 1030 L1200 970", "load": true, "id": "H1"}, {"t": "w", "a": "1320,220", "b": "1320,236", "d": "M1320 220 L1320 236", "dr": "M1320 236 L1320 220"}, {"t": "no", "a": "1320,236", "b": "1320,302", "d": "M1320 236 L1320 302", "dr": "M1320 302 L1320 236", "ctl": "KM2", "rmode": "open"}, {"t": "w", "a": "1320,302", "b": "1320,970", "d": "M1320 302 L1320 970", "dr": "M1320 970 L1320 302"}, {"t": "load", "a": "1320,970", "b": "1320,1030", "d": "M1320 970 L1320 1030", "dr": "M1320 1030 L1320 970", "load": true, "id": "H2"}, {"t": "w", "a": "1450,220", "b": "1450,236", "d": "M1450 220 L1450 236", "dr": "M1450 236 L1450 220"}, {"t": "no", "a": "1450,236", "b": "1450,302", "d": "M1450 236 L1450 302", "dr": "M1450 302 L1450 236", "ctl": "F1", "rmode": "open"}, {"t": "w", "a": "1450,302", "b": "1450,970", "d": "M1450 302 L1450 970", "dr": "M1450 970 L1450 302"}, {"t": "load", "a": "1450,970", "b": "1450,1030", "d": "M1450 970 L1450 1030", "dr": "M1450 1030 L1450 970", "load": true, "id": "H3"}, {"t": "w", "a": "170,1030", "b": "170,1062", "d": "M170 1030 L170 1062", "dr": "M170 1062 L170 1030"}, {"t": "w", "a": "430,1030", "b": "430,1062", "d": "M430 1030 L430 1062", "dr": "M430 1062 L430 1030"}, {"t": "w", "a": "650,1030", "b": "650,1062", "d": "M650 1030 L650 1062", "dr": "M650 1062 L650 1030"}, {"t": "w", "a": "800,1030", "b": "800,1062", "d": "M800 1030 L800 1062", "dr": "M800 1062 L800 1030"}, {"t": "w", "a": "950,1030", "b": "950,1062", "d": "M950 1030 L950 1062", "dr": "M950 1062 L950 1030"}, {"t": "w", "a": "1090,1030", "b": "1090,1062", "d": "M1090 1030 L1090 1062", "dr": "M1090 1062 L1090 1030"}, {"t": "w", "a": "1200,1030", "b": "1200,1062", "d": "M1200 1030 L1200 1062", "dr": "M1200 1062 L1200 1030"}, {"t": "w", "a": "1320,1030", "b": "1320,1062", "d": "M1320 1030 L1320 1062", "dr": "M1320 1062 L1320 1030"}, {"t": "w", "a": "1450,1030", "b": "1450,1062", "d": "M1450 1030 L1450 1062", "dr": "M1450 1062 L1450 1030"}, {"t": "w", "a": "N", "b": "170,1062", "d": "M90 1062 L170 1062", "dr": "M170 1062 L90 1062"}, {"t": "w", "a": "170,1062", "b": "430,1062", "d": "M170 1062 L430 1062", "dr": "M430 1062 L170 1062"}, {"t": "w", "a": "430,1062", "b": "650,1062", "d": "M430 1062 L650 1062", "dr": "M650 1062 L430 1062"}, {"t": "w", "a": "650,1062", "b": "800,1062", "d": "M650 1062 L800 1062", "dr": "M800 1062 L650 1062"}, {"t": "w", "a": "800,1062", "b": "950,1062", "d": "M800 1062 L950 1062", "dr": "M950 1062 L800 1062"}, {"t": "w", "a": "950,1062", "b": "1090,1062", "d": "M950 1062 L1090 1062", "dr": "M1090 1062 L950 1062"}, {"t": "w", "a": "1090,1062", "b": "1200,1062", "d": "M1090 1062 L1200 1062", "dr": "M1200 1062 L1090 1062"}, {"t": "w", "a": "1200,1062", "b": "1320,1062", "d": "M1200 1062 L1320 1062", "dr": "M1320 1062 L1200 1062"}, {"t": "w", "a": "1320,1062", "b": "1450,1062", "d": "M1320 1062 L1450 1062", "dr": "M1450 1062 L1320 1062"}], "devs": [{"t": "q", "key": "d1", "id": "Q2"}, {"t": "nc", "key": "d2", "ctl": "F1", "btn": false, "rm": null}, {"t": "nc", "key": "d3", "ctl": "S1", "btn": true, "rm": null}, {"t": "nc", "key": "d4", "ctl": "FC3", "btn": true, "rm": null}, {"t": "no", "key": "d5", "ctl": "S2", "btn": true, "rm": null}, {"t": "no", "key": "d6", "ctl": "KA1", "btn": false, "rm": null}, {"t": "coil", "key": "d7", "id": "KA1"}, {"t": "no", "key": "d8", "ctl": "KA1", "btn": false, "rm": null}, {"t": "no", "key": "d9", "ctl": "KT3t", "btn": false, "rm": null}, {"t": "no", "key": "d10", "ctl": "KM1", "btn": false, "rm": null}, {"t": "no", "key": "d11", "ctl": "KM2", "btn": false, "rm": null}, {"t": "nc", "key": "d12", "ctl": "KT1t", "btn": false, "rm": null}, {"t": "nc", "key": "d13", "ctl": "FC2", "btn": true, "rm": null}, {"t": "nc", "key": "d14", "ctl": "KM2", "btn": false, "rm": null}, {"t": "coil", "key": "d15", "id": "KM1"}, {"t": "no", "key": "d16", "ctl": "KT1t", "btn": false, "rm": null}, {"t": "coil", "key": "d17", "id": "KT2"}, {"t": "nc", "key": "d18", "ctl": "FC1", "btn": true, "rm": null}, {"t": "nc", "key": "d19", "ctl": "KM1", "btn": false, "rm": null}, {"t": "coil", "key": "d20", "id": "KM2"}, {"t": "nc", "key": "d21", "ctl": "KT2t", "btn": false, "rm": null}, {"t": "coil", "key": "d22", "id": "KT1"}, {"t": "nc", "key": "d23", "ctl": "KM1", "btn": false, "rm": null}, {"t": "nc", "key": "d24", "ctl": "KM2", "btn": false, "rm": null}, {"t": "coil", "key": "d25", "id": "KT3"}, {"t": "no", "key": "d26", "ctl": "KM1", "btn": false, "rm": null}, {"t": "lamp", "key": "d27", "id": "H1"}, {"t": "no", "key": "d28", "ctl": "KM2", "btn": false, "rm": null}, {"t": "lamp", "key": "d29", "id": "H2"}, {"t": "no", "key": "d30", "ctl": "F1", "btn": false, "rm": null}, {"t": "lamp", "key": "d31", "id": "H3"}], "buttons": ["S1", "S2", "F1", "FC3"], "coils": ["KA1", "KT3", "KT1", "KT2", "KM1", "KM2"], "qs": ["Q2"], "removables": [], "keys": {"m": "S2", "p": "S1"}};
+
+var T = {}, TIM = [], VIAJE = 4, pos = 0, lastT = null, dirC = 0, HASCARRO = false;
 var $ = function(id){ return document.getElementById(id); };
-var K3 = function(p){ return p[0].toFixed(3) + ',' + p[1].toFixed(3); };
-var G = { edges: [], cons: [], srcs: [], nsrc: [] };
-var DEV = {};
-function dev(name){ if (!DEV[name]) DEV[name] = { name: name, en: false, t: 0, out: false, on: true, pressed: false, tripped: false, latched: false, kind: '' }; return DEV[name]; }
-
-DRAW.forEach(function(d){
-  var k = d.key, net = d.net, nk = function(p){ return k + ':' + K3(p); };
-  var ends = [];
-  net.wires.forEach(function(w, i){
-    G.edges.push({ t: 'w', a: nk(w.a), b: nk(w.b), c: w.c, el: $(k + 'w' + i), fl: $(k + 'fw' + i) });
-    ends.push(w.a, w.b);
-  });
-  net.links.forEach(function(l){ G.edges.push({ t: 'l', a: nk(l[0]), b: nk(l[1]) }); });
-  net.els.forEach(function(e){
-    var el = $(k + e.id);
-    if (e.t === 'contact'){ G.edges.push({ t: 'c', a: nk(e.a), b: nk(e.b), dev: e.dev, kind: e.kind, timed: e.timed, el: el }); dev(e.dev); }
-    else if (e.t === 'motor'){ G.cons.push({ t: 'motor', dev: e.dev, pts: e.pts.map(nk), el: el }); }
-    else {
-      G.cons.push({ t: e.t, dev: e.dev, a: nk(e.a), b: nk(e.b), timer: e.timer, el: el, glow: e.t === 'pilot' ? $(k + 'g' + e.id) : null });
-      if (e.t === 'coil'){ var D = dev(e.dev); D.coil = true; if (e.timer) D.timer = e.timer; }
-    }
-  });
-  (net.src || []).forEach(function(s){
-    var best = null, bd = 1e9;
-    ends.forEach(function(p){ var dd = Math.abs(p[0] - s[1]) + Math.abs(p[1] - s[2]); if (dd < bd){ bd = dd; best = p; } });
-    if (best){ if (s[0] === 'N') G.nsrc.push(nk(best)); else G.srcs.push({ node: nk(best), lbl: s[0] }); }
-  });
-});
-// tipos de aparato a partir de la zona que se toca en el esquema
-Array.prototype.forEach.call(document.querySelectorAll('.hit'), function(h){ var D = dev(h.getAttribute('data-dev')); D.kind = h.getAttribute('data-hit'); });
-Object.keys(DEV).forEach(function(n){
-  var D = DEV[n];
-  if (/^-Q/.test(n)) D.kind = 'q';
-  if (D.timer){ D.T = Math.max(1, Math.min(5, (CFG.animT && CFG.animT[n]) || (CFG.timers && CFG.timers[n]) || 3)); }
-});
-
-var short = false, speed = 1, lastMsg = '', ev = '';
-function actuated(e){
-  var D = DEV[e.dev];
-  if (/^-Q/.test(e.dev)) return D.on;
-  if (/^-F\d/.test(e.dev) && !D.coil) return D.tripped;
-  if (D.coil) return e.timed ? D.out : D.en;
-  return D.pressed;
+function fmt(s){ return s.toFixed(1).replace('.', ',') + ' s'; }
+function left(st, c){ if (st.tm[c] == null || st.ext[c + 't']) return null; return Math.max(0, T[c] - (performance.now() - st.tm[c]) / 1000); }
+function timerCoil(st, c){ if (TIM.indexOf(c) < 0) return; if (st.coil[c]) st.tm[c] = performance.now(); else { st.tm[c] = null; st.ext[c + 't'] = false; } }
+function fcUpd(st){ if (!HASCARRO) return false; var a = pos <= 0.0005, b = pos >= 0.9995, ch = (a !== st.ext.FC1) || (b !== st.ext.FC2); st.ext.FC1 = a; st.ext.FC2 = b; return ch; }
+function drawCarro(st){
+  TIM.forEach(function(c){ var l = left(st, c), e = $('cd_' + c), d = $('cdx_' + c);
+    if (e) e.textContent = l === null ? '' : fmt(l);
+    if (d) d.textContent = l === null ? (st.ext[c + 't'] ? 'ya ha contado' : '') : 'faltan ' + fmt(l); });
+  if (!HASCARRO) return;
+  $('carro').setAttribute('transform', 'translate(' + (88 + pos * 464).toFixed(1) + ' 0)');
+  $('fcb1').classList.toggle('on', !!st.ext.FC1); $('fc1box').classList.toggle('on', !!st.ext.FC1);
+  $('fcb2').classList.toggle('on', !!st.ext.FC2); $('fc2box').classList.toggle('on', !!st.ext.FC2);
+  $('carroDir').textContent = dirC > 0 ? '→' : dirC < 0 ? '←' : '';
 }
+function tick(now){
+  var P = PAGE, st = P.st; if (!st){ requestAnimationFrame(tick); return; }
+  var dt = lastT === null ? 0 : Math.min(0.2, (now - lastT) / 1000); lastT = now;
+  var ch = false;
+  TIM.forEach(function(c){ if (st.tm[c] != null && !st.ext[c + 't'] && (now - st.tm[c]) / 1000 >= T[c]){ st.ext[c + 't'] = true; st.last = c + 'fin'; ch = true; } });
+  dirC = (st.coil.KM1 && !st.coil.KM2) ? 1 : (st.coil.KM2 && !st.coil.KM1) ? -1 : 0;
+  if (HASCARRO && dirC){ pos = Math.min(1, Math.max(0, pos + dirC * dt / VIAJE)); if (fcUpd(st)){ ch = true; st.last = 'fc'; } }
+  if (ch) P.settle(); else drawCarro(st);
+  requestAnimationFrame(tick);
+}
+function motorStatus(st){
+  var a = st.coil.KM1, b = st.coil.KM2, dir = (a && !b) ? 'R' : (b && !a) ? 'L' : '';
+  [['rotorR','R','spinR'],['rotorL','L','spinL']].forEach(function(q){ var e = $(q[0]); if (!e) return; e.style.display = dir === q[1] ? '' : 'none'; e.classList.toggle(q[2], dir === q[1]); });
+  document.querySelectorAll('[data-led]').forEach(function(d){ var k = d.getAttribute('data-led'); d.classList.toggle('on', !!st.coil[k]); });
+  return dir;
+}
+
+T = { KT3: 2, KT1: 5, KT2: 3 }; TIM = ['KT3','KT1','KT2']; HASCARRO = true; VIAJE = 4; pos = 0.5;
+PAGE.init = function(st){ st.ext.FC1 = false; st.ext.FC2 = false; TIM.forEach(function(c){ st.ext[c + 't'] = false; st.tm[c] = null; }); };
+PAGE.coilChange = function(st, c){ timerCoil(st, c); };
+function door(st){ st.btn.FC3 = !st.btn.FC3; st.last = st.btn.FC3 ? 'abre' : 'cierra'; }
+PAGE.extra = [
+  { el:'bOver', fn:function(st){ st.btn.F1 = !st.btn.F1; st.last = st.btn.F1 ? 'over' : 'rearme'; } },
+  { el:'gF1', fn:function(st){ st.btn.F1 = !st.btn.F1; st.last = st.btn.F1 ? 'over' : 'rearme'; } },
+  { el:'bDoor', fn:door }, { el:'gFC3', fn:door }, { el:'puerta', fn:door },
+  { el:'bCentro', fn:function(st){ if (st.coil.KM1 || st.coil.KM2) return; pos = 0.5; fcUpd(st); st.last = 'centro'; } }
+];
+PAGE.status = function(st, R){
+  var d = motorStatus(st), s = $('stxt');
+  s.textContent = d === 'R' ? 'Gira a derechas (hacia -FC2)' : d === 'L' ? 'Gira a izquierdas (hacia -FC1)' : st.coil.KA1 ? 'Parado: pausa' : 'Parado';
+  s.className = 'state ' + (d ? 'run' : 'stop');
+  $('bOver').textContent = st.btn.F1 ? 'Rearmar el térmico -F1' : 'Provocar sobrecarga (-F1)';
+  $('bDoor').textContent = st.btn.FC3 ? 'Cerrar la puerta' : 'Abrir la puerta (-FC3)';
+  $('hoja').style.transform = st.btn.FC3 ? 'rotate(-75deg)' : '';
+  $('fc3box').classList.toggle('on', !!st.btn.FC3);
+  $('doorTxt').textContent = st.btn.FC3 ? 'puerta abierta' : 'puerta cerrada';
+  $('bCentro').disabled = !!(st.coil.KM1 || st.coil.KM2);
+  drawCarro(st);
+};
+PAGE.msg = function(st, R){
+  var B = st.btn, E = st.ext, a = st.coil.KM1, b = st.coil.KM2, ka = st.coil.KA1;
+  if (!st.q.Q2) return '<b>-Q2 abierto:</b> el mando se queda sin tensión. Ciérralo tocándolo en el esquema.';
+  if (B.F1) return '<b>Sobrecarga:</b> el térmico -F1 abre su <span class="k">95-96</span> (cae -KA1 y, con su 21-24, todo el ciclo) y cierra su <span class="k">97-98</span>: se enciende el aviso <b>-H3</b>. Al rearmarlo no arranca solo: hay que volver a pulsar -S2.';
+  if (B.FC3) return '<b>Puerta abierta:</b> la puerta pisa <b>-FC3</b> y su <span class="k">NC 1-2</span>, en serie con el paro, se abre. Cae -KA1 y se para todo. Al cerrarla, el carro <b>no arranca solo</b>: hay que volver a pulsar -S2.';
+  if (B.S1) return '<b>Paro -S1:</b> cae -KA1, pierde su realimentación (11-14) y su 21-24 deja sin tensión todo el ciclo.';
+  if (!ka) return 'Pulsa <b>-S2</b> para empezar el ciclo: -KA1 se activa, se realimenta con su <span class="k">11-14</span> y su <span class="k">21-24</span> da tensión a todo el ciclo.';
+  if (a) return '<b>Gira a derechas (-KM1)</b> por el <span class="k">55-56 de -KT1</span>, que sigue contando. Cuando acabe, su 55-56 se abre y cae -KM1. Si antes llega a <b>-FC2</b>, su NC 1-2 lo para.';
+  if (b) return '<b>Gira a izquierdas (-KM2)</b> por el <span class="k">67-68 de -KT1</span>. Cuenta <b>-KT2</b>: cuando acabe, su 55-56 quita la tensión a -KT1, se abre su 67-68, cae -KM2 y vuelve a empezar. Si antes llega a <b>-FC1</b>, su NC 1-2 lo para.';
+  if (st.coil.KT3){ var sig = E.KT1t ? 'a izquierdas' : 'a derechas';
+    if (E.FC2 && !E.KT1t) return '<b>-FC2:</b> el carro ha llegado al final antes de acabar el tiempo y su NC 1-2 ha parado -KM1. -KT1 sigue contando; tras la pausa saldrá <b>a izquierdas</b>.';
+    return '<b>Pausa:</b> -KT3 cuenta (su bobina pasa por los <span class="k">71-72</span> de -KM1 y -KM2: solo con el motor parado). Al acabar, su <span class="k">67-68</span> da paso a los contactores y saldrá <b>' + sig + '</b>.'; }
+  if (E.FC1 && !st.coil.KT2) return 'El carro está en <b>-FC1</b>: su NC 1-2 impide girar a izquierdas. Cuando -KT1 vuelva a cero, saldrá a derechas.';
+  return '-KA1 activado. Esperando a que cuenten los temporizadores.';
+};
+
+</script>
+<script>(function(){ // trazos de "cable con tensión" sobre cada cable
+  var P = window.PAGE, svg = document.getElementById('mando'); if (!P || !svg) return;
+  var first = svg.querySelector('.flow');
+  P.edges.forEach(function(e, i){
+    if (e.t !== 'w' || !e.d || document.getElementById('w' + i)) return;
+    var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', e.d); p.setAttribute('id', 'w' + i); p.setAttribute('class', 'wlive');
+    svg.insertBefore(p, first);
+  });
+})();
+
+(function(){
+var P = window.PAGE, $ = function(id){ return document.getElementById(id); };
+var st = { btn:{}, coil:{}, q:{}, rm:{}, last:'inicio', on:{} , trip:false, ext:{}, tm:{} };
+var latched = {}, lastDown = {}, skipUp = {};
+P.buttons.forEach(function(b){ st.btn[b] = false; });
+P.coils.forEach(function(c){ st.coil[c] = false; });
+P.qs.forEach(function(q){ st.q[q] = true; });
+(P.removables||[]).forEach(function(r){ st.rm[r.id] = false; });
+if (P.init) P.init(st);
+function ctlOn(c){ if (st.ext.hasOwnProperty(c)) return st.ext[c]; return st.btn.hasOwnProperty(c) ? st.btn[c] : !!st.coil[c]; }
 function closed(e){
-  if (e.t !== 'c') return true;
-  var a = actuated(e);
-  return e.kind === 'nc' ? !a : a;
+  if (e.t === 'w') return true;
+  if (e.t === 'q') return st.q[e.id];
+  if (e.rm && st.rm[e.rm]) return e.rmode === 'bridge';
+  var a = ctlOn(e.ctl);
+  if (e.t === 'no') return a;
+  if (e.t === 'nc') return !a;
+  if (e.t === 'cona') return a;
+  if (e.t === 'conc') return !a;
+  return false;
 }
-function live(){
-  var adj = {};
-  G.edges.forEach(function(e){ if (!closed(e)) return; (adj[e.a] = adj[e.a] || []).push(e.b); (adj[e.b] = adj[e.b] || []).push(e.a); });
-  var lab = {}, conflict = false;
-  G.srcs.forEach(function(s){
-    var st = [s.node];
-    while (st.length){
-      var n = st.pop();
-      if (!lab[n]) lab[n] = {};
-      if (lab[n][s.lbl]) continue;
-      lab[n][s.lbl] = 1;
-      if (Object.keys(lab[n]).length > 1) conflict = true;
-      (adj[n] || []).forEach(function(m){ st.push(m); });
+var E = P.edges;
+function adj(filter){ var m = {}; E.forEach(function(e, i){ if (e.load || !filter(e)) return; (m[e.a]=m[e.a]||[]).push([e.b,i]); (m[e.b]=m[e.b]||[]).push([e.a,i]); }); return m; }
+function bfs(m, s, avoid){ var seen = {}; seen[s] = 0; var q = [s]; if (avoid) seen[avoid] = -1;
+  while (q.length){ var u = q.shift(); (m[u]||[]).forEach(function(p){ if (!(p[0] in seen)){ seen[p[0]] = seen[u] + 1; q.push(p[0]); } }); }
+  if (avoid) delete seen[avoid]; return seen; }
+function compute(){
+  var m = adj(closed), fromL = bfs(m, 'L'), toN = bfs(m, 'N');
+  var loads = {}, flows = {};
+  E.forEach(function(e, i){ if (e.load){ var on = (e.a in fromL) && (e.b in toN); loads[e.id] = on; if (on) flows[i] = 1; } });
+  var tops = [], bots = [];
+  E.forEach(function(e){ if (e.load && loads[e.id]){ tops.push(e.a); bots.push(e.b); } });
+  E.forEach(function(e, i){
+    if (e.load || !closed(e)) return;
+    function side(src, targets){
+      for (var k = 0; k < targets.length; k++){
+        var t = targets[k];
+        var a1 = bfs(m, src, e.b), b1 = bfs(m, e.b, e.a);
+        if ((e.a in a1 || e.a === src) && (t in b1 || t === e.b)) return 1;
+        var a2 = bfs(m, src, e.a), b2 = bfs(m, e.a, e.b);
+        if ((e.b in a2 || e.b === src) && (t in b2 || t === e.a)) return -1;
+      }
+      return 0;
     }
+    var d = side('L', tops); if (!d){ d = -side('N', bots); }
+    if (d) flows[i] = d;
   });
-  return { lab: lab, conflict: conflict };
+  return { loads: loads, flows: flows, live: fromL };
 }
-function solve(){
-  var L;
-  for (var it = 0; it < 60; it++){
-    L = live();
-    if (L.conflict){ short = true; Object.keys(DEV).forEach(function(n){ if (/^-Q1$/.test(n)) DEV[n].on = false; }); ev = 'short'; continue; }
-    var ch = false;
-    G.cons.forEach(function(c){
-      if (c.t !== 'coil') return;
-      var D = DEV[c.dev], en = !!L.lab[c.a];
-      if (D.en === en) return;
-      D.en = en; ch = true;
-      if (D.timer === 'off' && en){ D.out = true; D.t = 0; }
-      if (D.timer === 'off' && !en){ D.t = 0; }
-      if (D.timer === 'on' && !en){ D.out = false; D.t = 0; }
-      if (D.timer === 'on' && en){ D.t = 0; }
-    });
-    if (!ch) break;
+var timer = null, R = null;
+function settle(){
+  // Contactores y relés cambian al instante (un toque corto en un paro ya actúa).
+  for (var n = 0; n < 40; n++){
+    R = compute();
+    var ch = null;
+    for (var k = 0; k < P.coils.length; k++){ var c = P.coils[k]; if (!!R.loads[c] !== !!st.coil[c]){ ch = c; break; } }
+    if (ch === null) break;
+    st.coil[ch] = !!R.loads[ch]; if (P.after) P.after(st); if (P.coilChange) P.coilChange(st, ch);
   }
-  return L;
+  R = compute();
+  render();
 }
-function tick(dt){
-  var any = false;
-  Object.keys(DEV).forEach(function(n){
-    var D = DEV[n];
-    if (D.timer === 'on' && D.en && !D.out){ D.t += dt; if (D.t >= D.T){ D.out = true; any = true; } }
-    if (D.timer === 'off' && !D.en && D.out){ D.t += dt; if (D.t >= D.T){ D.out = false; any = true; } }
+function rot(el, deg){ if (el) el.style.transform = 'rotate(' + deg + 'deg)'; }
+function render(){
+  R = R || compute();
+  E.forEach(function(e, i){
+    var wl = $('w' + i); if (wl) wl.classList.toggle('live', e.a in R.live && e.b in R.live);
+    var f = $('fl' + i); if (!f) return;
+    var d = R.flows[i];
+    f.classList.toggle('on', !!d);
+    if (d) f.setAttribute('d', d === -1 ? e.dr : e.d);
   });
-  return any;
+  P.devs.forEach(function(v){
+    var a = v.ctl ? ctlOn(v.ctl) : false;
+    if (v.t === 'no') rot($('bl_' + v.key), a ? 32 : 0);
+    if (v.t === 'nc') rot($('bl_' + v.key), a ? -45 : 0);
+    if (v.t === 'co') rot($('bl_' + v.key), a ? 64 : 0);
+    if (v.btn){ var ac = $('ac_' + v.key); if (ac) ac.style.transform = a ? 'translateX(12px)' : ''; }
+    if (v.t === 'q'){ rot($('bl_' + v.key), st.q[v.id] ? 0 : -32); $('ac_' + v.key).style.transform = st.q[v.id] ? '' : 'translateX(-10px)'; }
+    if (v.t === 'coil'){ $('cf_' + v.key).style.fill = st.coil[v.id] ? '#FFE9A8' : '#fff'; }
+    if (v.t === 'lamp'){ $('gl_' + v.key).classList.toggle('on', !!R.loads[v.id]); }
+    if (v.rm){ var g = $('rm_' + v.key); g.classList.toggle('off', !!st.rm[v.rm]); $('cut_' + v.key).style.display = st.rm[v.rm] ? '' : 'none';
+      var br = $('br_' + v.key); if (br) br.classList.toggle('on', !!st.rm[v.rm]); }
+  });
+  P.buttons.forEach(function(b){ var el = $('b_' + b); if (el){ el.classList.toggle('on', st.btn[b]); el.classList.toggle('latched', !!latched[b]); el.setAttribute('aria-pressed', st.btn[b]); }
+    var g = $('g_' + b); if (g) g.classList.toggle('latched', !!latched[b]); var g2 = $('g_' + b + '_2'); if (g2) g2.classList.toggle('latched', !!latched[b]); });
+  (P.removables||[]).forEach(function(r){ var c = $('t_' + r.id); if (c) c.checked = !st.rm[r.id]; });
+  P.qs.forEach(function(q){ var b = $('bq_' + q); if (b) b.textContent = (st.q[q] ? 'Abrir ' : 'Cerrar ') + '-' + q; });
+  if (P.status) P.status(st, R, $);
+  $('explain').innerHTML = P.msg(st, R);
 }
-function seq3(lbls){ var o = ['L1', 'L2', 'L3']; return lbls.join() === 'L1,L2,L3' || lbls.join() === 'L2,L3,L1' || lbls.join() === 'L3,L1,L2'; }
-function render(L){
-  var lab = L.lab;
-  var phase = function(n){ return lab[n] ? Object.keys(lab[n])[0] : null; };
-  // contactos
-  G.edges.forEach(function(e){ if (e.t === 'c' && e.el) e.el.classList.toggle('on', actuated(e)); });
-  // consumos
-  var on = {}, runs = [];
-  G.cons.forEach(function(c){
-    if (c.t === 'motor'){
-      var ls = c.pts.map(phase), run = ls.every(function(x){ return x; }) && (new Set(ls)).size === 3;
-      c.run = run; c.rev = run && !seq3(ls);
-      c.el.classList.toggle('run', run); c.el.classList.toggle('rev', !!c.rev);
-      if (run) runs.push(c.dev + (c.rev ? ' (izquierdas)' : ''));
-    } else {
-      var en = !!lab[c.a]; c.en = en;
-      if (c.el) c.el.classList.toggle('on', en);
-      if (c.glow) c.glow.classList.toggle('on', en);
-      if (en) on[c.dev] = c.t;
-    }
-  });
-  // grafo de corriente: se podan las ramas muertas
-  var adj = {}, add = function(a, b, e){ (adj[a] = adj[a] || []).push([b, e]); (adj[b] = adj[b] || []).push([a, e]); };
-  G.edges.forEach(function(e){
-    if (!closed(e)) return;
-    if (e.t === 'w' && e.c === 'n') add(e.a, e.b, e);
-    else if (lab[e.a] && lab[e.b]) add(e.a, e.b, e);
-  });
-  G.cons.forEach(function(c){
-    if (c.t === 'motor'){ if (c.run){ add(c.pts[0], c.pts[1], null); add(c.pts[1], c.pts[2], null); } }
-    else if (c.en) add(c.a, c.b, null);
-  });
-  var term = {}; G.srcs.forEach(function(s){ term[s.node] = 1; }); G.nsrc.forEach(function(n){ term[n] = 1; });
-  var alive = {}; Object.keys(adj).forEach(function(n){ alive[n] = 1; });
-  var changed = true;
-  while (changed){
-    changed = false;
-    Object.keys(alive).forEach(function(n){
-      if (term[n]) return;
-      var deg = adj[n].filter(function(x){ return alive[x[0]]; }).length;
-      if (deg <= 1){ delete alive[n]; changed = true; }
-    });
-  }
-  G.edges.forEach(function(e){
-    if (e.t !== 'w') return;
-    var lv = e.c === 'f' && lab[e.a] && lab[e.b];
-    e.el.classList.toggle('live', !!lv);
-    var fl = alive[e.a] && alive[e.b] && closed(e) && (e.c === 'n' || lv);
-    e.fl.classList.toggle('on', !!fl);
-  });
-  // cuentas atrás
-  Array.prototype.forEach.call(document.querySelectorAll('.cdt'), function(t){
-    var D = DEV[t.getAttribute('data-dev')], s = '';
-    if (D && D.timer === 'on' && D.en && !D.out) s = '⏱ ' + (D.T - D.t).toFixed(1).replace('.', ',') + ' s';
-    if (D && D.timer === 'off' && !D.en && D.out) s = '⏱ ' + (D.T - D.t).toFixed(1).replace('.', ',') + ' s';
-    t.textContent = s;
-  });
-  // panel
-  Object.keys(LEDS).forEach(function(n){
-    var x = LEDS[n], D = DEV[n];
-    if (!x) return;
-    var a = D && D.coil ? D.en : !!on[n];
-    if (/^-M/.test(n)){ a = runs.some(function(r){ return r.indexOf(n) === 0; }); }
-    x.classList.toggle('on', !!a);
-  });
-  Array.prototype.forEach.call(document.querySelectorAll('[data-btn]'), function(b){
-    var D = DEV[b.getAttribute('data-btn')], k = D.kind;
-    if (k === 'push') b.classList.toggle('on', D.pressed);
-    if (k === 'toggle') b.classList.toggle('on', D.pressed);
-    if (k === 'q'){ b.classList.toggle('on', !D.on); b.firstChild.nodeValue = (D.on ? 'Abrir ' : 'Cerrar ') + D.name; }
-    if (k === 'trip'){ b.classList.toggle('on', D.tripped); b.firstChild.nodeValue = (D.tripped ? 'RESET ' : 'Disparar ') + D.name; }
-  });
-  Array.prototype.forEach.call(document.querySelectorAll('.hit'), function(h){
-    var D = DEV[h.getAttribute('data-dev')];
-    h.classList.toggle('latched', !!D.latched);
-    h.classList.toggle('pressed', !!(D.pressed && D.kind === 'push'));
-  });
-  // qué está pasando
-  var m = [];
-  Object.keys(DEV).forEach(function(n){ var D = DEV[n]; if (D.kind === 'q' && !D.on) m.push('<b>' + n + ' está abierto</b>: no llega tensión a lo que hay detrás.'); });
-  if (short) m.push('<b>¡Cortocircuito!</b> Han entrado los dos contactores a la vez: ha saltado -Q1.');
-  Object.keys(DEV).forEach(function(n){ var D = DEV[n]; if (D.tripped) m.push('<b>Ha saltado ' + n + '</b>: su 95-96 se abre y su 97-98 se cierra. Pulsa RESET para rearmarlo.'); });
-  var act = Object.keys(DEV).filter(function(n){ return DEV[n].coil && DEV[n].en; });
-  m.push(act.length ? 'Bobinas con tensión: <b>' + act.join(', ') + '</b>.' : 'Ninguna bobina tiene tensión.');
-  Object.keys(DEV).forEach(function(n){
-    var D = DEV[n];
-    if (D.timer === 'on' && D.en && !D.out) m.push('<span class="k">' + n + '</span> (a la conexión) está contando: faltan <b>' + Math.ceil(D.T - D.t - 1e-6) + ' s</b> para que cambien sus 55-56 y 67-68.');
-    if (D.timer === 'on' && D.en && D.out) m.push('<span class="k">' + n + '</span> ya ha contado: su 67-68 está cerrado y su 55-56 abierto.');
-    if (D.timer === 'off' && D.en) m.push('<span class="k">' + n + '</span> (a la desconexión) tiene tensión: sus contactos han cambiado al momento.');
-    if (D.timer === 'off' && !D.en && D.out) m.push('<span class="k">' + n + '</span> (a la desconexión) ya no tiene tensión y cuenta: faltan <b>' + Math.ceil(D.T - D.t - 1e-6) + ' s</b> para volver a reposo.');
-  });
-  if (runs.length) m.push('Motores girando: <b>' + runs.join(', ') + '</b>.');
-  var lit = Object.keys(on).filter(function(n){ return on[n] === 'pilot'; });
-  if (lit.length) m.push('Pilotos encendidos: <b>' + lit.join(', ') + '</b>.');
-  var html = m.map(function(x){ return '<p>' + x + '</p>'; }).join('');
-  if (html !== lastMsg){ $('explain').innerHTML = html; lastMsg = html; }
-}
-
-// ---------------- mandos
-function press(n, down){ var D = DEV[n]; if (D.pressed === down) return; D.pressed = down; changed(); }
-function toggle(n){ var D = DEV[n]; if (D.kind === 'q'){ D.on = !D.on; if (D.on) short = false; } else if (D.kind === 'trip') D.tripped = !D.tripped; else D.pressed = !D.pressed; changed(); }
-var lastDown = {}, skipUp = {};
-function holdable(el, n){
+function press(b, down){ if (st.btn[b] === down) return; st.btn[b] = down; st.last = b + (down ? 'On' : 'Off'); if (P.onpress) P.onpress(st, b, down); settle(); }
+function hold(el, b){
+  if (!el) return;
   el.addEventListener('pointerdown', function(e){
-    e.preventDefault(); try { el.setPointerCapture(e.pointerId); } catch(_){}
-    var D = DEV[n], now = Date.now();
-    if (D.latched){ D.latched = false; skipUp[n] = true; press(n, false); return; }
-    if (now - (lastDown[n] || 0) < 380){ D.latched = true; skipUp[n] = true; lastDown[n] = 0; press(n, true); return; }
-    lastDown[n] = now; press(n, true);
+    e.preventDefault(); try{ el.setPointerCapture(e.pointerId); }catch(_){}
+    var now = Date.now();
+    if (latched[b]){ latched[b] = false; skipUp[b] = true; press(b, false); render(); return; }
+    if (now - (lastDown[b] || 0) < 380){ latched[b] = true; skipUp[b] = true; lastDown[b] = 0; press(b, true); render(); return; }
+    lastDown[b] = now; press(b, true);
   });
-  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function(t){ el.addEventListener(t, function(){
-    if (skipUp[n]){ skipUp[n] = false; return; } if (DEV[n].latched) return; press(n, false);
+  ['pointerup','pointercancel','lostpointercapture'].forEach(function(ev){ el.addEventListener(ev, function(){
+    if (skipUp[b]){ if (ev !== 'lostpointercapture') skipUp[b] = false; return; }
+    if (latched[b]) return;
+    press(b, false);
   }); });
-  el.addEventListener('keydown', function(e){ if ((e.key === ' ' || e.key === 'Enter') && !e.repeat){ e.preventDefault(); press(n, true); } });
-  el.addEventListener('keyup', function(e){ if ((e.key === ' ' || e.key === 'Enter') && !DEV[n].latched) press(n, false); });
+  el.addEventListener('dblclick', function(e){ e.preventDefault(); });
+  el.addEventListener('keydown', function(e){ if ((e.key === ' ' || e.key === 'Enter') && !e.repeat){ e.preventDefault(); press(b, true); } });
+  el.addEventListener('keyup', function(e){ if ((e.key === ' ' || e.key === 'Enter') && !latched[b]) press(b, false); });
 }
-function clickable(el, n){
-  el.addEventListener('click', function(){ toggle(n); });
-  el.addEventListener('keydown', function(e){ if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); toggle(n); } });
-}
-// botones del panel
-var BTN = $('btns'), LEDS = {};
-var order = Object.keys(DEV).sort(function(a, b){
-  var r = function(n){ var k = DEV[n].kind; return k === 'push' ? 0 : k === 'toggle' ? 1 : k === 'trip' ? 2 : k === 'q' ? 3 : 9; };
-  return r(a) - r(b) || a.localeCompare(b, 'es', { numeric: true });
+function click(el, fn){ if (!el) return; el.addEventListener('click', fn); el.addEventListener('keydown', function(e){ if (el.tagName !== 'BUTTON' && (e.key === ' ' || e.key === 'Enter')){ e.preventDefault(); fn(); } }); }
+P.buttons.forEach(function(b){ hold($('b_' + b), b); hold($('g_' + b), b); var e2 = $('g_' + b + '_2'); if (e2) hold(e2, b); });
+P.qs.forEach(function(q){ var f = function(){ st.q[q] = !st.q[q]; st.last = 'q'; settle(); }; click($('bq_' + q), f); click($('g_' + q), f); });
+(P.removables||[]).forEach(function(r){
+  var f = function(){ st.rm[r.id] = !st.rm[r.id]; st.last = 'rm_' + r.id; settle(); };
+  (r.keys||[]).forEach(function(k){ click($('g_' + k), f); });
+  var c = $('t_' + r.id); if (c) c.addEventListener('change', function(){ st.rm[r.id] = !this.checked; st.last = 'rm_' + r.id; settle(); });
 });
-order.forEach(function(n){
-  var D = DEV[n]; if (!D.kind || D.coil) return;
-  var b = document.createElement('button'); b.setAttribute('data-btn', n); b.type = 'button';
-  var lbl = { push: 'Pulsador ', toggle: '', trip: 'Disparar ', q: 'Abrir ' }[D.kind] + n;
-  var sm = { push: 'mantén pulsado · doble clic lo fija', toggle: /^-FC/.test(n) ? 'final de carrera: pisado / libre' : 'detector: detecta / no detecta', trip: 'relé térmico', q: 'magnetotérmico' }[D.kind];
-  b.appendChild(document.createTextNode(lbl));
-  var s = document.createElement('span'); s.className = 'small'; s.textContent = sm; b.appendChild(s);
-  b.className = 'b-' + D.kind;
-  BTN.appendChild(b);
-  if (D.kind === 'push') holdable(b, n); else clickable(b, n);
+(P.extra||[]).forEach(function(x){ click($(x.el), function(){ x.fn(st); settle(); }); });
+var keymap = P.keys || {};
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace'){ var tg = e.target.tagName; if (tg !== 'INPUT') { e.preventDefault(); location.href = 'index.html#p5'; } } });
+document.addEventListener('keydown', function(e){
+  if (e.repeat) return;
+  var tag = e.target.tagName; if (tag === 'BUTTON' || tag === 'INPUT' || (e.target.getAttribute && e.target.getAttribute('role') === 'button')) return;
+  var k = keymap[e.key.toLowerCase()]; if (!k) return;
+  if (st.btn.hasOwnProperty(k)) press(k, true);
+  else if (st.q.hasOwnProperty(k)){ st.q[k] = !st.q[k]; settle(); }
+  else if (st.rm.hasOwnProperty(k)){ st.rm[k] = !st.rm[k]; st.last = 'rm_' + k; settle(); }
 });
-Array.prototype.forEach.call(document.querySelectorAll('.hit'), function(h){
-  var n = h.getAttribute('data-dev'); h.setAttribute('tabindex', '0'); h.setAttribute('role', 'button'); h.setAttribute('aria-label', n);
-  if (DEV[n].kind === 'push') holdable(h, n); else clickable(h, n);
-});
-// leds de estado
-var LD = $('leds');
-var names = Object.keys(DEV).filter(function(n){ return DEV[n].coil; }).sort(function(a, b){ return a.localeCompare(b, 'es', { numeric: true }); });
-var pil = G.cons.filter(function(c){ return c.t === 'pilot'; });
-var mot = G.cons.filter(function(c){ return c.t === 'motor'; });
-names.forEach(function(n){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot c"></span>' + n + (DEV[n].timer ? ' <small>(' + DEV[n].T + ' s)</small>' : ''); LD.appendChild(s); LEDS[n] = s.firstChild; });
-pil.forEach(function(c){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot" style="--lc:' + (c.el ? (DRAWCOL[c.dev] || '#3DBB4E') : '#3DBB4E') + '"></span>' + c.dev; LD.appendChild(s); LEDS[c.dev] = s.firstChild; });
-mot.forEach(function(c){ var s = document.createElement('span'); s.className = 'led'; s.innerHTML = '<span class="dot m"></span>' + c.dev; LD.appendChild(s); LEDS[c.dev] = s.firstChild; });
-// ruletas: un deslizador de 1 a 5 s por temporizador
-var RU = $('ruletas');
-Object.keys(DEV).filter(function(n){ return DEV[n].timer; }).sort(function(a, b){ return a.localeCompare(b, 'es', { numeric: true }); }).forEach(function(n){
-  var D = DEV[n];
-  D.T = Math.max(1, Math.min(5, Math.round(D.T)));
-  var row = document.createElement('label'); row.className = 'ru';
-  row.innerHTML = '<span class="rn">' + n + ' <small>' + (D.timer === 'on' ? 'conexión' : 'desconexión') + '</small></span><input type="range" min="1" max="5" step="1" value="' + D.T + '" aria-label="Tiempo de ' + n + '"><b>' + D.T + ' s</b>';
-  var inp = row.querySelector('input'), out = row.querySelector('b');
-  inp.addEventListener('input', function(){ D.T = +inp.value; out.textContent = D.T + ' s'; var lab = LEDS[n] && LEDS[n].parentNode.querySelector('small'); if (lab) lab.textContent = '(' + D.T + ' s)'; });
-  RU.appendChild(row);
-});
-if (!RU.children.length) RU.parentNode.style.display = 'none';
-// velocidad
-$('bSpeed').addEventListener('click', function(){ speed = speed === 1 ? 5 : 1; this.classList.toggle('on', speed > 1); this.firstChild.nodeValue = speed > 1 ? 'Tiempo ×5' : 'Tiempo normal'; });
-
-var L = solve();
-function changed(){ L = solve(); render(L); }
-var last = null;
-function loop(ts){
-  if (last === null) last = ts;
-  var dt = Math.min(0.1, (ts - last) / 1000) * speed; last = ts;
-  if (tick(dt)) L = solve();
-  render(L);
-  requestAnimationFrame(loop);
-}
-render(L);
-requestAnimationFrame(loop);
-document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace'){ var t = e.target.tagName; if (t !== 'INPUT' && t !== 'TEXTAREA'){ e.preventDefault(); location.href = 'index.html'; } } });
-window.__DEV = DEV;
+document.addEventListener('keyup', function(e){ var k = keymap[e.key.toLowerCase()]; if (k && st.btn.hasOwnProperty(k)) press(k, false); });
+P.st = st; P.settle = settle; P.render = render; P.ctlOn = ctlOn;
+settle();
+})();
+</script>
+<script>
+(function(){
+  Object.keys(T).forEach(function(c){ var r = document.getElementById('r_' + c), v = document.getElementById('v_' + c); if (!r) return;
+    function up(){ T[c] = +r.value; v.textContent = T[c] + ' s'; }
+    r.addEventListener('input', up); up(); });
+  requestAnimationFrame(tick);
 })();
 </script>
 <script>(function(){
   var b = document.getElementById('themeBtn'), r = document.documentElement;
-  function cur(){ var t = r.getAttribute('data-theme'); if (t) return t; return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light'; }
-  function paint(){ var d = cur() === 'dark'; b.textContent = d ? '\u2600\uFE0F' : '\uD83C\uDF19'; }
-  b.addEventListener('click', function(){ var t = cur() === 'dark' ? 'light' : 'dark'; r.setAttribute('data-theme', t); try { localStorage.setItem('tema', t); } catch(e){} paint(); });
+  function cur(){ var t = r.getAttribute('data-theme'); if (t) return t;
+    return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light'; }
+  function paint(){ var d = cur() === 'dark'; b.textContent = d ? '\u2600\uFE0F' : '\uD83C\uDF19';
+    b.setAttribute('aria-label', d ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'); b.title = b.getAttribute('aria-label'); }
+  b.addEventListener('click', function(){ var t = cur() === 'dark' ? 'light' : 'dark'; r.setAttribute('data-theme', t);
+    try { localStorage.setItem('tema', t); } catch(e){} paint(); });
   paint();
 })();</script>
 </body>

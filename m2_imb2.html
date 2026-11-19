@@ -696,7 +696,7 @@ function tablaPrHTML(D, n) {
     D.tabla.map(r => '<tr>' + r.map(x => { i++; return `<td>${x === null || (n !== undefined && i > n) ? '' : x}</td>`; }).join('') + '</tr>').join('') + '</tbody></table>';
 }
 
-// ------------------------------------------------------------------ piezas de la página (comunes a las 7)
+// ------------------------------------------------------------------ piezas de la página (comunes a todas)
 const $ = id => document.getElementById(id);
 function segmento(id, fn) {
   const el = $(id);
@@ -780,6 +780,8 @@ function iniciaPagina(CFG) {
     pintaNav(nav, ps.map(x => x.t), EST.paso, ps.length, n => { EST.paso = n; pon(); });
     avisoDesliza();
   };
+  // #uniones: empieza en el primer paso de las uniones (las antiguas páginas «(2)» mandan aquí)
+  if (CFG.parte === 'AB' && location.hash === '#uniones') EST.paso = PASOS[CFG.tipo + 'A'](datos(EST.ej).D).length + 1;
   marcaSeg('sEj', EST.ej);
   segmento('sEj', v => { EST.ej = +v; EST.paso = 1; try { sessionStorage.setItem(clave, v); } catch (e) {} pon(); });
   const cc = $('cCompletas');
